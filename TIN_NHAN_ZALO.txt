@@ -1,0 +1,24 @@
+====================================================================
+MẪU TIN NHẮN GỬI ZALO CHO ĐỒNG NGHIỆP (TOÀN TỈNH ĐỒNG NAI & THCS ĐĂK Ơ)
+====================================================================
+
+Kính gửi Quý Thầy/Cô đồng nghiệp,
+
+Để tiết kiệm thời gian mỗi lần đăng nhập CSDL và không phải click chuột thủ công từng tiết để xác nhận Lịch báo giảng hàng tuần, Thầy Hùng gửi tặng Quý Thầy/Cô bộ công cụ:
+
+🤖 "TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI (v5.1 - TOÀN TỈNH ĐỒNG NAI)"
+
+⚡ TÍNH NĂNG NỔI BẬT:
+1. Đăng nhập tự động 100%: Mở trang web truong.dongnai.edu.vn là Robot tự động điền đầy đủ Cấp học, Xã/Phường, Trường học, Số điện thoại và Mật khẩu. Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA ➔ Thầy/Cô chỉ cần nhìn mã CAPTCHA, gõ vào rồi ấn phím ENTER là vào thẳng hệ thống!
+2. Hỗ trợ toàn tỉnh: Tích hợp sẵn danh mục chuẩn 96 Xã/Phường và 2.178 Trường học thuộc mọi cấp (Mầm non, Tiểu học, THCS, THPT, GDTX) trên toàn tỉnh Đồng Nai. Riêng THCS Đăk Ơ có sẵn danh mục chọn nhanh 60 giáo viên.
+3. Xác nhận Hoàn thành Lịch báo giảng tuần trong 0.5 giây: 1 click là tự động chuyển toàn bộ 15-18 tiết trong tuần sang "Hoàn thành" và bấm GHI lưu xong xuôi.
+4. Bảo mật 100%: Mọi thông tin chỉ lưu cục bộ trên máy tính của Thầy/Cô, tuyệt đối không gửi ra ngoài.
+
+👉 CÁCH DÙNG SIÊU DỄ (Có 2 cách):
+- CÁCH 1 (Khuyên dùng - Không cần cài đặt): Mở file [1_CAI_DAT_DAU_TRANG.bat] (hoặc file Cai_Dat_Dau_Trang_1Click.html) ➔ Chọn Trường/Tên mình và nhập mật khẩu ➔ Kéo 2 nút lên thanh Dấu trang (Ctrl + Shift + B) của trình duyệt là xong!
+- CÁCH 2: Mở file [2_CAI_DAT_TIEN_ICH_CHROME.bat] để nạp tiện ích vào Chrome.
+
+💬 Nhóm Zalo AI chia sẻ & hỗ trợ giáo viên Đồng Nai: https://zalo.me/g/csdl-dongnai-ai
+🚀 Link GitHub cập nhật phiên bản mới: https://github.com/hungdak-o/tro-ly-csdl-dong-nai
+
+Chúc Quý Thầy/Cô một tuần giảng dạy thật nhiều niềm vui và thảnh thơi!

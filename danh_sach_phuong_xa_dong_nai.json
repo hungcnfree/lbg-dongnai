@@ -1,0 +1,482 @@
+[
+  {
+    "index": 0,
+    "name": "Trường trực thuộc sở",
+    "value": "-1"
+  },
+  {
+    "index": 1,
+    "name": "Phường An Lộc",
+    "value": "25333"
+  },
+  {
+    "index": 2,
+    "name": "Phường Bảo Vinh",
+    "value": "26098"
+  },
+  {
+    "index": 3,
+    "name": "Phường Biên Hòa",
+    "value": "26068"
+  },
+  {
+    "index": 4,
+    "name": "Phường Bình Lộc",
+    "value": "26089"
+  },
+  {
+    "index": 5,
+    "name": "Phường Bình Long",
+    "value": "25326"
+  },
+  {
+    "index": 6,
+    "name": "Phường Bình Phước",
+    "value": "25195"
+  },
+  {
+    "index": 7,
+    "name": "Phường Chơn Thành",
+    "value": "25432"
+  },
+  {
+    "index": 8,
+    "name": "Phường Dầu Giây",
+    "value": "26326"
+  },
+  {
+    "index": 9,
+    "name": "Phường Đồng Phú",
+    "value": "25363"
+  },
+  {
+    "index": 10,
+    "name": "Phường Đồng Xoài",
+    "value": "25210"
+  },
+  {
+    "index": 11,
+    "name": "Phường Hàng Gòn",
+    "value": "26113"
+  },
+  {
+    "index": 12,
+    "name": "Phường Hố Nai",
+    "value": "26005"
+  },
+  {
+    "index": 13,
+    "name": "Phường Lộc Ninh",
+    "value": "25270"
+  },
+  {
+    "index": 14,
+    "name": "Phường Long Bình",
+    "value": "26020"
+  },
+  {
+    "index": 15,
+    "name": "Phường Long Hưng",
+    "value": "26380"
+  },
+  {
+    "index": 16,
+    "name": "Phường Long Khánh",
+    "value": "26080"
+  },
+  {
+    "index": 17,
+    "name": "Phường Long Thành",
+    "value": "26368"
+  },
+  {
+    "index": 18,
+    "name": "Phường Minh Hưng",
+    "value": "25441"
+  },
+  {
+    "index": 19,
+    "name": "Phường Nhơn Trạch",
+    "value": "26485"
+  },
+  {
+    "index": 20,
+    "name": "Phường Phước Bình",
+    "value": "25220"
+  },
+  {
+    "index": 21,
+    "name": "Phường Phước Long",
+    "value": "25217"
+  },
+  {
+    "index": 22,
+    "name": "Phường Phước Tân",
+    "value": "26377"
+  },
+  {
+    "index": 23,
+    "name": "Phường Tam Hiệp",
+    "value": "26017"
+  },
+  {
+    "index": 24,
+    "name": "Phường Tam Phước",
+    "value": "26374"
+  },
+  {
+    "index": 25,
+    "name": "Phường Tân Phú",
+    "value": "26116"
+  },
+  {
+    "index": 26,
+    "name": "Phường Tân Triều",
+    "value": "26188"
+  },
+  {
+    "index": 27,
+    "name": "Phường Trấn Biên",
+    "value": "26041"
+  },
+  {
+    "index": 28,
+    "name": "Phường Trảng Bom",
+    "value": "26248"
+  },
+  {
+    "index": 29,
+    "name": "Phường Trảng Dài",
+    "value": "25993"
+  },
+  {
+    "index": 30,
+    "name": "Phường Trị An",
+    "value": "26170"
+  },
+  {
+    "index": 31,
+    "name": "Phường Xuân Lập",
+    "value": "26104"
+  },
+  {
+    "index": 32,
+    "name": "Phường Xuân Lộc",
+    "value": "26425"
+  },
+  {
+    "index": 33,
+    "name": "PhườngTân Khai",
+    "value": "25357"
+  },
+  {
+    "index": 34,
+    "name": "Xã An Phước",
+    "value": "26383"
+  },
+  {
+    "index": 35,
+    "name": "Xã An Viễn",
+    "value": "26296"
+  },
+  {
+    "index": 36,
+    "name": "Xã Bàu Hàm",
+    "value": "26254"
+  },
+  {
+    "index": 37,
+    "name": "Xã Bình An",
+    "value": "26389"
+  },
+  {
+    "index": 38,
+    "name": "Xã Bình Minh",
+    "value": "26278"
+  },
+  {
+    "index": 39,
+    "name": "Xã Bình Tân",
+    "value": "25246"
+  },
+  {
+    "index": 40,
+    "name": "Xã Bom Bo",
+    "value": "25405"
+  },
+  {
+    "index": 41,
+    "name": "Xã Bù Đăng",
+    "value": "25396"
+  },
+  {
+    "index": 42,
+    "name": "Xã Bù Gia Mập",
+    "value": "25222"
+  },
+  {
+    "index": 43,
+    "name": "Xã Cẩm Mỹ",
+    "value": "26341"
+  },
+  {
+    "index": 44,
+    "name": "Xã Đa Kia",
+    "value": "25231"
+  },
+  {
+    "index": 45,
+    "name": "Xã Đại Phước",
+    "value": "26491"
+  },
+  {
+    "index": 46,
+    "name": "Xã Đak Lua",
+    "value": "26119"
+  },
+  {
+    "index": 47,
+    "name": "Xã Đak Nhau",
+    "value": "25399"
+  },
+  {
+    "index": 48,
+    "name": "Xã Đăk Ơ",
+    "value": "25225"
+  },
+  {
+    "index": 49,
+    "name": "Xã Định Quán",
+    "value": "26206"
+  },
+  {
+    "index": 50,
+    "name": "Xã Đồng Tâm",
+    "value": "25390"
+  },
+  {
+    "index": 51,
+    "name": "Xã Gia Kiệm",
+    "value": "26311"
+  },
+  {
+    "index": 52,
+    "name": "Xã Hưng Phước",
+    "value": "25309"
+  },
+  {
+    "index": 53,
+    "name": "Xã Hưng Thịnh",
+    "value": "26281"
+  },
+  {
+    "index": 54,
+    "name": "Xã La Ngà",
+    "value": "26227"
+  },
+  {
+    "index": 55,
+    "name": "Xã Lộc Hưng",
+    "value": "25303"
+  },
+  {
+    "index": 56,
+    "name": "Xã Lộc Quang",
+    "value": "25292"
+  },
+  {
+    "index": 57,
+    "name": "Xã Lộc Tấn",
+    "value": "25279"
+  },
+  {
+    "index": 58,
+    "name": "Xã Lộc Thành",
+    "value": "25294"
+  },
+  {
+    "index": 59,
+    "name": "Xã Lộc Thạnh",
+    "value": "25280"
+  },
+  {
+    "index": 60,
+    "name": "Xã Long Hà",
+    "value": "25255"
+  },
+  {
+    "index": 61,
+    "name": "Xã Long Phước",
+    "value": "26413"
+  },
+  {
+    "index": 62,
+    "name": "Xã Minh Đức",
+    "value": "25349"
+  },
+  {
+    "index": 63,
+    "name": "Xã Nam Cát Tiên",
+    "value": "26122"
+  },
+  {
+    "index": 64,
+    "name": "Xã Nghĩa Trung",
+    "value": "25417"
+  },
+  {
+    "index": 65,
+    "name": "Xã Nha Bích",
+    "value": "25450"
+  },
+  {
+    "index": 66,
+    "name": "Xã Phú Hòa",
+    "value": "26221"
+  },
+  {
+    "index": 67,
+    "name": "Xã Phú Lâm",
+    "value": "26158"
+  },
+  {
+    "index": 68,
+    "name": "Xã Phú Lý",
+    "value": "26173"
+  },
+  {
+    "index": 69,
+    "name": "Xã Phú Nghĩa",
+    "value": "25267"
+  },
+  {
+    "index": 70,
+    "name": "Xã Phú Riềng",
+    "value": "25252"
+  },
+  {
+    "index": 71,
+    "name": "Xã Phú Trung",
+    "value": "25261"
+  },
+  {
+    "index": 72,
+    "name": "Xã Phú Vinh",
+    "value": "26215"
+  },
+  {
+    "index": 73,
+    "name": "Xã Phước An",
+    "value": "26503"
+  },
+  {
+    "index": 74,
+    "name": "Xã Phước Sơn",
+    "value": "25420"
+  },
+  {
+    "index": 75,
+    "name": "Xã Phước Thái",
+    "value": "26422"
+  },
+  {
+    "index": 76,
+    "name": "Xã Sông Ray",
+    "value": "26362"
+  },
+  {
+    "index": 77,
+    "name": "Xã Tà Lài",
+    "value": "26134"
+  },
+  {
+    "index": 78,
+    "name": "Xã Tân An",
+    "value": "26179"
+  },
+  {
+    "index": 79,
+    "name": "Xã Tân Hưng",
+    "value": "25345"
+  },
+  {
+    "index": 80,
+    "name": "Xã Tân Lợi",
+    "value": "25378"
+  },
+  {
+    "index": 81,
+    "name": "Xã Tân Quan",
+    "value": "25351"
+  },
+  {
+    "index": 82,
+    "name": "Xã Tân Tiến",
+    "value": "25318"
+  },
+  {
+    "index": 83,
+    "name": "Xã Thanh Sơn",
+    "value": "26209"
+  },
+  {
+    "index": 84,
+    "name": "Xã Thiện Hưng",
+    "value": "25308"
+  },
+  {
+    "index": 85,
+    "name": "Xã Thọ Sơn",
+    "value": "25402"
+  },
+  {
+    "index": 86,
+    "name": "Xã Thống Nhất",
+    "value": "26299"
+  },
+  {
+    "index": 87,
+    "name": "Xã Thuận Lợi",
+    "value": "25387"
+  },
+  {
+    "index": 88,
+    "name": "Xã Xuân Bắc",
+    "value": "26428"
+  },
+  {
+    "index": 89,
+    "name": "Xã Xuân Định",
+    "value": "26461"
+  },
+  {
+    "index": 90,
+    "name": "Xã Xuân Đông",
+    "value": "26359"
+  },
+  {
+    "index": 91,
+    "name": "Xã Xuân Đường",
+    "value": "26347"
+  },
+  {
+    "index": 92,
+    "name": "Xã Xuân Hòa",
+    "value": "26446"
+  },
+  {
+    "index": 93,
+    "name": "Xã Xuân Phú",
+    "value": "26458"
+  },
+  {
+    "index": 94,
+    "name": "Xã Xuân Quế",
+    "value": "26332"
+  },
+  {
+    "index": 95,
+    "name": "Xã Xuân Thành",
+    "value": "26434"
+  }
+]

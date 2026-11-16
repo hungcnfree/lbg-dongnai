@@ -1,0 +1,6 @@
+# Git Ignore for CSDL Dong Nai Assistant
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp
+*.log
