@@ -40,6 +40,6 @@ echo            Robot sẽ TỰ ĐỘNG ĐIỀN TOÀN BỘ và nhắc Thầy/Cô
 echo ====================================================================
 echo.
 echo 💬 Nhóm Zalo AI chia sẻ & hỗ trợ: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
-echo 🚀 GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/csdl-dongnai-extension
+echo 🚀 GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/lbg-dongnai
 echo.
 pause

@@ -2,14 +2,14 @@
   "manifest_version": 3,
   "name": "CSDL Đồng Nai - Trợ Lý Tự Động Toàn Tỉnh (v5.1)",
   "version": "5.1.0",
-  "description": "Tự động đăng nhập và xác nhận hoàn thành lịch báo giảng cho giáo viên THCS Đăk Ơ và các trường toàn tỉnh Đồng Nai",
+  "description": "Tự động điền đăng nhập và xác nhận hoàn thành lịch báo giảng cho giáo viên toàn tỉnh Đồng Nai",
   "permissions": [
     "activeTab",
     "storage",
     "tabs"
   ],
   "host_permissions": [
-    "https://truong.dongnai.edu.vn/*"
+    "*://truong.dongnai.edu.vn/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -18,10 +18,10 @@
   "content_scripts": [
     {
       "matches": [
-        "https://truong.dongnai.edu.vn/*"
+        "*://truong.dongnai.edu.vn/*"
       ],
       "js": ["content.js"],
-      "run_at": "document_end"
+      "run_at": "document_idle"
     }
   ]
 }

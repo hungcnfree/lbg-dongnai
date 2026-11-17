@@ -105,37 +105,59 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSchoolsDropdown();
   });
 
-  // 3. Tải cấu hình đã lưu trong chrome.storage
-  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.sync) {
-    chrome.storage.sync.get(['csdl_teacher_config'], (res) => {
-      if (res && res.csdl_teacher_config) {
-        currentConfig = Object.assign(currentConfig, res.csdl_teacher_config);
-        userInput.value = currentConfig.username || '';
-        passInput.value = currentConfig.password || '';
+  // 3. Tải cấu hình đã lưu trong chrome.storage (cả local và sync)
+  function loadSavedConfig() {
+    if (typeof chrome === 'undefined' || !chrome.storage) return;
 
-        if (currentConfig.mode === 'province') {
-          switchMode('province');
-          customNameInput.value = currentConfig.name || '';
-          if (currentConfig.capCode) capHocSelect.value = currentConfig.capCode;
-          if (currentConfig.phuongXa) phuongXaSelect.value = currentConfig.phuongXa;
-          updateSchoolsDropdown();
-          if (currentConfig.truong) {
-            // Cố gắng chọn trường đã lưu
-            for (let i = 0; i < truongSelect.options.length; i++) {
-              if (truongSelect.options[i].value.includes(currentConfig.truong) || currentConfig.truong.includes(truongSelect.options[i].value)) {
-                truongSelect.selectedIndex = i;
-                break;
-              }
+    const applyConfig = (saved) => {
+      if (!saved) return;
+      currentConfig = Object.assign(currentConfig, saved);
+      userInput.value = currentConfig.username || '';
+      passInput.value = currentConfig.password || '';
+
+      if (currentConfig.mode === 'province') {
+        switchMode('province');
+        customNameInput.value = currentConfig.name || '';
+        if (currentConfig.capCode) capHocSelect.value = currentConfig.capCode;
+        if (currentConfig.phuongXa) phuongXaSelect.value = currentConfig.phuongXa;
+        updateSchoolsDropdown();
+        if (currentConfig.truong) {
+          for (let i = 0; i < truongSelect.options.length; i++) {
+            if (truongSelect.options[i].value.includes(currentConfig.truong) || currentConfig.truong.includes(truongSelect.options[i].value)) {
+              truongSelect.selectedIndex = i;
+              break;
             }
           }
-        } else {
-          switchMode('dako');
-          teacherSelect.value = currentConfig.name || '';
         }
-        updateQuickBtnText();
+      } else {
+        switchMode('dako');
+        teacherSelect.value = currentConfig.name || '';
       }
-    });
+      updateQuickBtnText();
+    };
+
+    if (chrome.storage.local) {
+      chrome.storage.local.get(['csdl_teacher_config'], (localRes) => {
+        if (localRes && localRes.csdl_teacher_config) {
+          applyConfig(localRes.csdl_teacher_config);
+        } else if (chrome.storage.sync) {
+          chrome.storage.sync.get(['csdl_teacher_config'], (syncRes) => {
+            if (syncRes && syncRes.csdl_teacher_config) {
+              applyConfig(syncRes.csdl_teacher_config);
+            }
+          });
+        }
+      });
+    } else if (chrome.storage.sync) {
+      chrome.storage.sync.get(['csdl_teacher_config'], (syncRes) => {
+        if (syncRes && syncRes.csdl_teacher_config) {
+          applyConfig(syncRes.csdl_teacher_config);
+        }
+      });
+    }
   }
+
+  loadSavedConfig();
 
   // Khi chọn tên giáo viên THCS Đăk Ơ
   teacherSelect.addEventListener('change', () => {
@@ -209,12 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
     currentConfig.phuongXa = wardText;
     currentConfig.truong = schoolText;
 
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.sync) {
-      chrome.storage.sync.set({ csdl_teacher_config: currentConfig }, () => {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      const savePayload = { csdl_teacher_config: currentConfig };
+      if (chrome.storage.local) {
+        chrome.storage.local.set(savePayload);
+      }
+      if (chrome.storage.sync) {
+        chrome.storage.sync.set(savePayload, () => {
+          showSuccessModal(currentConfig.name, currentConfig.truong);
+          updateQuickBtnText();
+          sendActionToTab('CONFIG_SAVED', currentConfig);
+        });
+      } else {
         showSuccessModal(currentConfig.name, currentConfig.truong);
         updateQuickBtnText();
         sendActionToTab('CONFIG_SAVED', currentConfig);
-      });
+      }
     } else {
       showSuccessModal(currentConfig.name, currentConfig.truong);
     }

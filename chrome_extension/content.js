@@ -1,328 +1,248 @@
-// content.js - CSDL Đồng Nai Robot v5.1 (Toàn Tỉnh Đồng Nai & THCS Đăk Ơ)
+// content.js - CSDL Đồng Nai Robot v5.1 (DOM Event Engine - Tự Động Điền 100%)
 
 (function () {
-  console.log('[CSDL Đồng Nai Robot v5.1 - Toàn Tỉnh] Đang khởi động...');
+  console.log('[CSDL Đồng Nai Robot v5.1] Đang khởi động...');
 
-  // Helper thực thi mã trong ngữ cảnh trang (MAIN WORLD) để gọi $find và __doPostBack của Telerik ASP.NET
-  function execInPage(fn, ...args) {
-    const script = document.createElement('script');
-    script.textContent = `(${fn.toString()})(${args.map(a => JSON.stringify(a)).join(',')});`;
-    (document.head || document.documentElement).appendChild(script);
-    script.remove();
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  // Helper chờ phần tử xuất hiện trong DOM
+  async function waitForElement(selector, maxWaitMs = 6000) {
+    const start = Date.now();
+    while (Date.now() - start < maxWaitMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(150);
+    }
+    return null;
   }
 
+  // Cấu hình mặc định (THCS Đăk Ơ) nếu Thầy/Cô chưa kịp lưu tài khoản
+  function getDefaultConfig() {
+    return {
+      mode: 'dako',
+      name: 'Giáo viên THCS Đăk Ơ',
+      username: '',
+      password: '',
+      capHoc: 'Trung học cơ sở',
+      phuongXa: 'Xã Đăk Ơ',
+      truong: 'Trường THCS Đăk Ơ'
+    };
+  }
+
+  // Lấy cấu hình giáo viên từ cả local và sync storage
   function getTeacherConfig(cb) {
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.sync) {
-      chrome.storage.sync.get(['csdl_teacher_config'], (res) => {
-        cb(res && res.csdl_teacher_config ? res.csdl_teacher_config : null);
-      });
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      if (chrome.storage.local) {
+        chrome.storage.local.get(['csdl_teacher_config'], (localRes) => {
+          if (localRes && localRes.csdl_teacher_config) {
+            cb(localRes.csdl_teacher_config);
+          } else if (chrome.storage.sync) {
+            chrome.storage.sync.get(['csdl_teacher_config'], (syncRes) => {
+              cb(syncRes && syncRes.csdl_teacher_config ? syncRes.csdl_teacher_config : getDefaultConfig());
+            });
+          } else {
+            cb(getDefaultConfig());
+          }
+        });
+      } else if (chrome.storage.sync) {
+        chrome.storage.sync.get(['csdl_teacher_config'], (syncRes) => {
+          cb(syncRes && syncRes.csdl_teacher_config ? syncRes.csdl_teacher_config : getDefaultConfig());
+        });
+      } else {
+        cb(getDefaultConfig());
+      }
     } else {
-      cb(null);
+      cb(getDefaultConfig());
     }
   }
 
   // =========================================================================
-  // GIAI ĐOẠN 1: TỰ ĐỘNG ĐIỀN ĐĂNG NHẬP 100% & NHẮC NHẬP CAPTCHA
+  // BANNER THÔNG BÁO TIẾN TRÌNH TRỰC QUAN TRÊN TRANG ĐĂNG NHẬP
   // =========================================================================
 
-  function autoFillAndPromptCaptcha(cfg) {
-    if (!cfg || !cfg.username) {
-      injectSetupBanner();
-      return;
+  function updateRobotBanner(msg, isSuccess = false) {
+    let banner = document.getElementById('csdl-robot-banner');
+    const uInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
+    if (!banner && uInp) {
+      banner = document.createElement('div');
+      banner.id = 'csdl-robot-banner';
+      banner.style.cssText = `
+        margin-bottom: 14px;
+        padding: 12px 16px;
+        background: #0f172a;
+        border: 1px solid #0284c7;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(2, 132, 199, 0.25);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #f8fafc;
+        font-size: 13px;
+        line-height: 1.5;
+        transition: all 0.3s ease;
+      `;
+      const parent = uInp.closest('.form-group, td, div') || uInp.parentElement;
+      parent.parentElement.insertBefore(banner, parent);
     }
+    if (banner) {
+      if (isSuccess) {
+        banner.style.borderColor = '#10b981';
+        banner.style.background = 'linear-gradient(135deg, #0f172a, #132a26)';
+        banner.style.boxShadow = '0 4px 15px rgba(16, 185, 129, 0.3)';
+      }
+      banner.innerHTML = msg;
+    }
+  }
 
-    // Hiển thị thông báo chào mừng & nhắc nhở giáo viên
-    injectWelcomeReminderBanner(cfg.name || 'Thầy/Cô', cfg.truong || 'Trường THCS Đăk Ơ', cfg.capHoc || 'Trung học cơ sở', cfg.phuongXa || 'Xã Đăk Ơ');
+  // =========================================================================
+  // BỘ MÁY TỰ ĐỘNG CHỌN CẤP - XÃ - TRƯỜNG & ĐIỀN TÀI KHOẢN (DOM EVENT ENGINE)
+  // =========================================================================
 
-    // Chạy trong ngữ cảnh trang web
-    execInPage(async (teacherData) => {
-      // 1. Điền Tên đăng nhập & Mật khẩu
-      const userInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
-      const passInp = document.getElementById('ContentPlaceHolder1_ctl00_tbP');
+  let isAutoRunning = false;
 
-      if (userInp) {
-        userInp.value = teacherData.username;
-        userInp.dispatchEvent(new Event('input', { bubbles: true }));
-        userInp.dispatchEvent(new Event('change', { bubbles: true }));
+  async function executeAutoLoginFlow(cfg) {
+    if (isAutoRunning) return;
+    isAutoRunning = true;
+
+    try {
+      console.log('[CSDL Robot] Bắt đầu quy trình tự động điền với cấu hình:', cfg);
+      updateRobotBanner(`🤖 <strong>ROBOT CSDL (v5.1):</strong> Đang chuẩn bị tự động điền...`);
+
+      // 1. Điền Tên đăng nhập & Mật khẩu ngay lập tức nếu có
+      const uInp = await waitForElement('#ContentPlaceHolder1_ctl00_tbU', 4000);
+      const pInp = await waitForElement('#ContentPlaceHolder1_ctl00_tbP', 4000);
+
+      if (uInp && cfg.username) {
+        uInp.value = cfg.username;
+        uInp.dispatchEvent(new Event('input', { bubbles: true }));
+        uInp.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      if (pInp && cfg.password) {
+        pInp.value = cfg.password;
+        pInp.dispatchEvent(new Event('input', { bubbles: true }));
+        pInp.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
-      if (passInp) {
-        passInp.value = teacherData.password;
-        passInp.dispatchEvent(new Event('input', { bubbles: true }));
-        passInp.dispatchEvent(new Event('change', { bubbles: true }));
-      }
+      // 2. Tự động chọn CẤP HỌC (Ví dụ: Trung học cơ sở)
+      const targetCap = cfg.capHoc || 'Trung học cơ sở';
+      const capInp = await waitForElement('#ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input', 5000);
+      if (capInp) {
+        const curCap = (capInp.value || '').trim();
+        if (!curCap.toLowerCase().includes(targetCap.toLowerCase()) && !targetCap.toLowerCase().includes(curCap.toLowerCase())) {
+          updateRobotBanner(`⏳ <strong>Đang chọn Cấp học:</strong> ${targetCap}...`);
+          capInp.click();
+          await sleep(400);
 
-      // Hàm đợi ASP.NET AJAX Postback kết thúc
-      const waitAjax = () => new Promise(resolve => {
-        if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
-          const prm = Sys.WebForms.PageRequestManager.getInstance();
-          let resolved = false;
-          const done = () => {
-            if (!resolved) {
-              resolved = true;
-              setTimeout(resolve, 300);
-            }
-          };
-          const handler = (sender, args) => {
-            prm.remove_endRequest(handler);
-            done();
-          };
-          prm.add_endRequest(handler);
-          // Safety timeout in case postback completes instantly or doesn't fire
-          setTimeout(done, 1500);
+          const capItems = Array.from(document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_DropDown li'));
+          const targetCapLi = capItems.find(li => li.innerText.trim().toLowerCase().includes(targetCap.toLowerCase()));
+          if (targetCapLi) {
+            targetCapLi.click();
+            console.log('[CSDL Robot] Đã bấm chọn Cấp học:', targetCap);
+            // Chờ server ASP.NET trả về kết quả AJAX (khoảng 2.2 giây)
+            await sleep(2300);
+          }
         } else {
-          setTimeout(resolve, 600);
+          console.log('[CSDL Robot] Cấp học đã đúng sẵn:', curCap);
         }
-      });
+      }
 
-      // Hàm tìm item trong Telerik RadComboBox (khớp chính xác hoặc tìm kiếm chuỗi con)
-      const findItem = (combo, text) => {
-        if (!combo || !text) return null;
-        const targetClean = text.trim().toLowerCase();
-        let item = combo.findItemByText ? combo.findItemByText(text) : null;
-        if (item) return item;
+      // 3. Tự động chọn PHƯỜNG / XÃ (Ví dụ: Xã Đăk Ơ)
+      const targetXa = cfg.phuongXa || 'Xã Đăk Ơ';
+      const xaInp = await waitForElement('#ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input', 5000);
+      if (xaInp) {
+        const curXa = (xaInp.value || '').trim();
+        if (!curXa.toLowerCase().includes(targetXa.toLowerCase()) && !targetXa.toLowerCase().includes(curXa.toLowerCase())) {
+          updateRobotBanner(`⏳ <strong>Đang chọn Phường/Xã:</strong> ${targetXa}...`);
+          xaInp.click();
+          await sleep(450);
 
-        const items = combo.get_items ? combo.get_items() : (combo.getItems ? combo.getItems() : null);
-        if (items) {
-          const count = items.get_count ? items.get_count() : items.length;
-          // Lần 1: tìm khớp chính xác
-          for (let i = 0; i < count; i++) {
-            const it = items.getItem ? items.getItem(i) : items[i];
-            const itTxt = (it && it.get_text ? it.get_text() : '').trim().toLowerCase();
-            if (itTxt === targetClean) return it;
+          const xaItems = Array.from(document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_DropDown li'));
+          const targetXaLi = xaItems.find(li => li.innerText.trim().toLowerCase().includes(targetXa.toLowerCase()));
+          if (targetXaLi) {
+            targetXaLi.click();
+            console.log('[CSDL Robot] Đã bấm chọn Xã/Phường:', targetXa);
+            // Chờ server ASP.NET nạp danh sách Trường tương ứng (khoảng 1.5 giây)
+            await sleep(1600);
           }
-          // Lần 2: tìm chứa chuỗi con
-          for (let i = 0; i < count; i++) {
-            const it = items.getItem ? items.getItem(i) : items[i];
-            const itTxt = (it && it.get_text ? it.get_text() : '').toLowerCase();
-            if (itTxt.includes(targetClean) || targetClean.includes(itTxt)) return it;
-          }
+        } else {
+          console.log('[CSDL Robot] Xã/Phường đã đúng sẵn:', curXa);
         }
-        return null;
-      };
+      }
 
-      // 2. Chọn Cấp học: Kích hoạt Postback nếu khác cấp hiện tại
-      const targetCap = teacherData.capHoc || 'Trung học cơ sở';
-      const cbCapHoc = typeof $find === 'function' ? $find('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc') : null;
-      const currentCap = cbCapHoc ? cbCapHoc.get_text() : (document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input')?.value || '');
+      // 4. Tự động chọn TRƯỜNG HỌC (Ví dụ: Trường THCS Đăk Ơ)
+      const targetTruong = cfg.truong || 'Trường THCS Đăk Ơ';
+      const truongInp = await waitForElement('#ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input', 5000);
+      if (truongInp) {
+        const curTruong = (truongInp.value || '').trim();
+        if (!curTruong.toLowerCase().includes(targetTruong.toLowerCase()) && !targetTruong.toLowerCase().includes(curTruong.toLowerCase())) {
+          updateRobotBanner(`⏳ <strong>Đang chọn Trường:</strong> ${targetTruong}...`);
+          truongInp.click();
+          await sleep(450);
 
-      if (!currentCap || currentCap.trim().toLowerCase() !== targetCap.trim().toLowerCase()) {
-        if (cbCapHoc) {
-          const itCap = findItem(cbCapHoc, targetCap);
-          if (itCap) {
-            itCap.select();
-            if (typeof __doPostBack === 'function') {
-              __doPostBack('ctl00$ContentPlaceHolder1$ctl00$cbCapHoc', '');
-              await waitAjax();
+          const truongItems = Array.from(document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_cbTruong_DropDown li'));
+          // Tìm theo chuỗi đầy đủ hoặc từ khóa tên trường
+          let targetTruongLi = truongItems.find(li => li.innerText.toLowerCase().includes(targetTruong.toLowerCase()) || targetTruong.toLowerCase().includes(li.innerText.toLowerCase()));
+          if (!targetTruongLi) {
+            const cleanKey = targetTruong.replace(/trường|thcs|thpt|tiểu học|mầm non/gi, '').trim().toLowerCase();
+            if (cleanKey.length >= 3) {
+              targetTruongLi = truongItems.find(li => li.innerText.toLowerCase().includes(cleanKey));
             }
           }
-        }
-      }
 
-      // 3. Chọn Phường/Xã: Kích hoạt Postback nếu khác xã hiện tại
-      const targetXa = teacherData.phuongXa || 'Xã Đăk Ơ';
-      const rcbPhongGD = typeof $find === 'function' ? $find('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD') : null;
-      const currentXa = rcbPhongGD ? rcbPhongGD.get_text() : (document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input')?.value || '');
-
-      if (!currentXa || currentXa.trim().toLowerCase() !== targetXa.trim().toLowerCase()) {
-        if (rcbPhongGD) {
-          const itXa = findItem(rcbPhongGD, targetXa);
-          if (itXa) {
-            itXa.select();
-            if (typeof __doPostBack === 'function') {
-              __doPostBack('ctl00$ContentPlaceHolder1$ctl00$rcbPhongGD', '');
-              await waitAjax();
-            }
+          if (targetTruongLi) {
+            targetTruongLi.click();
+            console.log('[CSDL Robot] Đã bấm chọn Trường:', targetTruongLi.innerText.trim());
+            await sleep(400);
           }
+        } else {
+          console.log('[CSDL Robot] Trường học đã đúng sẵn:', curTruong);
         }
       }
 
-      // 4. Chọn Trường
-      const targetTruong = teacherData.truong || 'Trường THCS Đăk Ơ';
-      const cbTruong = typeof $find === 'function' ? $find('ctl00_ContentPlaceHolder1_ctl00_cbTruong') : null;
-      if (cbTruong) {
-        const itTruong = findItem(cbTruong, targetTruong);
-        if (itTruong) {
-          itTruong.select();
-        }
-      }
+      // 5. Ô CAPTCHA: Tự động nhảy con trỏ chuột vào ô & hỗ trợ phím ENTER (KHÔNG PHÓNG TO)
+      const capInpFinal = await waitForElement('#ContentPlaceHolder1_ctl00_tbCapcha', 3000);
+      if (capInpFinal) {
+        capInpFinal.focus();
+        capInpFinal.style.border = '2px solid #10b981';
+        capInpFinal.style.backgroundColor = '#f0fdf4';
+        capInpFinal.style.fontWeight = 'bold';
+        capInpFinal.style.fontSize = '14px';
 
-      // 5. Ô CAPTCHA: Tự động nhảy con trỏ chuột vào ô & bắt phím Enter để đăng nhập (KHÔNG PHÓNG TO)
-      const capchaInp = document.getElementById('ContentPlaceHolder1_ctl00_tbCapcha');
-      if (capchaInp) {
-        capchaInp.focus();
-        capchaInp.style.border = '2px solid #10b981';
-        capchaInp.style.backgroundColor = '#f0fdf4';
-        capchaInp.style.fontWeight = 'bold';
-        capchaInp.style.fontSize = '14px';
-
-        // Nhấn phím Enter tại ô CAPTCHA tự động bấm nút Đăng nhập
-        capchaInp.onkeydown = function (e) {
+        capInpFinal.onkeydown = function (e) {
           if (e.key === 'Enter') {
             const btnLogin = document.getElementById('ContentPlaceHolder1_ctl00_btOK');
             if (btnLogin) btnLogin.click();
           }
         };
       }
-    }, cfg);
-  }
 
-  // Khung thông báo nhắc nhở khi đã có cấu hình
-  function injectWelcomeReminderBanner(teacherName, schoolName, capHoc, phuongXa) {
-    const userInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
-    if (!userInp || document.getElementById('csdl-welcome-banner')) return;
-
-    const banner = document.createElement('div');
-    banner.id = 'csdl-welcome-banner';
-    banner.style.cssText = `
-      margin-bottom: 15px;
-      padding: 14px 16px;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      border: 1px solid #10b981;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #f8fafc;
-    `;
-
-    banner.innerHTML = `
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-        <span style="font-weight: bold; color: #10b981; font-size: 14px; display: flex; align-items: center; gap: 6px;">
-          🤖 ROBOT CSDL ĐỒNG NAI (v5.1): ĐÃ TỰ ĐIỀN XONG!
-        </span>
-        <span style="font-size: 11px; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 2px 8px; border-radius: 12px; font-weight: 600;">
-          ${teacherName}
-        </span>
-      </div>
-      <div style="font-size: 12px; line-height: 1.5; color: #cbd5e1;">
-        ✨ Cấp: <strong style="color: #f8fafc;">${capHoc}</strong> | Xã/Phường: <strong style="color: #f8fafc;">${phuongXa}</strong> | Trường: <strong style="color: #38bdf8;">${schoolName}</strong>.<br>
-        👉 <strong style="color: #10b981; font-size: 13px;">Thầy/Cô chỉ cần gõ mã CAPTCHA vào ô dưới rồi ấn phím ENTER là vào ngay!</strong>
-      </div>
-    `;
-
-    const parentContainer = userInp.closest('.form-group, td, div') || userInp.parentElement;
-    parentContainer.parentElement.insertBefore(banner, parentContainer);
-  }
-
-  // Khung thông báo khi đồng nghiệp lần đầu tiên chưa nhập thông tin
-  function injectSetupBanner() {
-    const userInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
-    if (!userInp || document.getElementById('csdl-setup-banner')) return;
-
-    const banner = document.createElement('div');
-    banner.id = 'csdl-setup-banner';
-    banner.style.cssText = `
-      margin-bottom: 15px;
-      padding: 12px 14px;
-      background: #1e293b;
-      border: 1px solid #f59e0b;
-      border-radius: 10px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #f8fafc;
-      font-size: 12px;
-      line-height: 1.5;
-    `;
-
-    banner.innerHTML = `
-      <div style="font-weight: bold; color: #f59e0b; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-        ⚠️ CHÀO QUÝ THẦY/CÔ ĐỒNG NAI!
-      </div>
-      <div style="color: #cbd5e1;">
-        Để Robot tự động điền tài khoản, Thầy/Cô vui lòng <strong>bấm vào biểu tượng Tiện ích (mảnh ghép) ở góc trên bên phải trình duyệt</strong>, chọn Trường/Tên mình và nhập mật khẩu một lần duy nhất nhé!
-      </div>
-    `;
-
-    const parentContainer = userInp.closest('.form-group, td, div') || userInp.parentElement;
-    parentContainer.parentElement.insertBefore(banner, parentContainer);
-  }
-
-  // =========================================================================
-  // GIAI ĐOẠN 2: LƯU TỪ ĐIỂN PPCT TẠI 3.6.1 (DanhMucTietPPCT.aspx)
-  // =========================================================================
-
-  function scanAndSavePPCTMaster() {
-    showToast('📚 Đang đọc danh mục Phân phối chương trình tại mục 3.6.1...');
-
-    const rows = document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00 > tbody > tr, .rgMasterTable > tbody > tr');
-    let count = 0;
-    const ppctMaster = {};
-
-    rows.forEach(row => {
-      const cells = row.querySelectorAll('td');
-      if (cells.length >= 7) {
-        const khoi = cells[3]?.innerText?.trim() || '';
-        const mon = cells[4]?.innerText?.trim() || '';
-        const tietStr = cells[5]?.innerText?.trim() || '';
-        const baiDay = cells[6]?.innerText?.trim() || '';
-
-        const tiet = parseInt(tietStr, 10);
-        if (mon && tiet && baiDay) {
-          const key = `${mon}__${khoi}`;
-          if (!ppctMaster[key]) ppctMaster[key] = {};
-          ppctMaster[key][tiet] = baiDay;
-          count++;
-        }
-      }
-    });
-
-    if (count > 0) {
-      if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-        chrome.storage.local.get(['csdl_ppct_database'], (res) => {
-          const db = res.csdl_ppct_database || {};
-          for (const k in ppctMaster) {
-            db[k] = Object.assign(db[k] || {}, ppctMaster[k]);
-          }
-          chrome.storage.local.set({ csdl_ppct_database: db }, () => {
-            showToast(`🎉 Robot đã ghi nhớ ${count} bài dạy chuẩn PPCT vào bộ não!`);
-          });
-        });
+      // 6. Hiển thị thông báo hoàn thành
+      const teacherDisplayName = cfg.name || 'Thầy/Cô';
+      const schoolDisplayName = cfg.truong || 'THCS Đăk Ơ';
+      if (cfg.username) {
+        updateRobotBanner(`
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="color: #10b981; font-size: 14px;">🎉 ROBOT ĐÃ TỰ ĐIỀN XONG CHO: ${teacherDisplayName}</strong>
+            <span style="font-size: 11px; background: rgba(56,189,248,0.15); color: #38bdf8; padding: 2px 8px; border-radius: 10px;">${schoolDisplayName}</span>
+          </div>
+          <div style="color: #cbd5e1; font-size: 12px;">
+            👉 <strong style="color: #38bdf8;">Thầy/Cô chỉ cần gõ 4 ký tự CAPTCHA rồi ấn phím ENTER là vào ngay!</strong>
+          </div>
+        `, true);
       } else {
-        showToast(`🎉 Đã quét xong ${count} tiết bài dạy!`);
+        updateRobotBanner(`
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="color: #38bdf8; font-size: 14px;">✅ ROBOT ĐÃ CHỌN SẴN: ${targetCap} | ${targetXa} | ${targetTruong}</strong>
+          </div>
+          <div style="color: #cbd5e1; font-size: 12px;">
+            👉 Thầy/Cô hãy bấm vào biểu tượng Tiện ích (🧩) ở góc trên để lưu SĐT & Mật khẩu tự điền cho lần sau nhé!
+          </div>
+        `, false);
       }
-    } else {
-      showToast('⚠️ Không tìm thấy bảng tiết PPCT nào. Hãy chọn Khối/Môn và bấm Tìm kiếm.');
+    } catch (err) {
+      console.error('[CSDL Robot Error]', err);
+      updateRobotBanner(`⚠️ Có chút chậm trễ khi tải trang. <a href="javascript:location.reload()" style="color: #38bdf8;">Bấm F5 tải lại</a> hoặc tự bấm vào các ô.`);
+    } finally {
+      isAutoRunning = false;
     }
-  }
-
-  function injectPpctScannerBar() {
-    if (document.getElementById('csdl-ppct-panel')) return;
-
-    const panel = document.createElement('div');
-    panel.id = 'csdl-ppct-panel';
-    panel.style.cssText = `
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: #1e293b;
-      color: #fff;
-      padding: 14px 18px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      z-index: 999999;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 13px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      border: 1px solid #334155;
-    `;
-    panel.innerHTML = `
-      <div style="font-weight: bold; color: #38bdf8;">📚 ROBOT 3.6.1: TỪ ĐIỂN PPCT</div>
-      <div style="font-size: 11px; color: #94a3b8;">Lưu toàn bộ bài dạy chuẩn để tự điền tên bài vào Lịch báo giảng.</div>
-      <button id="btn-save-ppct-now" style="
-        background: #0284c7;
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: 0.2s;
-      ">📥 Ghi Nhớ Toàn Bộ Tiết & Bài Dạy Trang Này</button>
-    `;
-
-    document.body.appendChild(panel);
-    document.getElementById('btn-save-ppct-now').onclick = scanAndSavePPCTMaster;
   }
 
   // =========================================================================
@@ -332,51 +252,40 @@
   function autoConfirmDone() {
     showToast('⚡ Robot đang chọn Hoàn thành tất cả các tiết trong tuần...');
 
-    execInPage(() => {
-      const rows = document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00 > tbody > tr');
-      let count = 0;
+    const rows = document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00 > tbody > tr, .rgMasterTable > tbody > tr');
+    let count = 0;
 
-      rows.forEach(row => {
-        if (row.innerText.trim().length > 15) {
-          const inp = row.querySelector('input[id*="rcbTrangThaiGV_Input"]');
-          if (inp) {
-            const comboId = inp.id.replace('_Input', '');
-            if (typeof $find === 'function') {
-              const combo = $find(comboId);
-              if (combo) {
-                const item = combo.findItemByText('Hoàn thành');
-                if (item) {
-                  item.select();
-                  count++;
-                }
-              }
-            } else {
-              inp.value = 'Hoàn thành';
-              count++;
-            }
+    rows.forEach(row => {
+      if (row.innerText.trim().length > 15) {
+        const inp = row.querySelector('input[id*="rcbTrangThaiGV_Input"]');
+        if (inp) {
+          // Click input để mở dropdown hoặc đặt trực tiếp
+          inp.click();
+          const comboId = inp.id.replace('_Input', '');
+          const dropLi = row.querySelector(`div[id*="${comboId}_DropDown"] li, .rcbSlide li`);
+          if (dropLi && dropLi.innerText.includes('Hoàn thành')) {
+            dropLi.click();
+            count++;
+          } else {
+            inp.value = 'Hoàn thành';
+            inp.dispatchEvent(new Event('input', { bubbles: true }));
+            inp.dispatchEvent(new Event('change', { bubbles: true }));
+            count++;
           }
         }
-      });
-
-      // Tự động bấm nút Ghi sau 300ms
-      setTimeout(() => {
-        const btns = Array.from(document.querySelectorAll('button, input[type="submit"], input[type="button"]'))
-          .filter(b => (b.innerText || b.value || '').trim() === 'Ghi');
-
-        if (btns.length > 0) {
-          btns[0].click();
-        }
-      }, 350);
-
-      window.postMessage({ type: 'CSDL_DONE_COUNT', count: count }, '*');
-    });
-
-    window.addEventListener('message', function onMsg(e) {
-      if (e.data && e.data.type === 'CSDL_DONE_COUNT') {
-        window.removeEventListener('message', onMsg);
-        showToast(`🎉 Đã chọn Hoàn thành cho ${e.data.count} tiết và bấm GHI lưu thành công!`);
       }
     });
+
+    // Tự động bấm nút Ghi sau 400ms
+    setTimeout(() => {
+      const btns = Array.from(document.querySelectorAll('button, input[type="submit"], input[type="button"]'))
+        .filter(b => (b.innerText || b.value || '').trim() === 'Ghi');
+
+      if (btns.length > 0) {
+        btns[0].click();
+      }
+      showToast(`🎉 Đã chọn Hoàn thành cho các tiết và bấm GHI lưu thành công!`);
+    }, 450);
   }
 
   function injectDoneShortcutButton() {
@@ -428,10 +337,6 @@
     document.getElementById('btn-quick-confirm-done').onclick = autoConfirmDone;
   }
 
-  // =========================================================================
-  // TOAST THÔNG BÁO GIAO DIỆN
-  // =========================================================================
-
   function showToast(msg) {
     let toast = document.getElementById('csdl-toast');
     if (!toast) {
@@ -462,33 +367,33 @@
   }
 
   // =========================================================================
-  // BẮT ĐẦU ĐIỀU HƯỚNG TỪNG TRANG
+  // KHỞI ĐỘNG KHI TRANG TẢI
   // =========================================================================
 
   const currentPath = window.location.pathname.toLowerCase();
 
-  // 1. Trang Đăng nhập (Login.aspx)
-  if (currentPath.includes('login.aspx') || document.getElementById('ContentPlaceHolder1_ctl00_tbU')) {
-    getTeacherConfig((cfg) => {
-      autoFillAndPromptCaptcha(cfg);
-    });
+  // 1. Nếu là trang Login.aspx hoặc có ô tbU
+  if (currentPath.includes('login.aspx') || document.getElementById('ContentPlaceHolder1_ctl00_tbU') || document.querySelector('input[id*="tbU"]')) {
+    // Chờ 300ms để DOM ổn định rồi thực thi
+    setTimeout(() => {
+      getTeacherConfig((cfg) => {
+        executeAutoLoginFlow(cfg);
+      });
+    }, 350);
   }
 
-  // 2. Trang 3.6.1 Danh mục tiết PPCT
-  if (currentPath.includes('danhmuc_tietppct') || currentPath.includes('danhmuctietppct')) {
-    injectPpctScannerBar();
-  }
-
-  // 3. Trang 3.6.2 Khai báo lịch báo giảng
+  // 2. Nếu là trang 3.6.2 Khai báo lịch báo giảng
   if (currentPath.includes('khaibaolichbaogiang') || currentPath.includes('lichbaogiang')) {
-    injectDoneShortcutButton();
+    setTimeout(() => {
+      injectDoneShortcutButton();
+    }, 500);
   }
 
-  // Lắng nghe lệnh từ Popup Extension
+  // 3. Lắng nghe thông điệp từ Popup Extension
   if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
     chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       if (req.action === 'CONFIG_SAVED') {
-        autoFillAndPromptCaptcha(req.data);
+        executeAutoLoginFlow(req.data);
         sendResponse({ status: 'OK' });
       } else if (req.action === 'CONFIRM_DONE') {
         autoConfirmDone();

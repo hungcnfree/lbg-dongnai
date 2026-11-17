@@ -20,6 +20,6 @@ Kính gửi Quý Thầy/Cô đồng nghiệp,
 3. Bật "Chế độ dành cho nhà phát triển" ở góc trên bên phải ➔ Bấm "Tải tiện ích đã giải nén" và dán hoặc chọn thư mục "chrome_extension". Bấm vào biểu tượng Tiện ích, chọn Tên/Trường và lưu mật khẩu 1 lần là xong!
 
 💬 Nhóm Zalo AI chia sẻ & hỗ trợ giáo viên Đồng Nai: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
-🚀 Link GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/csdl-dongnai-extension
+🚀 Link GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/lbg-dongnai
 
 Chúc Quý Thầy/Cô một tuần giảng dạy thật nhiều niềm vui và thảnh thơi!

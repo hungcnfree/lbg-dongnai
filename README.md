@@ -4,7 +4,7 @@
 > Tác giả: **Thầy Nông Văn Hùng** (Trường THCS Đăk Ơ, Huyện Bù Gia Mập, Tỉnh Đồng Nai) & Cộng đồng AI Giáo dục Đồng Nai.
 
 🌐 **Trang web hướng dẫn trực tuyến (GitHub Pages):**  
-👉 **[https://hungcnfree.github.io/csdl-dongnai-extension/](https://hungcnfree.github.io/csdl-dongnai-extension/)**
+👉 **[https://hungcnfree.github.io/lbg-dongnai/](https://hungcnfree.github.io/lbg-dongnai/)**
 
 💬 **Nhóm Zalo AI chia sẻ & hỗ trợ giáo viên Đồng Nai:**  
 👉 **[https://zalo.me/g/2vhbtmsqdr06gyfiuru8](https://zalo.me/g/2vhbtmsqdr06gyfiuru8)**
@@ -69,7 +69,7 @@ BAN_CHIA_SE_DONG_NGHIEP/
 1. **Đẩy mã nguồn lên GitHub:**
    ```bash
    git init
-   git remote add origin https://github.com/hungcnfree/csdl-dongnai-extension.git
+   git remote add origin https://github.com/hungcnfree/lbg-dongnai.git
    git branch -M main
    git add .
    git commit -m "Release v5.1: CSDL Dong Nai Chrome Extension"
@@ -77,19 +77,19 @@ BAN_CHIA_SE_DONG_NGHIEP/
    ```
 
 2. **Bật GitHub Pages:**
-   - Vào GitHub Repository: `https://github.com/hungcnfree/csdl-dongnai-extension`.
+   - Vào GitHub Repository: `https://github.com/hungcnfree/lbg-dongnai`.
    - Chọn **Settings** (Cài đặt) ➔ chọn mục **Pages** ở menu bên trái.
    - Tại phần **Build and deployment** ➔ **Source**: Chọn **Deploy from a branch**.
    - Tại phần **Branch**: Chọn nhánh `main`, thư mục giữ nguyên `/ (root)` ➔ bấm **Save**.
    - Sau 1 phút, trang web hướng dẫn sẽ trực tuyến tại:  
-     👉 **`https://hungcnfree.github.io/csdl-dongnai-extension/`**
+     👉 **`https://hungcnfree.github.io/lbg-dongnai/`**
 
 ---
 
 ## 💬 HỖ TRỢ & ĐÓNG GÓP Ý KIẾN
 
 - **Nhóm Zalo AI Giáo Dục Đồng Nai:** [https://zalo.me/g/2vhbtmsqdr06gyfiuru8](https://zalo.me/g/2vhbtmsqdr06gyfiuru8)
-- **Kho lưu trữ GitHub:** [https://github.com/hungcnfree/csdl-dongnai-extension](https://github.com/hungcnfree/csdl-dongnai-extension)
+- **Kho lưu trữ GitHub:** [https://github.com/hungcnfree/lbg-dongnai](https://github.com/hungcnfree/lbg-dongnai)
 
 ---
 *Bản quyền © 2026 Thầy Nông Văn Hùng (Trường THCS Đăk Ơ) & Cộng đồng AI Giáo dục Đồng Nai.*
