@@ -1,8 +1,8 @@
-// page_bridge.js - Telerik Engine Toàn Tỉnh v5.3.1 (Sloppy Mode)
+// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.3 (Sloppy Mode)
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot] Khởi động Telerik Engine Toàn Tỉnh v5.3.1...');
+  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.3...');
 
   function sleep(ms) {
     return new Promise(function (resolve) {
@@ -11,7 +11,7 @@
   }
 
   function notify(msg, isDone, isError) {
-    // v5.3.1: gửi dưới dạng chuỗi JSON để content.js (thế giới khác) đọc được
+    // v5.3.3: gửi dưới dạng chuỗi JSON để content.js (thế giới khác) đọc được
     window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_PROGRESS', {
       detail: JSON.stringify({ message: msg, isDone: !!isDone, isError: !!isError })
     }));
@@ -27,7 +27,7 @@
     });
   }
 
-  // CHỈ đúng Trường Toàn Tỉnh (mã 70691515).
+  // CHỈ đúng Trường THCS Đăk Ơ (mã 70691515).
   // Không dùng "có chữ THCS + Đăk Ơ" vì "Trường TH&THCS Trương Định (70691426) - Xã Đăk Ơ" cũng thỏa.
   function isDakOThcs(txt) {
     var t = norm(txt);
@@ -152,7 +152,7 @@
     });
   }
 
-  // Thực thi quy trình đăng nhập dành riêng cho Toàn Tỉnh
+  // Thực thi quy trình đăng nhập dành riêng cho THCS Đăk Ơ
   async function runDakOFlow(cfg) {
     try {
       notify('⏳ Đang kết nối điều khiển CSDL Đồng Nai...', false);
@@ -182,36 +182,31 @@
           var t = txt.toLowerCase();
           return t.includes('đăk ơ') || t.includes('đắk ơ');
         });
-        // CHỜ POSTBACK XÃ ĐĂK Ơ (Server nạp trường Toàn Tỉnh)
+        // CHỜ POSTBACK XÃ ĐĂK Ơ (Server nạp trường THCS Đăk Ơ)
         await waitForAjaxPostBack(1500, 8000);
       }
 
       // =====================================================================
-            // 3. TRƯỜNG HỌC (Tự động linh hoạt theo cấu hình giáo viên hoặc THCS Đăk Ơ)
-      var isDako = (!cfg.mode || cfg.mode === 'dako') || (cfg.truong && (cfg.truong.includes('Đăk Ơ') || cfg.truong.includes('Đắk Ơ')));
-      var targetSchool = isDako ? 'Trường THCS Đăk Ơ' : (cfg.truong || 'Trường THCS Đăk Ơ');
-      notify('⏳ Đang chọn Trường: <strong>' + esc(targetSchool) + '</strong>...', false);
+      // 3. TRƯỜNG HỌC: CỐ ĐỊNH TRƯỜNG THCS ĐĂK Ơ (Mã: 70691515)
+      // TUYỆT ĐỐI KHÔNG BAO GIỜ CHỌN MẦM NON HAY TIỂU HỌC!
+      // =====================================================================
+      notify('⏳ Đang chọn Trường: <strong>Trường THCS Đăk Ơ</strong>...', false);
       var schoolSelected = false;
       var startFind = Date.now();
-
-      function matchesSchoolFilter(txt) {
-        if (isDako) return isDakOThcs(txt);
-        var t = norm(txt);
-        var targ = norm(targetSchool);
-        return t.includes(targ) || targ.includes(t);
-      }
 
       while (Date.now() - startFind < 15000) {
         var inpTr = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input');
         var curTr = inpTr ? (inpTr.value || '').trim() : '';
-
-        if (matchesSchoolFilter(curTr)) {
+        
+        // Kiểm tra xem trường hiện tại đã chuẩn THCS Đăk Ơ chưa
+        if (isDakOThcs(curTr)) {
           schoolSelected = true;
           break;
         }
 
+        // Chọn bằng bộ lọc thông minh: Phải chứa 70691515 hoặc THCS Đăk Ơ, cấm tuyệt đối mầm non/tiểu học
         var ok = await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input', function (txt) {
-          return matchesSchoolFilter(txt);
+          return isDakOThcs(txt);
         });
 
         if (ok) {
@@ -222,6 +217,7 @@
         await sleep(600);
       }
 
+      // =====================================================================
       // 4. ĐIỀN SĐT, MẬT KHẨU & FOCUS CAPTCHA (8 KÝ TỰ)
       // =====================================================================
       var uInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
@@ -253,7 +249,7 @@
         };
       }
 
-      // v5.3.1: đọc giá trị THẬT trên trang (không dùng giá trị mặc định cứng) để biết đã chọn đúng chưa
+      // v5.3.3: đọc giá trị THẬT trên trang (không dùng giá trị mặc định cứng) để biết đã chọn đúng chưa
       var capEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input');
       var xaEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input');
       var truongEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input');
@@ -272,7 +268,7 @@
         return;
       }
 
-      var teacherName = cfg.name || 'Thầy/Cô Toàn Tỉnh';
+      var teacherName = cfg.name || 'Thầy/Cô THCS Đăk Ơ';
       notify('🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN XONG CHO ' + teacherName + '!</strong><br><span style="color:#2563EB;">' + esc(finalCap) + ' | ' + esc(finalXa) + ' | ' + esc(finalTruong) + '</span>', true);
     } catch (err) {
       console.error('[CSDL Robot] Lỗi:', err);
@@ -349,201 +345,95 @@
     }
   }
 
-  // =========================================================================
-  // ĐIỀN LỊCH BÁO GIẢNG TỪ FILE TKB EXCEL (v5.4)
-  // =========================================================================
-  var SUBJECT_ALIASES = [
-    { re: /^thể dục/i, target: 'giáo dục thể chất' },
-    { re: /^m[ĩi] thu[ậa]t/i, target: 'nghệ thuật ( mt )' },
-    { re: /^âm nh[ạa]c/i, target: 'nghệ thuật ( an )' },
-    { re: /^to[áa]n h[ọo]c/i, target: 'toán' },
-    { re: /^h[đd]tn[- ]?hn/i, target: 'hđtn' },
-    { re: /^l[ịi]ch s[ửu]/i, target: 'lịch sử và địa lý (sử)' },
-    { re: /^[đd][ịi]a l[ýy]/i, target: 'lịch sử và địa lý ( địa )' },
-    { re: /^h[óo]a h[ọo]c/i, target: 'khtn ( hóa học )' },
-    { re: /^sinh h[ọo]c/i, target: 'khtn ( sinh học )' },
-    { re: /^v[ậa]t l[ýy]/i, target: 'khtn ( vật lý )' },
-    { re: /^khtn/i, target: 'khoa học tự nhiên' }
-  ];
-
-  function tkbNorm(s) {
-    return String(s || '').normalize('NFC').replace(/\s+/g, ' ').trim().toLowerCase();
-  }
-
-  function tkbStripParen(s) {
-    return String(s || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
-  }
-
-  function subjectScore(itemText, excelSubject) {
-    var raw = String(excelSubject || '').trim();
-    var base = tkbStripParen(raw);
-    var cands = [raw, base];
-    for (var i = 0; i < SUBJECT_ALIASES.length; i++) {
-      if (SUBJECT_ALIASES[i].re.test(base)) cands.push(SUBJECT_ALIASES[i].target);
-    }
-    var it = tkbNorm(itemText);
-    var best = 0;
-    for (var j = 0; j < cands.length; j++) {
-      var c = tkbNorm(cands[j]);
-      if (!c) continue;
-      if (it === c) best = Math.max(best, 100);
-      else if (it.indexOf(c) !== -1) best = Math.max(best, 75);
-      else if (c.indexOf(it) !== -1 && it.length >= 3) best = Math.max(best, 60);
-    }
-    return best;
-  }
-
-  function findTeacherTkb(tkb, name) {
-    var target = tkbNorm(name);
-    var list = (tkb && tkb.teachers) || [];
-    var i, n, hit = null;
-    for (i = 0; i < list.length; i++) {
-      if (tkbNorm(list[i].name) === target) { hit = list[i]; break; }
-    }
-    if (!hit) {
-      for (i = 0; i < list.length; i++) {
-        n = tkbNorm(list[i].name);
-        if (n && (n.indexOf(target) !== -1 || target.indexOf(n) !== -1)) { hit = list[i]; break; }
-      }
-    }
-    return hit;
-  }
-
-  function pickComboItem(combo, scorer) {
-    if (!combo || !combo.get_items) return null;
-    var items = combo.get_items();
-    var best = null, bestScore = 0;
-    for (var i = 0; i < items.get_count(); i++) {
-      var it = items.getItem(i);
-      var s = scorer(it.get_text());
-      if (s > bestScore) { bestScore = s; best = it; }
-    }
-    return bestScore >= 60 ? best : null;
-  }
-
-  function setComboById(inputId, scorer) {
-    if (!inputId) return false;
-    var combo = window.$find ? window.$find(inputId.replace(/_Input$/, '')) : null;
-    if (!combo) return false;
-    var item = pickComboItem(combo, scorer);
-    if (!item) return false;
-    try { item.select(); } catch (e) { /* Telerik ném lỗi strict-mode nhưng lựa chọn vẫn áp dụng */ }
-    return true;
-  }
-
-  // Cột "Lớp học" hiển thị trên lưới là RadComboBox nhiều lựa chọn (rcbLopHocs) -> phải check ô lớp
-  function checkMultiClass(input, lop) {
-    if (!input || !lop) return false;
-    var combo = window.$find ? window.$find(input.id.replace(/_Input$/, '')) : null;
-    if (!combo || !combo.get_items) return false;
-    var items = combo.get_items();
-    for (var i = 0; i < items.get_count(); i++) {
-      var it = items.getItem(i);
-      if (tkbNorm(it.get_text()) === tkbNorm(lop)) {
-        try {
-          if (typeof it.check === 'function') it.check();
-          else if (typeof it.set_checked === 'function') it.set_checked(true);
-        } catch (e) { /* bỏ qua */ }
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function showTkbToast(html, ok) {
-    var el = document.getElementById('csdl-tkb-toast');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'csdl-tkb-toast';
-      el.style.cssText = 'position:fixed;bottom:112px;right:24px;max-width:400px;background:#FFFDF5;border:2px solid #0F172A;border-radius:12px;box-shadow:4px 4px 0 #0F172A;padding:12px 14px;z-index:2147483001;font-family:-apple-system,BlinkMacSystemFont,"Plus Jakarta Sans","Segoe UI",Roboto,sans-serif;font-size:12.5px;line-height:1.5;color:#0F172A;';
-      document.body.appendChild(el);
-    }
-    el.style.background = ok ? '#D1FAE5' : '#FEE2E2';
-    el.innerHTML = html;
-    clearTimeout(el._timer);
-    el._timer = setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 9000);
-  }
-
-  function runFillTKB(payload) {
-    try {
-      var tkb = payload.tkb;
-      var teacherName = payload.teacher || '';
-      var teacher = findTeacherTkb(tkb, teacherName);
-      if (!teacher) {
-        showTkbToast('⚠️ Không tìm thấy TKB của <strong>' + esc(teacherName) + '</strong> trong file Excel đã nạp.<br>Kiểm tra lại tên giáo viên hoặc nạp lại file.', false);
-        return;
-      }
-
-      var grid = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00');
-      if (!grid) {
-        showTkbToast('⚠️ Không tìm thấy lưới lịch báo giảng trên trang. Hãy mở đúng mục 3.6.2.', false);
-        return;
-      }
-
-      var rows = Array.prototype.slice.call(grid.rows);
-      var day = null, buoi = null;
-      var filled = 0, blank = 0, noSubject = [], noClass = 0;
-
-      for (var r = 1; r < rows.length; r++) {
-        var row = rows[r];
-        var texts = Array.prototype.map.call(row.cells, function (c) {
-          return (c.innerText || '').replace(/\s+/g, ' ').trim();
-        });
-
-        for (var i = 0; i < texts.length; i++) {
-          var dm = /^Thứ\s*([2-7])/i.exec(texts[i]);
-          if (dm) { day = parseInt(dm[1], 10); break; }
-        }
-        for (var b = 0; b < texts.length; b++) {
-          if (/^(Sáng|Chiều)$/i.test(texts[b])) { buoi = /chiều/i.test(texts[b]) ? 'C' : 'S'; break; }
-        }
-
-        var cv = row.querySelector('input[id$="rcbCongViecThucHien_Input"]');
-        if (!cv) continue;
-        // Input nằm trong cấu trúc lồng của RadComboBox nên phải lấy <td> của LƯỚI
-        var cvCombo = cv.closest('.RadComboBox');
-        var cvTd = cvCombo ? cvCombo.closest('td') : cv.closest('td');
-        var tietTd = cvTd ? cvTd.previousElementSibling : null;
-        var tiet = parseInt(((tietTd ? tietTd.innerText : '') || '').replace(/\s+/g, ' ').trim(), 10);
-        if (!day || !buoi || !tiet) continue;
-
-        var slot = teacher.slots[day + '|' + buoi + '|' + tiet];
-        if (!slot) { blank++; continue; }
-
-        var monInput = row.querySelector('input[id$="rcbMonHoc_Input"]');
-        var lopInput = row.querySelector('input[id$="rcbLopHoc_Input"]');
-        var lopMulti = row.querySelector('input[id$="rcbLopHocs_Input"]');
-        if (!monInput) continue;
-
-        var okMon = setComboById(monInput.id, function (t) { return subjectScore(t, slot.mon); });
-        var okLop = false;
-        if (slot.lop) {
-          okLop = checkMultiClass(lopMulti, slot.lop) || (lopInput ? setComboById(lopInput.id, function (t) { return tkbNorm(t) === tkbNorm(slot.lop) ? 100 : 0; }) : false);
-        }
-
-        if (!okMon) noSubject.push(slot.mon);
-        if (slot.lop && !okLop) noClass++;
-        if (okMon) filled++;
-      }
-
-      var msg = '✅ Đã điền <strong>' + filled + ' tiết</strong> cho <strong>' + esc(teacher.name) + '</strong>';
-      if (blank) msg += ' • bỏ qua ' + blank + ' tiết trống';
-      if (noSubject.length) {
-        var uniq = [];
-        for (var u = 0; u < noSubject.length; u++) if (uniq.indexOf(noSubject[u]) === -1) uniq.push(noSubject[u]);
-        msg += '<br><span style="color:#B45309;">⚠️ Môn chưa khớp danh mục CSDL: ' + esc(uniq.join(', ')) + '</span>';
-      }
-      if (noClass) msg += '<br><span style="color:#B45309;">⚠️ ' + noClass + ' dòng chưa khớp lớp học</span>';
-      msg += '<br><span style="color:#475569;">Thầy/Cô kiểm tra lại rồi bấm nút GHI trên thanh công cụ.</span>';
-      showTkbToast(msg, filled > 0);
-    } catch (e) {
-      console.error('[CSDL Robot] Lỗi điền TKB:', e);
-      showTkbToast('⚠️ Lỗi điền TKB: ' + esc(e.message || e), false);
-    }
-  }
-
   // Lắng nghe sự kiện từ content.js
   var loginFlowRunning = false;
+  
+  // KỸ NĂNG ĐỈNH CAO: TỰ ĐỘNG LÙI VỀ TUẦN CŨ SOI TIẾT PPCT THỰC TẾ TRÊN CSDL
+  async function runInspectPreviousWeek(prevWeekNum, targetWeekNum) {
+    try {
+      notify('🔍 Đang chuyển về Tuần ' + prevWeekNum + ' trên CSDL để soi tiết PPCT thực tế...', false);
+
+      // 1. Chuyển sang tuần cũ
+      var okPrev = await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTuan_Input', function (txt) {
+        return txt.indexOf('Tuần ' + prevWeekNum) !== -1;
+      });
+
+      if (!okPrev) {
+        notify('⚠️ Không chuyển được về Tuần ' + prevWeekNum + ' trên CSDL.', false, true);
+        window.dispatchEvent(new CustomEvent('CSDL_INSPECT_RESULT', {
+          detail: JSON.stringify({ success: false, error: 'Không chuyển được tuần cũ' })
+        }));
+        return;
+      }
+
+      await waitForAjaxPostBack(1800, 10000);
+
+      // 2. Quét bảng RadGrid1 tuần cũ để lấy tiết PPCT thực tế
+      var rows = document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00 > tbody > tr');
+      var inspected = {}; // key: mon___lop -> { maxPpct: N, count: C }
+
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        if (!row || row.innerText.trim().length < 10) continue;
+
+        // Trích xuất Môn học, Lớp học và Tiết PPCT
+        var monInp = row.querySelector('input[id*="rcbMonHoc_Input"]') || row.querySelector('input[name*="MonHoc"]');
+        var lopInp = row.querySelector('input[id*="rcbLopHoc_Input"]') || row.querySelector('input[name*="LopHoc"]');
+        var ppctInp = row.querySelector('input[id*="tbTietPPCT"]') || row.querySelector('input[name*="TietPPCT"]');
+
+        var mon = monInp ? (monInp.value || '').trim() : '';
+        var lop = lopInp ? (lopInp.value || '').trim() : '';
+        var ppctVal = ppctInp ? parseInt(ppctInp.value, 10) : NaN;
+
+        // Nếu là text trong td
+        if (!mon && row.cells.length > 5) mon = (row.cells[4] ? row.cells[4].innerText : '').trim();
+        if (!lop && row.cells.length > 6) lop = (row.cells[5] ? row.cells[5].innerText : '').trim();
+        if (isNaN(ppctVal) && row.cells.length > 7) ppctVal = parseInt((row.cells[6] ? row.cells[6].innerText : ''), 10);
+
+        if (mon && lop && !isNaN(ppctVal) && ppctVal > 0) {
+          var key = mon.toLowerCase() + '___' + lop.toLowerCase();
+          if (!inspected[key]) {
+            inspected[key] = { mon: mon, lop: lop, maxPpct: ppctVal, count: 1 };
+          } else {
+            inspected[key].count += 1;
+            if (ppctVal > inspected[key].maxPpct) {
+              inspected[key].maxPpct = ppctVal;
+            }
+          }
+        }
+      }
+
+      var foundCount = Object.keys(inspected).length;
+      notify('✅ Đã soi xong Tuần ' + prevWeekNum + ': Tìm thấy dữ liệu của ' + foundCount + ' môn/lớp. Đang quay lại Tuần ' + targetWeekNum + '...', false);
+
+      // 3. Chuyển quay lại tuần hiện tại
+      await sleep(400);
+      await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTuan_Input', function (txt) {
+        return txt.indexOf('Tuần ' + targetWeekNum) !== -1;
+      });
+      await waitForAjaxPostBack(1800, 10000);
+
+      notify('🎉 Đã đối chiếu xong với Tuần ' + prevWeekNum + '! Đang áp dụng số tiết PPCT thực tế vào tuần này...', true);
+
+      // Trả kết quả về cho content.js
+      window.dispatchEvent(new CustomEvent('CSDL_INSPECT_RESULT', {
+        detail: JSON.stringify({
+          success: true,
+          prevWeekNum: prevWeekNum,
+          targetWeekNum: targetWeekNum,
+          inspected: inspected
+        })
+      }));
+    } catch (err) {
+      console.error('[CSDL Robot] Lỗi soi tuần cũ:', err);
+      notify('⚠️ Lỗi soi tuần cũ: ' + (err.message || err), false, true);
+      window.dispatchEvent(new CustomEvent('CSDL_INSPECT_RESULT', {
+        detail: JSON.stringify({ success: false, error: err.message || String(err) })
+      }));
+    }
+  }
+
+
   window.addEventListener('CSDL_RUN_BRIDGE_FLOW', function (e) {
     var cfg = e.detail;
     if (typeof cfg === 'string') {
@@ -567,18 +457,20 @@
     runAutoFillFromTKB();
   });
 
-  // v5.4: nhận dữ liệu TKB từ content.js (đã đọc từ file Excel) và điền lưới
-  window.addEventListener('CSDL_FILL_TKB', function (e) {
-    var payload = e.detail;
-    if (typeof payload === 'string') {
-      try { payload = JSON.parse(payload); } catch (err) { return; }
+  // Báo cho content.js biết đã sẵn sàng nhận lệnh (DOM dùng chung giữa 2 thế giới)
+  
+  window.addEventListener('CSDL_RUN_INSPECT_PREV_WEEK', function (e) {
+    var data = e.detail;
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch (err) { data = null; }
     }
-    if (!payload) return;
-    runFillTKB(payload);
+    if (data && data.prevWeekNum && data.targetWeekNum) {
+      runInspectPreviousWeek(data.prevWeekNum, data.targetWeekNum);
+    }
   });
 
-  // Báo cho content.js biết đã sẵn sàng nhận lệnh (DOM dùng chung giữa 2 thế giới)
+
   document.documentElement.setAttribute('data-csdl-bridge', 'ready');
 
-  console.log('[CSDL Robot] Telerik Engine Toàn Tỉnh v5.4 đã sẵn sàng!');
+  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.3 đã sẵn sàng!');
 })();

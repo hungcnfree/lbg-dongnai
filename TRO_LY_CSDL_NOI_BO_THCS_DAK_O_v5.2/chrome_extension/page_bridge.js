@@ -1,8 +1,8 @@
-// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.1 (Sloppy Mode)
+// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.3 (Sloppy Mode)
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.1...');
+  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.3...');
 
   function sleep(ms) {
     return new Promise(function (resolve) {
@@ -11,7 +11,7 @@
   }
 
   function notify(msg, isDone, isError) {
-    // v5.3.1: gửi dưới dạng chuỗi JSON để content.js (thế giới khác) đọc được
+    // v5.3.3: gửi dưới dạng chuỗi JSON để content.js (thế giới khác) đọc được
     window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_PROGRESS', {
       detail: JSON.stringify({ message: msg, isDone: !!isDone, isError: !!isError })
     }));
@@ -249,7 +249,7 @@
         };
       }
 
-      // v5.3.1: đọc giá trị THẬT trên trang (không dùng giá trị mặc định cứng) để biết đã chọn đúng chưa
+      // v5.3.3: đọc giá trị THẬT trên trang (không dùng giá trị mặc định cứng) để biết đã chọn đúng chưa
       var capEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input');
       var xaEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input');
       var truongEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input');
@@ -347,6 +347,93 @@
 
   // Lắng nghe sự kiện từ content.js
   var loginFlowRunning = false;
+  
+  // KỸ NĂNG ĐỈNH CAO: TỰ ĐỘNG LÙI VỀ TUẦN CŨ SOI TIẾT PPCT THỰC TẾ TRÊN CSDL
+  async function runInspectPreviousWeek(prevWeekNum, targetWeekNum) {
+    try {
+      notify('🔍 Đang chuyển về Tuần ' + prevWeekNum + ' trên CSDL để soi tiết PPCT thực tế...', false);
+
+      // 1. Chuyển sang tuần cũ
+      var okPrev = await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTuan_Input', function (txt) {
+        return txt.indexOf('Tuần ' + prevWeekNum) !== -1;
+      });
+
+      if (!okPrev) {
+        notify('⚠️ Không chuyển được về Tuần ' + prevWeekNum + ' trên CSDL.', false, true);
+        window.dispatchEvent(new CustomEvent('CSDL_INSPECT_RESULT', {
+          detail: JSON.stringify({ success: false, error: 'Không chuyển được tuần cũ' })
+        }));
+        return;
+      }
+
+      await waitForAjaxPostBack(1800, 10000);
+
+      // 2. Quét bảng RadGrid1 tuần cũ để lấy tiết PPCT thực tế
+      var rows = document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00 > tbody > tr');
+      var inspected = {}; // key: mon___lop -> { maxPpct: N, count: C }
+
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        if (!row || row.innerText.trim().length < 10) continue;
+
+        // Trích xuất Môn học, Lớp học và Tiết PPCT
+        var monInp = row.querySelector('input[id*="rcbMonHoc_Input"]') || row.querySelector('input[name*="MonHoc"]');
+        var lopInp = row.querySelector('input[id*="rcbLopHoc_Input"]') || row.querySelector('input[name*="LopHoc"]');
+        var ppctInp = row.querySelector('input[id*="tbTietPPCT"]') || row.querySelector('input[name*="TietPPCT"]');
+
+        var mon = monInp ? (monInp.value || '').trim() : '';
+        var lop = lopInp ? (lopInp.value || '').trim() : '';
+        var ppctVal = ppctInp ? parseInt(ppctInp.value, 10) : NaN;
+
+        // Nếu là text trong td
+        if (!mon && row.cells.length > 5) mon = (row.cells[4] ? row.cells[4].innerText : '').trim();
+        if (!lop && row.cells.length > 6) lop = (row.cells[5] ? row.cells[5].innerText : '').trim();
+        if (isNaN(ppctVal) && row.cells.length > 7) ppctVal = parseInt((row.cells[6] ? row.cells[6].innerText : ''), 10);
+
+        if (mon && lop && !isNaN(ppctVal) && ppctVal > 0) {
+          var key = mon.toLowerCase() + '___' + lop.toLowerCase();
+          if (!inspected[key]) {
+            inspected[key] = { mon: mon, lop: lop, maxPpct: ppctVal, count: 1 };
+          } else {
+            inspected[key].count += 1;
+            if (ppctVal > inspected[key].maxPpct) {
+              inspected[key].maxPpct = ppctVal;
+            }
+          }
+        }
+      }
+
+      var foundCount = Object.keys(inspected).length;
+      notify('✅ Đã soi xong Tuần ' + prevWeekNum + ': Tìm thấy dữ liệu của ' + foundCount + ' môn/lớp. Đang quay lại Tuần ' + targetWeekNum + '...', false);
+
+      // 3. Chuyển quay lại tuần hiện tại
+      await sleep(400);
+      await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTuan_Input', function (txt) {
+        return txt.indexOf('Tuần ' + targetWeekNum) !== -1;
+      });
+      await waitForAjaxPostBack(1800, 10000);
+
+      notify('🎉 Đã đối chiếu xong với Tuần ' + prevWeekNum + '! Đang áp dụng số tiết PPCT thực tế vào tuần này...', true);
+
+      // Trả kết quả về cho content.js
+      window.dispatchEvent(new CustomEvent('CSDL_INSPECT_RESULT', {
+        detail: JSON.stringify({
+          success: true,
+          prevWeekNum: prevWeekNum,
+          targetWeekNum: targetWeekNum,
+          inspected: inspected
+        })
+      }));
+    } catch (err) {
+      console.error('[CSDL Robot] Lỗi soi tuần cũ:', err);
+      notify('⚠️ Lỗi soi tuần cũ: ' + (err.message || err), false, true);
+      window.dispatchEvent(new CustomEvent('CSDL_INSPECT_RESULT', {
+        detail: JSON.stringify({ success: false, error: err.message || String(err) })
+      }));
+    }
+  }
+
+
   window.addEventListener('CSDL_RUN_BRIDGE_FLOW', function (e) {
     var cfg = e.detail;
     if (typeof cfg === 'string') {
@@ -371,7 +458,19 @@
   });
 
   // Báo cho content.js biết đã sẵn sàng nhận lệnh (DOM dùng chung giữa 2 thế giới)
+  
+  window.addEventListener('CSDL_RUN_INSPECT_PREV_WEEK', function (e) {
+    var data = e.detail;
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch (err) { data = null; }
+    }
+    if (data && data.prevWeekNum && data.targetWeekNum) {
+      runInspectPreviousWeek(data.prevWeekNum, data.targetWeekNum);
+    }
+  });
+
+
   document.documentElement.setAttribute('data-csdl-bridge', 'ready');
 
-  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.1 đã sẵn sàng!');
+  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.3 đã sẵn sàng!');
 })();

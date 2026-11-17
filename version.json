@@ -1,17 +1,18 @@
 {
-  "version": "5.3.2",
-  "versionCode": 532,
+  "version": "5.3.3",
+  "versionCode": 533,
   "releaseDate": "17/11/2026",
-  "title": "Trợ Lý CSDL v5.3.2 - Hỏi Nạp Excel TKB Đầu Tiên & Tự Tính Lũy Kế PPCT",
+  "title": "Trợ Lý CSDL v5.3.3 - Hệ Thống Hybrid TKB Excel & Kỹ Năng Soi Tuần Cũ",
   "changelog": [
-    "Hỏi và cho phép nạp file Excel Thời khóa biểu (.xlsx) ở lần đầu sử dụng.",
-    "Những lần sau: Hỏi 'TKB có đổi không?' -> Không đổi tự động tính lũy kế PPCT theo tuần và nạp CSDL; Có đổi cho tải lên file mới.",
-    "Tích hợp sẵn bộ máy đọc & sinh file Excel chuẩn CSDL ngay trên trình duyệt bằng SheetJS.",
-    "Bộ Icon Hoa Hướng Dương vàng rực rỡ, tươi vui, hiển thị chuẩn xác trên thanh công cụ Chrome."
+    "Hệ thống Hybrid thông minh: Nạp Excel TKB ở Tuần 1 làm mốc gốc.",
+    "Kỹ năng Soi Tuần Cũ trên CSDL: Tự động lùi về tuần trước đối chiếu tiết PPCT thực tế chống lệch tiết khi nghỉ lễ/dạy bù.",
+    "3 Tùy chọn trực quan: Nạp tiếp tuần này | Soi tuần cũ đối chiếu | Nạp file Excel mới khi đổi TKB.",
+    "Tích hợp bộ máy SheetJS & mẫu CSDL chuẩn, tự động sinh và nạp file Excel trong 1 click.",
+    "Bộ Icon Hoa Hướng Dương vàng rực rỡ, tươi vui, hiển thị sắc nét trên Chrome."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.2.zip",
-    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.2.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.3.zip",
+    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.3.zip",
     "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip",
     "provinceZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"

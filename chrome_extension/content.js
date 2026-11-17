@@ -1,8 +1,8 @@
-// content.js - Trợ Lý CSDL v5.3.2 (Quản lý Excel TKB & Nạp LBG Tự Động)
+// content.js - Trợ Lý CSDL v5.3.3 (Quản lý Excel TKB & Nạp LBG Tự Động)
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot v5.3.2] Đang khởi động tiện ích...');
+  console.log('[CSDL Robot v5.3.3] Đang khởi động tiện ích...');
 
   function injectBridgeScript() {
     if (document.getElementById('csdl-bridge-script')) return;
@@ -100,7 +100,7 @@
       updateRobotBanner(`
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong style="color: #065F46; font-size: 13.5px;">🎉 ROBOT ĐÃ TỰ ĐIỀN XONG MỌI THỨ!</strong>
-          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.3.2</span>
+          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.3.3</span>
         </div>
         <div style="font-size: 12px; color: #0F172A; margin-bottom: 6px;">
           ${detail.message}
@@ -125,7 +125,7 @@
 
   function triggerAutoLogin(cfg) {
     injectBridgeScript();
-    updateRobotBanner(`🌻 <strong>TRỢ LÝ CSDL v5.3.2:</strong> Đang tự động chọn Cấp - Xã - Trường Toàn Tỉnh...`);
+    updateRobotBanner(`🌻 <strong>TRỢ LÝ CSDL v5.3.3:</strong> Đang tự động chọn Cấp - Xã - Trường Toàn Tỉnh...`);
     let tries = 0;
     const send = () => {
       const ready = document.documentElement.getAttribute('data-csdl-bridge') === 'ready';
@@ -299,11 +299,33 @@
     };
   }
 
-  // HỘP THOẠI 2: NHỮNG LẦN SAU (HỎI THỜI KHÓA BIỂU CÓ ĐỔI KHÔNG?)
+  // HỘP THOẠI 2: NHỮNG LẦN SAU (HỆ THỐNG HYBRID 3 TÙY CHỌN THÔNG MINH)
   function showWeekFillModal(tkbConfig) {
     removeExistingModal();
 
     const curWeek = getCurrentWeekNumber();
+    const prevWeek = Math.max(1, curWeek - 1);
+
+    // Tính toán trước danh sách tiết dự kiến cho tuần này
+    const offset = curWeek - (tkbConfig.baseWeek || 11);
+    let previewHtml = '';
+    const uniqueSummary = {};
+    for (const item of (tkbConfig.lessons || [])) {
+      const key = item.mon + ' ' + item.lop;
+      const ppct = item.basePpct + offset * (item.step || 1);
+      if (!uniqueSummary[key]) {
+        uniqueSummary[key] = [ppct];
+      } else {
+        uniqueSummary[key].push(ppct);
+      }
+    }
+    const previewItems = [];
+    for (const [k, ppcts] of Object.entries(uniqueSummary)) {
+      previewItems.push(`<strong>${k}</strong>: Tiết ${ppcts.join(', ')}`);
+    }
+    previewHtml = previewItems.slice(0, 4).join(' &nbsp;|&nbsp; ');
+    if (previewItems.length > 4) previewHtml += ` ... (+${previewItems.length - 4} môn)`;
+
     const overlay = document.createElement('div');
     overlay.id = 'csdl-tkb-dialog-modal';
     overlay.style.cssText = `
@@ -315,15 +337,15 @@
 
     overlay.innerHTML = `
       <div style="
-        background: #FFFDF5; width: 480px; max-width: 92vw;
+        background: #FFFDF5; width: 510px; max-width: 94vw;
         border: 3px solid #0F172A; border-radius: 18px;
         box-shadow: 6px 6px 0px #0F172A; padding: 22px; color: #0F172A;
       ">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="${chrome.runtime.getURL('icons/icon48.png')}" style="width: 28px; height: 28px;">
+            <img src="${chrome.runtime.getURL('icons/icon48.png')}" style="width: 30px; height: 30px;">
             <div>
-              <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #0F172A; line-height: 1.1;">NẠP LỊCH BÁO GIẢNG - TUẦN ${curWeek}</h3>
+              <h3 style="margin: 0; font-size: 16.5px; font-weight: 800; color: #0F172A; line-height: 1.1;">NẠP LỊCH BÁO GIẢNG - TUẦN ${curWeek}</h3>
               <div style="font-size: 11px; color: #64748B; font-weight: 600;">Giáo viên: ${tkbConfig.teacherName || 'Nông Văn Hùng'} • ${tkbConfig.totalLessons || tkbConfig.lessons.length} tiết dạy/tuần</div>
             </div>
           </div>
@@ -332,28 +354,39 @@
 
         <div style="
           background: #FEF3C7; border: 2px solid #0F172A; border-radius: 12px;
-          padding: 12px 14px; margin: 14px 0; text-align: center; box-shadow: 2px 2px 0px #0F172A;
+          padding: 10px 12px; margin: 12px 0 8px 0; text-align: center; box-shadow: 2px 2px 0px #0F172A;
         ">
-          <div style="font-weight: 800; font-size: 13.5px; color: #854D0E; margin-bottom: 4px;">
+          <div style="font-weight: 800; font-size: 13.5px; color: #854D0E; margin-bottom: 3px;">
             ❓ THỜI KHÓA BIỂU CỦA THẦY/CÔ TUẦN NÀY CÓ ĐỔI KHÔNG?
           </div>
           <div style="font-size: 11.5px; color: #475569;">
-            Nếu không đổi, hệ thống sẽ tự động tính lũy kế số tiết PPCT tương ứng cho <strong>Tuần ${curWeek}</strong> và nạp ngay vào CSDL!
+            Dự kiến PPCT Tuần ${curWeek}: <span style="color: #2563EB;">${previewHtml}</span>
           </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 14px;">
+          <!-- TÙY CHỌN 1: TKB KHÔNG ĐỔI (DÙNG CHO 95% TRƯỜNG HỢP) -->
           <button id="btn-confirm-no-change" style="
             background: #10B981; color: white; border: 2px solid #0F172A;
-            border-radius: 12px; padding: 13px 14px; font-size: 13px; font-weight: 800;
+            border-radius: 12px; padding: 12px 14px; font-size: 13px; font-weight: 800;
             cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
           ">
-            ✅ TKB KHÔNG ĐỔI - TỰ ĐỘNG NẠP TUẦN ${curWeek}
+            ✅ TKB KHÔNG ĐỔI - TỰ ĐỘNG NẠP TUẦN ${curWeek} NGAY
           </button>
 
+          <!-- TÙY CHỌN 2: KỸ NĂNG SOI TUẦN CŨ (ĐỐI CHIẾU THỰC TẾ PHÒNG LỆCH TIẾT/NGHỈ LỄ) -->
+          <button id="btn-confirm-inspect-prev" style="
+            background: #F59E0B; color: #0F172A; border: 2px solid #0F172A;
+            border-radius: 12px; padding: 11px 14px; font-size: 12px; font-weight: 800;
+            cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
+          ">
+            🔍 SOI TUẦN CŨ (${prevWeek}) ĐỐI CHIẾU TIẾT THỰC TẾ TRÊN CSDL
+          </button>
+
+          <!-- TÙY CHỌN 3: TKB CÓ ĐỔI -->
           <button id="btn-confirm-has-change" style="
             background: #2563EB; color: white; border: 2px solid #0F172A;
-            border-radius: 12px; padding: 11px 14px; font-size: 12.5px; font-weight: 800;
+            border-radius: 12px; padding: 10px 14px; font-size: 12px; font-weight: 800;
             cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
           ">
             🔄 TKB CÓ ĐỔI - TẢI LÊN FILE EXCEL MỚI
@@ -367,35 +400,23 @@
 
     document.getElementById('btn-modal-close-x2').onclick = removeExistingModal;
 
-    // NÚT 1: TKB KHÔNG ĐỔI -> TỰ ĐỘNG SINH FILE VÀ NẠP CSDL
+    // NÚT 1: TKB KHÔNG ĐỔI -> SINH FILE VÀ MỞ CSDL
     document.getElementById('btn-confirm-no-change').onclick = () => {
-      try {
-        if (typeof window.LbgExcelEngine === 'undefined') {
-          alert('Lỗi: Bộ máy LbgExcelEngine chưa sẵn sàng.');
-          return;
-        }
-
-        const excelBlob = window.LbgExcelEngine.generateWeekExcelBlob(curWeek, tkbConfig, window.TEMPLATE_LBG_BASE64);
-        const fileName = `LichBaoGiang_Tuan${curWeek}_${(tkbConfig.teacherName || 'GiaoVien').replace(/\s+/g, '')}.xlsx`;
-
-        // Tự động tải file về thư mục Downloads của máy
-        window.LbgExcelEngine.downloadBlob(excelBlob, fileName);
-
-        // Mở sẵn cửa sổ Nhập từ Excel của CSDL
-        triggerCsdlOpenExcelImport();
-
-        removeExistingModal();
-
-        alert(`🎉 ĐÃ SINH XONG FILE EXCEL LỊCH BÁO GIẢNG TUẦN ${curWeek}!
-(File đã được tải về máy: ${fileName})
-
-Hệ thống CSDL đã được mở sẵn cửa sổ 'Nhập từ Excel'. Thầy/Cô chỉ cần chọn file vừa tải về rồi bấm Nhập dữ liệu là 100% hoàn tất!`);
-      } catch (err) {
-        alert('⚠️ Lỗi khi sinh file Excel: ' + (err.message || err));
-      }
+      executeGenerateAndOpenCsdl(curWeek, tkbConfig);
     };
 
-    // NÚT 2: TKB CÓ ĐỔI -> CHỌN FILE EXCEL MỚI
+    // NÚT 2: SOI TUẦN CŨ TRÊN CSDL
+    document.getElementById('btn-confirm-inspect-prev').onclick = () => {
+      removeExistingModal();
+      injectBridgeScript(() => {
+        updateRobotBanner(`🔍 <strong>ROBOT CSDL:</strong> Đang lùi về Tuần ${prevWeek} trên CSDL để soi tiết PPCT thực tế...`);
+        window.dispatchEvent(new CustomEvent('CSDL_RUN_INSPECT_PREV_WEEK', {
+          detail: JSON.stringify({ prevWeekNum: prevWeek, targetWeekNum: curWeek })
+        }));
+      });
+    };
+
+    // NÚT 3: TKB CÓ ĐỔI -> TẢI LÊN FILE MỚI
     const updateInput = document.getElementById('input-hidden-tkb-update');
     document.getElementById('btn-confirm-has-change').onclick = () => updateInput.click();
 
@@ -413,6 +434,68 @@ Hệ thống CSDL đã được mở sẵn cửa sổ 'Nhập từ Excel'. Thầ
       });
     };
   }
+
+  // Thực thi sinh file Excel và mở CSDL
+  function executeGenerateAndOpenCsdl(targetWeek, tkbConfig, customPpctOverrides = null) {
+    try {
+      if (typeof window.LbgExcelEngine === 'undefined') {
+        alert('Lỗi: Bộ máy LbgExcelEngine chưa sẵn sàng.');
+        return;
+      }
+
+      // Nếu có số tiết thực tế soi từ tuần cũ, áp dụng trực tiếp
+      let activeConfig = JSON.parse(JSON.stringify(tkbConfig));
+      if (customPpctOverrides) {
+        for (const item of activeConfig.lessons) {
+          const key = (item.mon || '').toLowerCase() + '___' + (item.lop || '').toLowerCase();
+          if (customPpctOverrides[key] && customPpctOverrides[key].maxPpct) {
+            // Tiết bắt đầu tuần này = tiết cuối tuần cũ + 1
+            item.basePpct = customPpctOverrides[key].maxPpct + 1;
+            item.step = customPpctOverrides[key].count || item.step || 1;
+          }
+        }
+        activeConfig.baseWeek = targetWeek; // đặt mốc tuần này
+      }
+
+      const excelBlob = window.LbgExcelEngine.generateWeekExcelBlob(targetWeek, activeConfig, window.TEMPLATE_LBG_BASE64);
+      const fileName = `LichBaoGiang_Tuan${targetWeek}_${(activeConfig.teacherName || 'GiaoVien').replace(/\s+/g, '')}.xlsx`;
+
+      window.LbgExcelEngine.downloadBlob(excelBlob, fileName);
+      triggerCsdlOpenExcelImport();
+      removeExistingModal();
+
+      alert(`🎉 ĐÃ SINH XONG FILE EXCEL LỊCH BÁO GIẢNG TUẦN ${targetWeek}!\n(File đã tải về máy: ${fileName})\n\nHệ thống CSDL đã được mở sẵn cửa sổ 'Nhập từ Excel'. Thầy/Cô chỉ cần chọn file vừa tải về rồi bấm Nhập dữ liệu là 100% hoàn tất!`);
+    } catch (err) {
+      alert('⚠️ Lỗi khi sinh file Excel: ' + (err.message || err));
+    }
+  }
+
+  // LẮNG NGHE KẾT QUẢ SOI TUẦN CŨ TỪ page_bridge.js
+  window.addEventListener('CSDL_INSPECT_RESULT', (e) => {
+    let res = e.detail;
+    if (typeof res === 'string') {
+      try { res = JSON.parse(res); } catch (err) { res = null; }
+    }
+    if (!res) return;
+
+    if (res.success && res.inspected && Object.keys(res.inspected).length > 0) {
+      getStoredTkb((tkbConfig) => {
+        if (!tkbConfig) tkbConfig = window.LbgExcelEngine.getDefaultTkbConfig();
+        const found = Object.keys(res.inspected).length;
+        if (confirm(`🎉 ĐÃ SOI THÀNH CÔNG TUẦN ${res.prevWeekNum}!\nTìm thấy số tiết thực tế của ${found} môn/lớp.\n\nThầy/Cô có muốn sinh file và nạp ngay cho Tuần ${res.targetWeekNum} với số tiết thực tế này không?`)) {
+          executeGenerateAndOpenCsdl(res.targetWeekNum, tkbConfig, res.inspected);
+        } else {
+          showWeekFillModal(tkbConfig);
+        }
+      });
+    } else {
+      alert(`⚠️ Không tìm thấy dữ liệu trên CSDL ở Tuần ${res.prevWeekNum || 'cũ'} (có thể tuần trước chưa được lên lịch).\n\nHệ thống sẽ chuyển về nạp tự động theo Thời khóa biểu Excel chuẩn!`);
+      getStoredTkb((tkbConfig) => {
+        showWeekFillModal(tkbConfig || window.LbgExcelEngine.getDefaultTkbConfig());
+      });
+    }
+  });
+
 
   function handleQuickTkbButtonClick() {
     getStoredTkb((savedCfg) => {

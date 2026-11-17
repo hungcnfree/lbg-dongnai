@@ -1,8 +1,8 @@
 // popup.js - Trợ Lý CSDL Bản Nội Bộ THCS Đăk Ơ v5.3.0
 // Paper Neo-Brutalism UI & Tự động cập nhật 1-click
 
-const CURRENT_VERSION = '5.3.2';
-const CURRENT_VERSION_CODE = 532;
+const CURRENT_VERSION = '5.3.3';
+const CURRENT_VERSION_CODE = 533;
 
 let currentConfig = {
   mode: 'dako',
