@@ -3,8 +3,8 @@ chcp 65001 >nul
 title CÀI ĐẶT TIỆN ÍCH CHROME - CSDL TOÀN TỈNH ĐỒNG NAI
 cls
 echo ====================================================================
-echo   🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI v5.1 - TOÀN TỈNH ĐỒNG NAI
-echo   Tác giả: Thầy Nông Văn Hùng (THCS Đăk Ơ)
+echo   🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI v5.2 - TOÀN TỈNH ĐỒNG NAI
+echo   Tác quyền: Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
 echo ====================================================================
 echo.
 set EXT_DIR=%~dp0chrome_extension
@@ -36,7 +36,7 @@ echo   [BƯỚC 3] Nhấp vào biểu tượng Tiện ích ở góc trên Chrome
 echo            chọn Trường/Tên Thầy Cô và nhập SĐT + Mật khẩu rồi bấm LƯU!
 echo.
 echo   [BƯỚC 4] Mở trang https://truong.dongnai.edu.vn:
-echo            Robot sẽ TỰ ĐỘNG ĐIỀN TOÀN BỘ và nhắc Thầy/Cô nhập CAPTCHA!
+echo            Robot sẽ TỰ ĐỘNG ĐIỀN TOÀN BỘ và nhắc Thầy/Cô gõ 8 ký tự CAPTCHA!
 echo ====================================================================
 echo.
 echo 💬 Nhóm Zalo AI chia sẻ & hỗ trợ: https://zalo.me/g/2vhbtmsqdr06gyfiuru8

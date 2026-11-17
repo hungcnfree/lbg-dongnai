@@ -1,280 +1,830 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hướng Dẫn Cài Đặt Tiện Ích Trợ Lý CSDL Đồng Nai (v5.1 Toàn Tỉnh)</title>
-  <style>
-    :root {
-      --primary: #0284c7;
-      --primary-dark: #0369a1;
-      --success: #10b981;
-      --accent: #38bdf8;
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      line-height: 1.6;
-      background: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 30px 15px 50px;
-    }
-    .wrapper {
-      max-width: 820px;
-      margin: 0 auto;
-      background: var(--card);
-      border-radius: 16px;
-      padding: 36px 40px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      border: 1px solid var(--border);
-    }
-    .header {
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 20px;
-      margin-bottom: 24px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .header h1 {
-      margin: 0;
-      color: var(--accent);
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .header p {
-      margin: 8px 0 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .highlight-card {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-left: 5px solid var(--success);
-      padding: 16px 20px;
-      border-radius: 10px;
-      margin-bottom: 28px;
-      font-size: 14px;
-      color: #6ee7b7;
-      line-height: 1.6;
-    }
-    h2 {
-      color: var(--accent);
-      font-size: 18px;
-      margin-top: 32px;
-      border-bottom: 1px dashed var(--border);
-      padding-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .step-box {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px 22px;
-      margin-bottom: 16px;
-      transition: border-color 0.2s;
-    }
-    .step-box:hover {
-      border-color: var(--accent);
-    }
-    .step-title {
-      font-weight: bold;
-      color: #ffffff;
-      font-size: 15px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .badge-step {
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: white;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .kbd {
-      background: #334155;
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-weight: bold;
-      color: var(--accent);
-      border: 1px solid #475569;
-    }
-    .note-box {
-      background: rgba(245, 158, 11, 0.08);
-      border-left: 4px solid #f59e0b;
-      padding: 14px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #fde68a;
-      margin: 24px 0;
-      line-height: 1.6;
-    }
-    .action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
-      transition: transform 0.2s, background 0.2s;
-    }
-    .action-btn:hover {
-      background: #0284c7;
-      transform: translateY(-1px);
-    }
-    .footer {
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.7;
-    }
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-    .footer-link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      background: #0f172a;
-      color: var(--accent);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 12px;
-      transition: 0.2s;
-    }
-    .footer-link-btn:hover {
-      background: #334155;
-      border-color: var(--accent);
-    }
-  </style>
-</head>
-<body>
-  <div class="wrapper">
-    <div class="header">
-      <span class="badge">CHUYỂN ĐỔI SỐ GIÁO DỤC ĐỒNG NAI</span>
-      <h1>🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI (v5.1)</h1>
-      <p>Giải pháp Tiện ích mở rộng Google Chrome dành cho giáo viên trường THCS Đăk Ơ và các trường toàn tỉnh Đồng Nai</p>
-    </div>
 
-    <div class="highlight-card">
-      🎯 <strong>MỤC TIÊU DUY NHẤT:</strong> Cài đặt 1 lần duy nhất, từ đó về sau khi mở <code>truong.dongnai.edu.vn</code> là <strong>Robot tự động điền 100%</strong> (Cấp học, Xã/Phường, Trường học, Số điện thoại, Mật khẩu). Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA, Thầy/Cô chỉ cần gõ 4 ký tự rồi ấn <strong>Enter</strong> là vào thẳng hệ thống!
-    </div>
-
-    <div style="text-align: center; margin: 24px 0 30px 0;">
-      <a href="https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.1/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.1.zip" class="action-btn" style="font-size: 15px; padding: 13px 26px; background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-        ⬇️ TẢI TRỌN BỘ TIỆN ÍCH EXTENSION (ZIP ~180KB)
-      </a>
-      <div style="font-size: 12px; color: #94a3b8; margin-top: 8px;">Tải về ➔ Giải nén ➔ Chạy file <code>CAI_DAT_TIEN_ICH_CHROME.bat</code> là xong!</div>
-    </div>
-
-    <h2>🚀 HƯỚNG DẪN CÀI ĐẶT 1 LẦN DUY NHẤT (CHỈ 3 BƯỚC)</h2>
-
-    <div class="step-box">
-      <div class="step-title"><span class="badge-step">Bước 1</span> Mở Quản Lý Tiện Ích Chrome & Sao Chép Thư Mục</div>
-      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
-        • Nhấp đúp vào file: <strong><code>CAI_DAT_TIEN_ICH_CHROME.bat</code></strong> trong thư mục vừa giải nén.<br>
-        • Chương trình sẽ <strong>tự động sao chép đường dẫn thư mục</strong> vào bộ nhớ tạm (Clipboard), đồng thời tự mở sẵn trang <span class="kbd">chrome://extensions</span> trên trình duyệt Chrome và mở cửa sổ thư mục <code>chrome_extension</code>.
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-tertiary-fixed-variant": "#005236",
+          "on-tertiary-container": "#bdffdb",
+          "on-primary-container": "#eeefff",
+          "secondary-fixed-dim": "#ffb690",
+          "on-tertiary": "#ffffff",
+          "on-error-container": "#93000a",
+          "slate-text-main": "#0F172A",
+          "surface-container-low": "#f5f4ec",
+          "error-container": "#ffdad6",
+          "outline": "#737686",
+          "notebook-paper-base": "#FFFDF5",
+          "surface-container-high": "#eae8e0",
+          "slate-text-muted": "#64748B",
+          "outline-variant": "#c3c6d7",
+          "surface-variant": "#e4e3db",
+          "on-primary": "#ffffff",
+          "on-primary-fixed-variant": "#003ea8",
+          "tertiary-container": "#007d55",
+          "tertiary-fixed": "#6ffbbe",
+          "primary-fixed-dim": "#b4c5ff",
+          "primary-fixed": "#dbe1ff",
+          "on-secondary": "#ffffff",
+          "surface-dim": "#dcdad2",
+          "surface-container-highest": "#e4e3db",
+          "secondary-fixed": "#ffdbca",
+          "background": "#fbf9f1",
+          "primary-container": "#2563eb",
+          "secondary-container": "#fd761a",
+          "on-primary-fixed": "#00174b",
+          "sprout-green-soft": "#D1FAE5",
+          "on-secondary-fixed": "#341100",
+          "on-error": "#ffffff",
+          "surface-container": "#f0eee6",
+          "notebook-grid-line": "#E2E8F0",
+          "on-surface-variant": "#434655",
+          "on-tertiary-fixed": "#002113",
+          "error": "#ba1a1a",
+          "inverse-on-surface": "#f3f1e9",
+          "secondary": "#9d4300",
+          "on-secondary-fixed-variant": "#783200",
+          "on-secondary-container": "#5c2400",
+          "primary": "#004ac6",
+          "chalkboard-orange-soft": "#FFEDD5",
+          "surface": "#fbf9f1",
+          "tertiary-fixed-dim": "#4edea3",
+          "surface-tint": "#0053db",
+          "sticker-yellow": "#FBBF24",
+          "inverse-surface": "#30312c",
+          "tertiary": "#006242",
+          "sticker-yellow-soft": "#FEF3C7",
+          "inverse-primary": "#b4c5ff",
+          "on-surface": "#1b1c17",
+          "surface-container-lowest": "#ffffff",
+          "on-background": "#1b1c17",
+          "ink-blue-hover": "#1D4ED8",
+          "surface-bright": "#fbf9f1"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-xl": "1.5rem",
+          "space-md": "0.75rem",
+          "space-sm": "0.5rem",
+          "space-lg": "1rem",
+          "margin": "1rem",
+          "gutter": "0.75rem",
+          "space-xs": "0.25rem"
+        },
+        "fontFamily": {
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Space Grotesk"
+          ],
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-lg": [
+            "Space Grotesk"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Space Grotesk"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "title-md": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "headline-sm": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-lg": [
+            "26px",
+            {
+              "lineHeight": "34px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "800"
+            }
+          ],
+          "label-md": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-md": [
+            "13px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-lg": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-lg": [
+            "14px",
+            {
+              "lineHeight": "22px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "10px",
+            {
+              "lineHeight": "12px",
+              "letterSpacing": "0.05em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "700"
+            }
+          ],
+          "title-md": [
+            "15px",
+            {
+              "lineHeight": "22px",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col selection:bg-sticker-yellow selection:text-slate-text-main"><header class="fixed top-0 w-full z-50 bg-notebook-paper-base/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><div class="p-1 bg-chalkboard-orange-soft rounded-xl shadow-[2px_2px_0px_#0F172A]"><img alt="Logo Trợ Lý CSDL" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-embedded-images/default-avatar-01.png"/></div><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm text-slate-text-main tracking-tight uppercase">TRỢ LÝ CSDL ĐỒNG NAI</span><span class="px-2 py-0.5 bg-secondary-container text-on-primary font-label-sm text-label-sm rounded-full shadow-[1px_1px_0px_#0F172A]">v5.2 Telerik</span></div></div><nav class="hidden xl:flex items-center gap-space-xs p-1 bg-surface-container rounded-xl" data-active-classes="bg-primary-container text-on-primary font-bold rounded-lg shadow-[2px_2px_0px_#0F172A]"><a class="px-space-md py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" data-path="trang-chu" href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank">Trang Chủ</a><a class="px-space-md py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" data-path="huong-dan-cai-dat-(3-buoc)" href="#">Hướng Dẫn Cài Đặt (3 Bước)</a><a class="px-space-md py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" data-path="tinh-nang-tu-dong" href="#">Tính Năng Tự Động</a><a class="px-space-md py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" data-path="giao-dien-extension-(popup)" href="#">Giao Diện Extension (Popup)</a><a class="px-space-md py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" data-path="tai-tien-ich-zip" href="#">Tải Tiện Ích ZIP</a><a class="px-space-md py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" data-path="cong-dong-thay-co" href="#">Cộng Đồng Thầy Cô</a></nav><div class="flex items-center gap-space-md"><a class="group relative inline-flex items-center gap-space-sm px-space-lg py-2 bg-primary-container hover:bg-ink-blue-hover text-on-primary font-headline-sm text-headline-sm rounded-xl shadow-[2px_2px_0px_#0F172A] hover:shadow-[3px_3px_0px_#0F172A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all" data-path="tai-tien-ich-zip" href="#"><span class="material-symbols-outlined text-headline-sm">download</span><span>Tải Miễn Phí (ZIP ~180KB)</span></a><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[1px_1px_0px_#0F172A]" src="https://lh3.googleusercontent.com/aida-embedded-images/default-avatar-01.png"/></div></div></header><main class="w-full pt-16 bg-surface min-h-[calc(100vh-140px)]"><div class="max-w-7xl mx-auto px-margin py-space-lg"><div class="flex flex-col w-full relative selection:bg-sticker-yellow selection:text-slate-text-main">
+<!-- Subtle Notebook Grid Background Pattern Overlay -->
+<div class="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(#c3c6d7_1px,transparent_1px)] [background-size:20px_20px] -z-10"></div>
+<!-- ========================================== -->
+<!-- 1. HERO SECTION                            -->
+<!-- ========================================== -->
+<section class="relative w-full pt-space-md pb-space-xl flex flex-col items-center">
+<!-- Doodles & Decorative Floating Stickers -->
+<div class="absolute -top-2 left-6 lg:left-24 rotate-[-8deg] pointer-events-none hidden md:flex items-center gap-space-xs px-3 py-1.5 bg-sticker-yellow-soft text-secondary rounded-full shadow-[2px_2px_0px_#0F172A] border-dashed border-2 border-secondary-container">
+<span class="material-symbols-outlined text-title-md">auto_awesome</span>
+<span class="font-label-md text-label-md">Đặc quyền Thầy Cô Đồng Nai</span>
+</div>
+<div class="absolute top-12 right-6 lg:right-28 rotate-[6deg] pointer-events-none hidden md:flex items-center gap-space-xs px-3 py-1.5 bg-sprout-green-soft text-tertiary rounded-xl shadow-[2px_2px_0px_#0F172A]">
+<span class="material-symbols-outlined text-title-md">bolt</span>
+<span class="font-label-md text-label-md font-bold">1 Click = 0.5 Giây</span>
+</div>
+<!-- Badge Intro -->
+<div class="inline-flex items-center gap-space-xs px-4 py-2 bg-chalkboard-orange-soft text-on-secondary-container rounded-full shadow-[2px_2px_0px_#0F172A] mb-space-md">
+<span class="material-symbols-outlined text-headline-sm text-secondary-container">backpack</span>
+<span class="font-label-lg text-label-lg font-bold">Tiện ích Google Chrome v5.1 • Miễn Phí 100% Phi Lợi Nhuận</span>
+</div>
+<!-- Main Title with Highlighter Mark -->
+<div class="text-center max-w-4xl mx-auto px-space-md relative">
+<h1 class="font-headline-lg text-[32px] md:text-[46px] leading-[40px] md:leading-[56px] text-slate-text-main tracking-tight font-extrabold mb-space-md">
+        Giải Phóng Thầy Cô Khỏi Nhập Liệu
+        <span class="relative inline-block px-2 text-primary-container">
+          CSDL Thủ Công!
+          <!-- Highlighter graphic underlay -->
+<svg class="absolute -bottom-1.5 left-0 w-full h-4 -z-10 text-sticker-yellow fill-current opacity-70" preserveaspectratio="none" viewbox="0 0 300 20">
+<path d="M0,12 C50,2 180,18 300,6 L298,18 C180,24 40,14 0,16 Z"></path>
+</svg>
+</span>
+</h1>
+<p class="font-body-lg text-body-lg md:text-[16px] md:leading-[26px] text-slate-text-muted max-w-3xl mx-auto mb-space-lg">
+<strong class="text-slate-text-main font-bold">Mục tiêu duy nhất:</strong> Cài 1 lần duy nhất, mở <code class="px-2 py-0.5 bg-surface-container-high text-primary font-mono rounded font-semibold text-sm">truong.dongnai.edu.vn</code> là <span class="bg-sticker-yellow-soft px-1 text-slate-text-main font-bold">Robot tự động điền 100%</span> Cấp học, Xã/Phường, Trường, SĐT, Mật khẩu. Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA, chỉ gõ 8 ký tự CAPTCHA rồi ấn <strong class="text-slate-text-main">Enter</strong> là xong!
       </p>
-    </div>
-
-    <div class="step-box">
-      <div class="step-title"><span class="badge-step">Bước 2</span> Nạp Thư Mục Tiện Ích Vào Chrome</div>
-      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
-        1. Tại trang Quản lý tiện ích Chrome, bật công tắc <strong>"Chế độ dành cho nhà phát triển" (Developer mode)</strong> ở góc trên cùng bên phải màn hình.<br>
-        2. Bấm nút <strong>"Tải tiện ích đã giải nén" (Load unpacked)</strong> ở góc trên cùng bên trái.<br>
-        3. Dán đường dẫn thư mục (ấn <span class="kbd">Ctrl + V</span>) hoặc chọn đúng thư mục <code>chrome_extension</code> ➔ Bấm <strong>Select Folder</strong> là xong!
-      </p>
-    </div>
-
-    <div class="step-box">
-      <div class="step-title"><span class="badge-step">Bước 3</span> Chọn Trường & Lưu Thông Tin Của Thầy/Cô</div>
-      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
-        1. Bấm vào biểu tượng <strong>Tiện ích (hình mảnh ghép 🧩)</strong> ở góc trên bên phải thanh công cụ Chrome, chọn ghim biểu tượng <strong>🤖 Trợ Lý CSDL</strong>.<br>
-        2. Bấm vào biểu tượng Trợ lý:<br>
-        &nbsp;&nbsp;&nbsp;• <strong>Nếu là giáo viên THCS Đăk Ơ:</strong> Chọn Tên Thầy/Cô trong danh sách 60 giáo viên.<br>
-        &nbsp;&nbsp;&nbsp;• <strong>Nếu ở Trường khác / Xã khác:</strong> Bấm sang tab <em>"Trường khác / Xã khác"</em> ➔ Nhập Họ tên, chọn Cấp học (Mầm non, Tiểu học, THCS, THPT, GDTX), chọn Xã/Phường và Trường của mình.<br>
-        3. Nhập <strong>Số điện thoại</strong> và <strong>Mật khẩu CSDL</strong> ➔ Bấm <strong>💾 LƯU CẤU HÌNH CỦA TÔI</strong>!
-      </p>
-    </div>
-
-    <h2>⚡ TRẢI NGHIỆM SỬ DỤNG HÀNG NGÀY</h2>
-
-    <div class="step-box">
-      <div class="step-title">🔑 Đăng nhập CSDL tự động 100%</div>
-      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
-        Mở trang <code>https://truong.dongnai.edu.vn</code> ➔ Robot tự động điền đầy đủ mọi thông tin trong tích tắc ➔ Con trỏ chuột đã nằm sẵn trong ô CAPTCHA, Thầy/Cô <strong>gõ mã CAPTCHA rồi ấn phím ENTER</strong> là vào ngay!
-      </p>
-    </div>
-
-    <div class="step-box">
-      <div class="step-title">✅ Hoàn thành Lịch báo giảng tuần trong 0.5 giây</div>
-      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
-        Khi vào mục <strong>3.6.2 Khai báo lịch báo giảng</strong> ➔ Ở góc dưới bên phải màn hình sẽ xuất hiện nút màu xanh: <strong>"✅ BẤM ĐỂ HOÀN THÀNH"</strong>. Chỉ cần bấm 1 click là Robot tự chọn Hoàn thành cho 15-18 tiết và tự động bấm nút <strong>Ghi</strong> lưu xong xuôi!
-      </p>
-    </div>
-
-    <div class="note-box">
-      🔒 <strong>BẢO MẬT TUYỆT ĐỐI 100%:</strong><br>
-      • Toàn bộ tài khoản và mật khẩu chỉ lưu cục bộ trên máy tính của Thầy/Cô (`chrome.storage.sync`), không gửi qua bất kỳ máy chủ nào.<br>
-      • Robot <strong>không can thiệp giải mã CAPTCHA</strong> (Thầy/Cô vẫn tự tay gõ CAPTCHA) nhằm đảm bảo tuân thủ 100% quy định an toàn thông tin của ngành Giáo dục.
-    </div>
-
-    <div class="footer">
-      <div>© 2026 <strong>Thầy Nông Văn Hùng</strong> (Trường THCS Đăk Ơ, Huyện Bù Gia Mập, Tỉnh Đồng Nai) & Cộng đồng AI Giáo dục Đồng Nai</div>
-      <div style="font-size: 11px; margin-top: 4px; color: #64748b;">Sáng kiến phi lợi nhuận hỗ trợ giáo viên toàn tỉnh tối ưu hóa thời gian & chuyển đổi số hiệu quả.</div>
-      <div class="footer-links">
-        <a href="https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.1/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.1.zip" class="footer-link-btn" style="color: #10b981; border-color: rgba(16, 185, 129, 0.4);">
-          ⬇️ Tải Bản Nén v5.1 (ZIP)
-        </a>
-        <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="footer-link-btn">
-          💬 Tham Gia Nhóm Zalo AI
-        </a>
-        <a href="https://github.com/hungcnfree/lbg-dongnai" target="_blank" class="footer-link-btn">
-          🚀 Cập Nhật Mã Nguồn (GitHub)
-        </a>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center justify-center gap-space-md mb-space-xl">
+<a class="group inline-flex items-center gap-space-sm px-space-xl py-3.5 bg-primary-container hover:bg-ink-blue-hover text-on-primary font-headline-sm text-headline-sm rounded-xl shadow-[3px_3px_0px_#0F172A] hover:shadow-[4px_4px_0px_#0F172A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all" href="https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip">
+<span class="material-symbols-outlined text-[24px] group-hover:animate-bounce">download</span>
+<span>TẢI TRỌN BỘ EXTENSION (ZIP ~180KB)</span>
+</a>
+<a class="inline-flex items-center gap-space-sm px-space-lg py-3.5 bg-notebook-paper-base hover:bg-chalkboard-orange-soft text-slate-text-main font-headline-sm text-headline-sm rounded-xl shadow-[3px_3px_0px_#0F172A] hover:shadow-[4px_4px_0px_#0F172A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all" href="#huong-dan-3-buoc">
+<span class="material-symbols-outlined text-secondary-container">bolt</span>
+<span>Xem Hướng Dẫn 3 Bước</span>
+</a>
+</div>
+<!-- Feature Quick Pills -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md w-full max-w-5xl mb-space-xl">
+<div class="bg-notebook-paper-base p-space-md rounded-xl shadow-[2px_2px_0px_#0F172A] flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-sprout-green-soft text-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-label-lg text-slate-text-main">Tiết Kiệm 99%</h4>
+<p class="font-body-sm text-body-sm text-slate-text-muted">Không nhập thủ công</p>
+</div>
+</div>
+<div class="bg-notebook-paper-base p-space-md rounded-xl shadow-[2px_2px_0px_#0F172A] flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-chalkboard-orange-soft text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">shield_person</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-label-lg text-slate-text-main">Bảo Mật Máy Cá Nhân</h4>
+<p class="font-body-sm text-body-sm text-slate-text-muted">100% Cục bộ offline</p>
+</div>
+</div>
+<div class="bg-notebook-paper-base p-space-md rounded-xl shadow-[2px_2px_0px_#0F172A] flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-label-lg text-slate-text-main">Mục 3.6.2 Lịch Giảng</h4>
+<p class="font-body-sm text-body-sm text-slate-text-muted">Ghi 18 tiết 0.5 giây</p>
+</div>
+</div>
+<div class="bg-notebook-paper-base p-space-md rounded-xl shadow-[2px_2px_0px_#0F172A] flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-sticker-yellow-soft text-slate-text-main flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">domain</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-label-lg text-slate-text-main">Toàn Tỉnh Đồng Nai</h4>
+<p class="font-body-sm text-body-sm text-slate-text-muted">Mọi Cấp 1, Cấp 2, Cấp 3</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 2. INTERACTIVE EXTENSION PREVIEW & SIMULATOR-->
+<!-- ========================================== -->
+<section class="w-full py-space-xl bg-surface-container-low rounded-3xl shadow-[3px_3px_0px_#0F172A] p-space-md md:p-space-xl mb-space-xl relative overflow-hidden">
+<!-- Memo pin sticker top right -->
+<div class="absolute -top-4 right-10 rotate-12 z-20 pointer-events-none hidden md:block">
+<div class="w-10 h-10 bg-secondary-container rounded-full shadow-[2px_2px_0px_#0F172A] flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-headline-sm">push_pin</span>
+</div>
+</div>
+<div class="text-center max-w-2xl mx-auto mb-space-lg">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 bg-sticker-yellow-soft text-slate-text-main rounded-full font-label-md text-label-md mb-2 shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-[16px]">touch_app</span> TRẢI NGHIỆM TRỰC QUAN
       </div>
-    </div>
-  </div>
-</body>
-</html>
+<h2 class="font-headline-md text-headline-lg text-slate-text-main">Bộ Khung Điều Khiển Extension v5.1</h2>
+<p class="font-body-md text-body-md text-slate-text-muted">Giao diện cửa sổ Chrome Extension pop-up tiện lợi. Quý Thầy/Cô có thể bấm thử các tab và tuỳ chọn cấu hình dưới đây!</p>
+</div>
+<!-- Simulator Workspace -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left Explanation Note Sticky -->
+<div class="lg:col-span-5 flex flex-col gap-space-md order-2 lg:order-1">
+<div class="bg-sticker-yellow-soft/80 p-space-lg rounded-2xl shadow-[2px_2px_0px_#0F172A] relative">
+<div class="flex items-center gap-space-xs font-headline-sm text-headline-sm text-slate-text-main mb-space-xs">
+<span class="material-symbols-outlined text-secondary-container">tips_and_updates</span>
+<span>Thiết kế tinh gọn cho Giáo Viên</span>
+</div>
+<p class="font-body-md text-body-md text-slate-text-main mb-space-sm">
+            Thầy Cô giáo lớn tuổi cũng dễ dàng sử dụng với 2 lựa chọn thông minh:
+          </p>
+<ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-text-main">
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-tertiary-container text-body-md mt-0.5">check_circle</span>
+<span><strong>Tab THCS Đăk Ơ:</strong> Tích hợp sẵn danh bạ 60 Thầy/Cô, chọn tên là máy tự khớp hồ sơ.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-tertiary-container text-body-md mt-0.5">check_circle</span>
+<span><strong>Tab Trường Khác:</strong> Tự do chọn Cấp học (Mầm Non, TH, THCS, THPT, GDTX) và Xã/Phường toàn tỉnh.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-tertiary-container text-body-md mt-0.5">check_circle</span>
+<span><strong>Công tắc Robot thông minh:</strong> Tự động kích hoạt khi mở trang đăng nhập cơ sở dữ liệu.</span>
+</li>
+</ul>
+</div>
+<!-- Robot Helper Mascot Card -->
+<div class="bg-notebook-paper-base p-space-md rounded-2xl shadow-[2px_2px_0px_#0F172A] flex items-center gap-space-md">
+<div class="w-16 h-16 rounded-full bg-chalkboard-orange-soft flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#0F172A]">
+<img class="w-14 h-14 object-contain" data-alt="Chibi anime robot teacher wearing graduation cap with round spectacles, cheerful smile, holding a fountain pen, bright warm vibrant educational pop style mascot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcUoXLk0nYddD4t1LJnXBEibdwnymUjSItmV2Nd7pjGWGy5SIsrJdQU_mRwGY40J2EQtDWJdXIz_ZLhE9CVTJPLcOlOHCe7H7w8135woeDRo7vNuNN-0x9UwP_NhlSeE3oSwji51C6c7NYq-tmUBn34h21fsYJXIWHYlronpI8xgPtBHHhCcAY90We4Xr6Bpewr_-_5_1xf930A0wrmgoPxutXb5LqMBYqWJxrwPjA"/>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm text-slate-text-main">Robot EduBot Đăk Ơ</span>
+<span class="px-1.5 py-0.2 bg-sprout-green-soft text-tertiary font-label-sm text-label-sm rounded">Online</span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-text-muted">"Dạ em kính chào Quý Thầy Cô! Em đã sẵn sàng tự động điền lịch báo giảng &amp; CSDL rồi ạ!"</p>
+</div>
+</div>
+</div>
+<!-- Right: POPUP EXTENSION FRAME (Realistic 380px Chrome Extension) -->
+<div class="lg:col-span-7 flex justify-center order-1 lg:order-2">
+<div class="w-full max-w-[390px] bg-notebook-paper-base rounded-2xl shadow-[4px_4px_0px_#0F172A] overflow-hidden flex flex-col">
+<!-- Extension Pop-up Top Header -->
+<div class="bg-slate-text-main text-on-primary px-space-md py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-7 h-7 rounded-full bg-sticker-yellow flex items-center justify-center text-slate-text-main">
+<span class="material-symbols-outlined text-[18px]">smart_toy</span>
+</div>
+<div>
+<div class="font-headline-sm text-label-lg leading-tight text-notebook-paper-base">TRỢ LÝ CSDL ĐỒNG NAI</div>
+<div class="font-label-sm text-[9px] text-tertiary-fixed leading-none">THCS Đăk Ơ &amp; Toàn Tỉnh v5.1</div>
+</div>
+</div>
+<!-- Quick Toggle Status Switch -->
+<label class="inline-flex items-center gap-1 cursor-pointer">
+<span class="font-label-sm text-[10px] text-surface-container">Tự động</span>
+<div class="relative">
+<input checked="" class="sr-only peer" id="autoToggle" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-tertiary-container shadow-[1px_1px_0px_#000]"></div>
+</div>
+</label>
+</div>
+<!-- Chrome Ext Tabs -->
+<div class="grid grid-cols-2 p-1.5 bg-surface-container gap-1 font-label-md text-label-md">
+<button class="py-1.5 text-center font-bold rounded-lg bg-notebook-paper-base text-primary shadow-[1px_1px_0px_#0F172A] transition-all" id="tabBtnDako" onclick="switchSimTab('dako')">
+              THCS Đăk Ơ (60 Thầy Cô)
+            </button>
+<button class="py-1.5 text-center font-semibold rounded-lg text-slate-text-muted hover:text-slate-text-main transition-all" id="tabBtnOther" onclick="switchSimTab('other')">
+              Trường Khác / Xã Khác
+            </button>
+</div>
+<!-- Ext Body Container -->
+<div class="p-space-md flex flex-col gap-space-md bg-notebook-paper-base">
+<!-- Tab 1: THCS Dak O View -->
+<div class="flex flex-col gap-space-sm" id="tabContentDako">
+<label class="font-headline-sm text-label-md text-slate-text-main flex items-center justify-between">
+<span>Chọn Tên Thầy / Cô trong danh sách:</span>
+<span class="text-tertiary-container font-label-sm">Đã có 60 hồ sơ</span>
+</label>
+<div class="relative">
+<select class="w-full px-3 py-2 bg-surface-container-low rounded-lg font-body-md text-slate-text-main shadow-[1px_1px_0px_#0F172A] focus:outline-none focus:ring-2 focus:ring-primary-container" id="teacherSelect" onchange="autoFillDakOTeacher()">
+<option value="hung">Thầy Nông Văn Hùng - THCS Đăk Ơ</option>
+<option value="lan">Cô Nguyễn Thị Lan - Tổ Khoa học Tự nhiên</option>
+<option value="tuan">Thầy Trần Minh Tuấn - Tổ Toán Tin</option>
+<option value="hoa">Cô Lê Thị Mai Hoa - Tổ Ngữ Văn</option>
+<option value="duc">Thầy Phạm Hồng Đức - Tổ Ngoại Ngữ</option>
+<option value="an">Cô Đặng Thùy An - THCS Đăk Ơ</option>
+</select>
+</div>
+<div class="p-2 bg-sprout-green-soft rounded-lg text-tertiary font-body-sm text-[11px] flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Tự động định danh: Xã Đăk Ơ - THCS Đăk Ơ</span>
+</div>
+</div>
+<!-- Tab 2: Other School View (Hidden by default) -->
+<div class="hidden flex-col gap-space-sm" id="tabContentOther">
+<div>
+<label class="font-label-md text-label-md text-slate-text-main block mb-1">Cấp học:</label>
+<div class="grid grid-cols-3 gap-1">
+<button class="px-1.5 py-1 text-center bg-primary-container text-on-primary rounded font-label-sm text-[11px] font-bold shadow-[1px_1px_0px_#0F172A]" type="button">THCS</button>
+<button class="px-1.5 py-1 text-center bg-surface-container rounded font-label-sm text-[11px] text-slate-text-muted hover:bg-surface-container-high" type="button">Tiểu Học</button>
+<button class="px-1.5 py-1 text-center bg-surface-container rounded font-label-sm text-[11px] text-slate-text-muted hover:bg-surface-container-high" type="button">THPT / GDTX</button>
+</div>
+</div>
+<div>
+<label class="font-label-md text-label-md text-slate-text-main block mb-1">Xã / Phường:</label>
+<select class="w-full px-2.5 py-1.5 bg-surface-container-low rounded-lg font-body-sm text-slate-text-main shadow-[1px_1px_0px_#0F172A] focus:outline-none">
+<option>Xã Bù Gia Mập (H. Bù Gia Mập)</option>
+<option>Phường Tân Phong (TP. Biên Hòa)</option>
+<option>Xã Gia Canh (H. Định Quán)</option>
+<option>Xã Xuân Lộc (H. Xuân Lộc)</option>
+</select>
+</div>
+<div>
+<label class="font-label-md text-label-md text-slate-text-main block mb-1">Tên Trường Học:</label>
+<input class="w-full px-2.5 py-1.5 bg-surface-container-low rounded-lg font-body-sm text-slate-text-main shadow-[1px_1px_0px_#0F172A] focus:outline-none" placeholder="Nhập tên trường của Thầy/Cô..." type="text" value="Trường THCS Đăk Ơ"/>
+</div>
+</div>
+<!-- Credentials Input Fields -->
+<div class="flex flex-col gap-space-xs pt-2">
+<label class="font-label-md text-label-md text-slate-text-main flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">smartphone</span>
+<span>Số điện thoại đăng nhập CSDL:</span>
+</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-mono text-body-md text-slate-text-main shadow-[1px_1px_0px_#0F172A] focus:outline-none" id="simPhone" type="text" value="0987.654.321"/>
+</div>
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-slate-text-main flex items-center justify-between">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+<span>Mật khẩu CSDL:</span>
+</span>
+<span class="font-label-sm text-[10px] text-slate-text-muted">Mã hóa nội bộ máy</span>
+</label>
+<div class="relative">
+<input class="w-full px-3 py-1.5 bg-surface-container-low rounded-lg font-mono text-body-md text-slate-text-main shadow-[1px_1px_0px_#0F172A] focus:outline-none" id="simPass" type="password" value="Giaovien@2026"/>
+<button class="absolute right-2 top-1.5 text-slate-text-muted hover:text-slate-text-main" onclick="toggleSimPass()" type="button">
+<span class="material-symbols-outlined text-[18px]" id="passIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Save Action Button -->
+<button class="w-full py-2.5 bg-tertiary-container hover:bg-tertiary text-on-primary font-headline-sm text-title-md rounded-xl shadow-[2px_2px_0px_#0F172A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-space-xs mt-1" id="btnSaveConfig" onclick="simulateSaveConfig()">
+<span class="material-symbols-outlined text-[20px]">save</span>
+<span>LƯU CẤU HÌNH CỦA TÔI</span>
+</button>
+<!-- Status message placeholder -->
+<div class="hidden text-center py-1 bg-sprout-green-soft text-tertiary font-label-md rounded shadow-[1px_1px_0px_#0F172A]" id="saveFeedback">
+              ✨ Đã lưu thông tin an toàn vào máy!
+            </div>
+<div class="text-center font-label-sm text-[10px] text-slate-text-muted">
+              🔒 Dữ liệu được lưu trong <code class="text-primary font-mono">chrome.storage.sync</code> an toàn.
+            </div>
+</div>
+<!-- Chrome Ext Footer note -->
+<div class="px-space-md py-2 bg-surface-container-high border-t border-notebook-grid-line flex items-center justify-between text-[11px] text-slate-text-muted font-label-md">
+<span>Phiên bản v5.1 mới nhất</span>
+<span class="text-secondary font-bold">100% Sẵn sàng</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 3. TRẢI NGHIỆM HÀNG NGÀY: TRƯỚC VÀ SAU    -->
+<!-- ========================================== -->
+<section class="w-full py-space-lg mb-space-xl">
+<div class="text-center max-w-3xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 bg-chalkboard-orange-soft text-secondary rounded-full font-label-md text-label-md mb-2 shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-[16px]">compare_arrows</span> SỰ KHÁC BIỆT KỲ DIỆU
+      </div>
+<h2 class="font-headline-lg text-headline-lg text-slate-text-main">
+        Mỗi Ngày Đăng Nhập CSDL: <span class="text-primary-container">Thầy Cô Chọn Cách Nào?</span>
+</h2>
+<p class="font-body-lg text-body-lg text-slate-text-muted">So sánh thực tế giữa quy trình thủ công vất vả trước đây và sự thảnh thơi khi có Trợ lý Robot Chrome v5.1.</p>
+</div>
+<!-- Comparison Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-xl max-w-5xl mx-auto">
+<!-- Card: Before (Chưa có tiện ích) -->
+<div class="bg-surface-container-high p-space-xl rounded-3xl shadow-[3px_3px_0px_#0F172A] flex flex-col justify-between relative overflow-hidden">
+<!-- Sticker Tag -->
+<div class="inline-flex items-center gap-1 px-3 py-1 bg-error-container text-on-error-container rounded-full font-label-md text-label-md w-fit mb-space-md shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-[16px]">cancel</span> TRƯỚC ĐÂY (THỦ CÔNG MỆT MỎI)
+        </div>
+<div class="flex flex-col gap-space-md mb-space-lg">
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0 font-bold text-xs">1</span>
+<p class="font-body-md text-slate-text-main">Mở web <code class="font-mono text-xs bg-surface-container px-1 py-0.5 rounded">truong.dongnai.edu.vn</code> thấy 5 ô trống trơn.</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0 font-bold text-xs">2</span>
+<p class="font-body-md text-slate-text-main">Phải cuộn tìm Cấp học ➔ Tìm Huyện Bù Gia Mập ➔ Tìm Xã Đăk Ơ ➔ Tìm Trường THCS Đăk Ơ.</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0 font-bold text-xs">3</span>
+<p class="font-body-md text-slate-text-main">Nhập lại 10 số điện thoại và chuỗi mật khẩu phức tạp hoa/thường.</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0 font-bold text-xs">4</span>
+<p class="font-body-md text-slate-text-main">Khai báo Lịch báo giảng (Mục 3.6.2): Bấm từng môn, từng tiết, mất từ 15-20 phút cho một tuần dạy.</p>
+</div>
+</div>
+<div class="p-space-md bg-notebook-paper-base rounded-xl shadow-[2px_2px_0px_#0F172A] flex items-center justify-between">
+<span class="font-headline-sm text-body-md text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">timer</span> Mất 2-3 phút / lần đăng nhập
+          </span>
+<span class="font-label-sm text-slate-text-muted">Dễ gõ sai mật khẩu</span>
+</div>
+</div>
+<!-- Card: After (Có Robot v5.1) -->
+<div class="bg-sprout-green-soft p-space-xl rounded-3xl shadow-[3px_3px_0px_#0F172A] flex flex-col justify-between relative overflow-hidden">
+<!-- Sticker Tag -->
+<div class="inline-flex items-center gap-1 px-3 py-1 bg-tertiary-container text-on-primary rounded-full font-label-md text-label-md w-fit mb-space-md shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> BÂY GIỜ VỚI TRỢ LÝ ROBOT (v5.1)
+        </div>
+<div class="flex flex-col gap-space-md mb-space-lg">
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-tertiary-container text-on-primary flex items-center justify-center shrink-0 font-bold text-xs">1</span>
+<p class="font-body-md text-slate-text-main"><strong class="text-tertiary font-bold">Tự động điền 100%:</strong> Vừa mở trang lên là Cấp học, Xã, Trường, SĐT, Mật khẩu đã điền sẵn!</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-tertiary-container text-on-primary flex items-center justify-center shrink-0 font-bold text-xs">2</span>
+<p class="font-body-md text-slate-text-main"><strong class="text-tertiary font-bold">Chuột tự nhảy vào CAPTCHA:</strong> Thầy Cô chỉ cần gõ 8 ký tự CAPTCHA, bấm phím ENTER rồi ấn <kbd class="px-1.5 py-0.5 bg-notebook-paper-base rounded shadow-[1px_1px_0px_#0F172A] font-bold">ENTER</kbd> là vào ngay.</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-tertiary-container text-on-primary flex items-center justify-center shrink-0 font-bold text-xs">3</span>
+<p class="font-body-md text-slate-text-main"><strong class="text-tertiary font-bold">Lịch báo giảng 0.5 giây:</strong> Vào mục 3.6.2 xuất hiện nút xanh khổng lồ <span class="bg-tertiary-fixed text-on-tertiary-fixed px-1.5 py-0.5 rounded font-bold">✅ BẤM ĐỂ HOÀN THÀNH</span>.</p>
+</div>
+<div class="flex items-start gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-tertiary-container text-on-primary flex items-center justify-center shrink-0 font-bold text-xs">4</span>
+<p class="font-body-md text-slate-text-main">Robot tự đánh dấu 15 - 18 tiết và tự động ấn nút <strong>Ghi</strong> lưu trữ tức thì!</p>
+</div>
+</div>
+<div class="p-space-md bg-notebook-paper-base rounded-xl shadow-[2px_2px_0px_#0F172A] flex items-center justify-between">
+<span class="font-headline-sm text-body-md text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">electric_bolt</span> Chỉ 01 giây là xong xuôi!
+          </span>
+<span class="font-label-sm text-tertiary font-bold">Thảnh thơi dạy học</span>
+</div>
+</div>
+</div>
+<!-- Exclusive Feature Spotlight: Lịch Báo Giảng Button Demo -->
+<div class="max-w-5xl mx-auto mt-space-xl bg-notebook-paper-base p-space-lg md:p-space-xl rounded-3xl shadow-[3px_3px_0px_#0F172A] flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs max-w-xl">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 bg-secondary-container text-on-primary font-label-sm text-label-sm rounded-md shadow-[1px_1px_0px_#0F172A]">TÍNH NĂNG ĐẶC BIỆT MỤC 3.6.2</span>
+<span class="font-label-md text-tertiary font-semibold">Tự động hóa lịch báo giảng</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-slate-text-main">
+          Nút Thần Kỳ: "✅ BẤM ĐỂ HOÀN THÀNH"
+        </h3>
+<p class="font-body-md text-slate-text-muted">
+          Khi Thầy/Cô mở trang Khai báo Lịch báo giảng tuần trên CSDL Đồng Nai, Extension tự động hiển thị nút bấm nổi ở góc màn hình. Bấm 1 nhấp chuột duy nhất, toàn bộ tiết dạy trong tuần được duyệt Hoàn thành và tự động Ghi!
+        </p>
+</div>
+<!-- Live Mock Button with Click Reaction -->
+<div class="flex flex-col items-center gap-space-xs shrink-0">
+<button class="group relative px-space-xl py-4 bg-tertiary-container hover:bg-tertiary text-on-primary font-headline-sm text-headline-sm rounded-2xl shadow-[4px_4px_0px_#0F172A] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all flex items-center gap-space-sm" id="demoMagicBtn" onclick="runMagicDemo()">
+<span class="material-symbols-outlined text-[26px]">task_alt</span>
+<span>✅ BẤM ĐỂ HOÀN THÀNH</span>
+</button>
+<span class="font-label-md text-label-md text-tertiary opacity-0 transition-opacity duration-300" id="magicToast">
+          🎉 Đã duyệt 18 tiết &amp; Tự động lưu thành công!
+        </span>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 4. HƯỚNG DẪN CÀI ĐẶT 3 BƯỚC SIÊU ĐƠN GIẢN  -->
+<!-- ========================================== -->
+<section class="w-full py-space-xl bg-chalkboard-orange-soft/40 rounded-3xl p-space-md md:p-space-xl shadow-[3px_3px_0px_#0F172A] mb-space-xl" id="huong-dan-3-buoc">
+<div class="text-center max-w-3xl mx-auto mb-space-xl">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 bg-primary-fixed text-primary rounded-full font-label-md text-label-md mb-2 shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-[16px]">menu_book</span> HƯỚNG DẪN DỄ HIỂU
+      </div>
+<h2 class="font-headline-lg text-headline-lg text-slate-text-main">
+        Cài Đặt 1 Lần Duy Nhất Trong 3 Bước
+      </h2>
+<p class="font-body-lg text-body-lg text-slate-text-muted">
+        Chỉ cần làm một lần trên máy tính của Thầy Cô, từ đó về sau mọi việc đã có Robot tự làm hoàn toàn!
+      </p>
+</div>
+<!-- 3 Big Steps Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg max-w-6xl mx-auto">
+<!-- Step 1 -->
+<div class="bg-notebook-paper-base p-space-lg rounded-2xl shadow-[3px_3px_0px_#0F172A] flex flex-col justify-between relative group hover:-translate-y-1 transition-all">
+<!-- Step Number badge -->
+<div class="flex items-center justify-between mb-space-md">
+<span class="w-12 h-12 rounded-xl bg-sticker-yellow text-slate-text-main font-headline-lg text-headline-md flex items-center justify-center shadow-[2px_2px_0px_#0F172A]">
+            1
+          </span>
+<span class="font-label-sm text-secondary-container font-bold uppercase tracking-wider">Bước đầu tiên</span>
+</div>
+<div class="flex flex-col gap-space-sm mb-space-md">
+<h3 class="font-headline-sm text-headline-sm text-slate-text-main">
+            Chạy File Cài Đặt Tự Động
+          </h3>
+<p class="font-body-md text-body-md text-slate-text-muted">
+            Sau khi tải file <code class="px-1.5 py-0.5 bg-surface-container text-primary font-mono text-xs rounded">.ZIP</code> về và giải nén, Thầy/Cô chỉ cần <strong>nhấp đúp chuột</strong> vào file:
+          </p>
+<div class="p-space-sm bg-surface-container rounded-lg font-mono text-xs text-primary font-bold shadow-[1px_1px_0px_#0F172A] flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+<span>CAI_DAT_TIEN_ICH_CHROME.bat</span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-text-muted">
+            Chương trình sẽ <strong>tự động copy đường dẫn</strong> vào bộ nhớ tạm Clipboard và tự mở trang <code class="text-xs font-mono">chrome://extensions</code> lên.
+          </p>
+</div>
+<div class="pt-space-sm border-t border-notebook-grid-line flex items-center gap-1 text-tertiary font-label-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Không cần gõ lệnh gì cả</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="bg-notebook-paper-base p-space-lg rounded-2xl shadow-[3px_3px_0px_#0F172A] flex flex-col justify-between relative group hover:-translate-y-1 transition-all">
+<!-- Step Number badge -->
+<div class="flex items-center justify-between mb-space-md">
+<span class="w-12 h-12 rounded-xl bg-primary-fixed text-primary font-headline-lg text-headline-md flex items-center justify-center shadow-[2px_2px_0px_#0F172A]">
+            2
+          </span>
+<span class="font-label-sm text-primary font-bold uppercase tracking-wider">Nạp vào Chrome</span>
+</div>
+<div class="flex flex-col gap-space-sm mb-space-md">
+<h3 class="font-headline-sm text-headline-sm text-slate-text-main">
+            Bật Chế Độ Nhà Phát Triển
+          </h3>
+<p class="font-body-md text-body-md text-slate-text-muted">
+            Tại cửa sổ tiện ích Chrome vừa mở ra:
+          </p>
+<ol class="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-text-main list-decimal list-inside">
+<li>Gạt bật công tắc <strong>Developer mode</strong> (góc trên bên phải).</li>
+<li>Bấm nút <strong>Tải tiện ích đã giải nén</strong> (Load unpacked).</li>
+<li>Ấn phím <kbd class="px-1.5 py-0.5 bg-surface-container rounded shadow-[1px_1px_0px_#0F172A] font-bold">Ctrl + V</kbd> rồi bấm <strong>Select Folder</strong>.</li>
+</ol>
+</div>
+<div class="pt-space-sm border-t border-notebook-grid-line flex items-center gap-1 text-primary font-label-md">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Extension hiển thị ngay lập tức</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="bg-notebook-paper-base p-space-lg rounded-2xl shadow-[3px_3px_0px_#0F172A] flex flex-col justify-between relative group hover:-translate-y-1 transition-all">
+<!-- Step Number badge -->
+<div class="flex items-center justify-between mb-space-md">
+<span class="w-12 h-12 rounded-xl bg-sprout-green-soft text-tertiary font-headline-lg text-headline-md flex items-center justify-center shadow-[2px_2px_0px_#0F172A]">
+            3
+          </span>
+<span class="font-label-sm text-tertiary font-bold uppercase tracking-wider">Hoàn tất</span>
+</div>
+<div class="flex flex-col gap-space-sm mb-space-md">
+<h3 class="font-headline-sm text-headline-sm text-slate-text-main">
+            Ghim &amp; Lưu Cấu Hình
+          </h3>
+<p class="font-body-md text-body-md text-slate-text-muted">
+            Bấm vào mảnh ghép 🧩 trên góc Chrome, ghim biểu tượng Robot:
+          </p>
+<ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-slate-text-main">
+<li class="flex items-start gap-1">
+<span class="material-symbols-outlined text-secondary-container text-body-md">arrow_right</span>
+<span><strong>THCS Đăk Ơ:</strong> Chọn Tên Thầy/Cô.</span>
+</li>
+<li class="flex items-start gap-1">
+<span class="material-symbols-outlined text-secondary-container text-body-md">arrow_right</span>
+<span><strong>Trường khác:</strong> Nhập Cấp học &amp; Xã.</span>
+</li>
+<li class="flex items-start gap-1">
+<span class="material-symbols-outlined text-secondary-container text-body-md">arrow_right</span>
+<span>Điền SĐT, Mật khẩu rồi bấm <strong>💾 Lưu</strong>!</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-sm border-t border-notebook-grid-line flex items-center gap-1 text-secondary-container font-label-md">
+<span class="material-symbols-outlined text-[16px]">celebration</span>
+<span>Từ nay mọi thứ tự động hoàn toàn!</span>
+</div>
+</div>
+</div>
+<!-- Quick Download Action Below Tutorial -->
+<div class="mt-space-xl text-center">
+<a class="inline-flex items-center gap-space-sm px-space-xl py-3 bg-secondary-container hover:bg-secondary text-on-primary font-headline-sm text-headline-sm rounded-xl shadow-[3px_3px_0px_#0F172A] transition-all" href="https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip">
+<span class="material-symbols-outlined">file_download</span>
+<span>Tải Ngay File Cài Đặt (ZIP ~180KB)</span>
+</a>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 5. CAM KẾT BẢO MẬT & TÁC GIẢ SÁNG KIẾN     -->
+<!-- ========================================== -->
+<section class="w-full py-space-xl grid grid-cols-1 lg:grid-cols-12 gap-space-xl mb-space-lg">
+<!-- Security Commitment Box -->
+<div class="lg:col-span-7 bg-notebook-paper-base p-space-xl rounded-3xl shadow-[3px_3px_0px_#0F172A] flex flex-col justify-between">
+<div>
+<div class="inline-flex items-center gap-space-xs px-3 py-1 bg-sprout-green-soft text-tertiary rounded-full font-label-md text-label-md mb-space-md shadow-[1px_1px_0px_#0F172A]">
+<span class="material-symbols-outlined text-[16px]">verified_user</span> CAM KẾT AN TOÀN TUYỆT ĐỐI
+        </div>
+<h3 class="font-headline-lg text-headline-md text-slate-text-main mb-space-md">
+          Bảo Vệ Tài Khoản Của Quý Thầy Cô 100%
+        </h3>
+<div class="flex flex-col gap-space-md font-body-md text-body-md text-slate-text-main">
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container rounded-xl">
+<span class="material-symbols-outlined text-tertiary text-[24px] mt-0.5">lock</span>
+<div>
+<strong class="text-slate-text-main">Không Máy Chủ Trung Gian:</strong>
+<p class="text-slate-text-muted">Toàn bộ thông tin tài khoản và mật khẩu chỉ được lưu trữ cục bộ trong trình duyệt máy tính của Thầy/Cô (<code class="font-mono text-xs text-primary">chrome.storage.sync</code>). Không hề gửi về bất kỳ máy chủ nào bên ngoài.</p>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container rounded-xl">
+<span class="material-symbols-outlined text-secondary-container text-[24px] mt-0.5">gavel</span>
+<div>
+<strong class="text-slate-text-main">Tuyệt Đối Tuân Thủ Quy Định Ngành:</strong>
+<p class="text-slate-text-muted">Extension <strong>không tự giải mã CAPTCHA</strong>. Thầy Cô vẫn tự tay gõ 8 ký tự bảo mật, đảm bảo đúng quy chuẩn an toàn thông tin và chống truy cập bất hợp pháp của Sở GD&amp;ĐT Đồng Nai.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-md border-t border-notebook-grid-line flex items-center justify-between text-xs text-slate-text-muted font-label-md">
+<span>Mã nguồn hoàn toàn mở trên GitHub</span>
+<span class="text-tertiary font-bold">Đã kiểm duyệt virus &amp; trojan</span>
+</div>
+</div>
+<!-- Author & Community Box -->
+<div class="lg:col-span-5 bg-notebook-paper-base p-space-xl rounded-3xl shadow-[3px_3px_0px_#0F172A] flex flex-col justify-between">
+<div>
+<!-- School Doodled Header -->
+<div class="flex items-center gap-space-md mb-space-md">
+<img class="w-16 h-16 rounded-2xl object-cover shadow-[2px_2px_0px_#0F172A]" data-alt="Warm friendly portrait of Vietnamese male teacher standing proudly in front of a rural secondary school in Dak O Dong Nai, gentle smile, inspiring educator vibe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ8X8A-o4ccmJkSLgx51Q0z0S-sL1JFi3Dlw3BIxZb5H53P8p9pWPcIAvF48vSk_XguFkXn6QRJuUgx_4g6mD_IskTQ9y_4SxKHOQBgfBNluMk_hkMsLQ544ICKQfW2N4qPsIATnH0vXFtLRLazfz2F3ftdVn5LliZtHeMQn026BfPasTriwd5BS-bhvAeHavLIpuQ12hYLyr50lxTYK0Ec8FtuCnJHgpTrcBd8dIH"/>
+<div>
+<span class="font-label-sm text-secondary uppercase font-bold tracking-wider">Tác giả sáng kiến</span>
+<h4 class="font-headline-sm text-headline-sm text-slate-text-main">Thầy Nông Văn Hùng</h4>
+<p class="font-body-sm text-body-sm text-slate-text-muted">Giáo viên Đồng Nai</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-slate-text-main mb-space-md">
+          "Xuất phát từ nỗi vất vả của chính bản thân và đồng nghiệp mỗi tuần khi thao tác CSDL, tôi cùng cộng đồng giáo viên yêu công nghệ Đồng Nai tạo nên tiện ích này hoàn toàn phi lợi nhuận để gửi tặng Quý Thầy Cô."
+        </p>
+<!-- Community Links Stack -->
+<div class="flex flex-col gap-space-xs">
+<a class="flex items-center justify-between p-space-sm bg-sprout-green-soft hover:bg-tertiary-fixed rounded-xl shadow-[2px_2px_0px_#0F172A] transition-all" href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank">
+<div class="flex items-center gap-space-xs text-slate-text-main font-headline-sm text-title-md">
+<span class="material-symbols-outlined text-tertiary-container">forum</span>
+<span>Nhóm Hỗ Trợ Zalo AI Thầy Cô</span>
+</div>
+<span class="material-symbols-outlined text-tertiary text-[20px]">arrow_forward</span>
+</a>
+<a class="flex items-center justify-between p-space-sm bg-chalkboard-orange-soft hover:bg-secondary-fixed rounded-xl shadow-[2px_2px_0px_#0F172A] transition-all" href="https://github.com/hungcnfree/lbg-dongnai" target="_blank">
+<div class="flex items-center gap-space-xs text-slate-text-main font-headline-sm text-title-md">
+<span class="material-symbols-outlined text-secondary-container">code</span>
+<span>Kho Mã Nguồn Mở (GitHub)</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="mt-space-md text-center">
+<span class="font-label-sm text-slate-text-muted">Phiên bản hiện tại: v5.1 • Cập nhật Tháng 03/2026</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Interactive Client-side Micro-interactions -->
+<script>
+  function switchSimTab(tab) {
+    const btnDako = document.getElementById('tabBtnDako');
+    const btnOther = document.getElementById('tabBtnOther');
+    const contentDako = document.getElementById('tabContentDako');
+    const contentOther = document.getElementById('tabContentOther');
+
+    if (tab === 'dako') {
+      btnDako.className = "py-1.5 text-center font-bold rounded-lg bg-notebook-paper-base text-primary shadow-[1px_1px_0px_#0F172A] transition-all";
+      btnOther.className = "py-1.5 text-center font-semibold rounded-lg text-slate-text-muted hover:text-slate-text-main transition-all";
+      contentDako.classList.remove('hidden');
+      contentOther.classList.add('hidden');
+    } else {
+      btnOther.className = "py-1.5 text-center font-bold rounded-lg bg-notebook-paper-base text-primary shadow-[1px_1px_0px_#0F172A] transition-all";
+      btnDako.className = "py-1.5 text-center font-semibold rounded-lg text-slate-text-muted hover:text-slate-text-main transition-all";
+      contentOther.classList.remove('hidden');
+      contentDako.classList.add('hidden');
+    }
+  }
+
+  function autoFillDakOTeacher() {
+    const teacher = document.getElementById('teacherSelect').value;
+    const phoneInput = document.getElementById('simPhone');
+    if (teacher === 'hung') phoneInput.value = '0987.654.321';
+    else if (teacher === 'lan') phoneInput.value = '0912.345.678';
+    else if (teacher === 'tuan') phoneInput.value = '0903.888.999';
+    else phoneInput.value = '0978.112.233';
+  }
+
+  function toggleSimPass() {
+    const passInput = document.getElementById('simPass');
+    const passIcon = document.getElementById('passIcon');
+    if (passInput.type === 'password') {
+      passInput.type = 'text';
+      passIcon.innerText = 'visibility_off';
+    } else {
+      passInput.type = 'password';
+      passIcon.innerText = 'visibility';
+    }
+  }
+
+  function simulateSaveConfig() {
+    const btn = document.getElementById('btnSaveConfig');
+    const feedback = document.getElementById('saveFeedback');
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">sync</span><span>ĐANG LƯU...</span>';
+    setTimeout(() => {
+      btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">done_all</span><span>ĐÃ LƯU THÀNH CÔNG!</span>';
+      btn.classList.remove('bg-tertiary-container');
+      btn.classList.add('bg-sprout-green-soft', 'text-tertiary');
+      feedback.classList.remove('hidden');
+      setTimeout(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">save</span><span>LƯU CẤU HÌNH CỦA TÔI</span>';
+        btn.classList.add('bg-tertiary-container');
+        btn.classList.remove('bg-sprout-green-soft', 'text-tertiary');
+        feedback.classList.add('hidden');
+      }, 3000);
+    }, 600);
+  }
+
+  function runMagicDemo() {
+    const toast = document.getElementById('magicToast');
+    const btn = document.getElementById('demoMagicBtn');
+    btn.classList.add('scale-95');
+    setTimeout(() => {
+      btn.classList.remove('scale-95');
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 3500);
+    }, 150);
+  }
+</script></div></main><footer class="w-full bg-surface-container-low py-space-xl"><div class="max-w-7xl mx-auto px-margin flex flex-col md:flex-row items-center justify-between gap-space-lg"><div class="flex flex-col gap-1 text-center md:text-left"><div class="flex items-center justify-center md:justify-start gap-space-xs font-title-md text-title-md text-slate-text-main"><span class="material-symbols-outlined text-tertiary">school</span><span>Sáng kiến Giáo Dục Phi Lợi Nhuận vì Thầy Cô Giáo</span></div><p class="font-body-sm text-body-sm text-slate-text-muted">© 2026 Thầy Nông Văn Hùng &amp; Cộng đồng AI Giáo dục Đồng Nai • Tối ưu chuyển đổi số học đường</p></div><div class="flex items-center gap-space-md"><a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="inline-flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container-lowest hover:bg-sprout-green-soft text-slate-text-main font-label-md text-label-md rounded-lg shadow-[2px_2px_0px_#0F172A] transition-all" href="#"><span class="material-symbols-outlined text-headline-sm text-tertiary-container">chat</span><span>Zalo AI Thầy Cô</span></a><a href="https://github.com/hungcnfree/lbg-dongnai" target="_blank" class="inline-flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container-lowest hover:bg-sticker-yellow-soft text-slate-text-main font-label-md text-label-md rounded-lg shadow-[2px_2px_0px_#0F172A] transition-all" href="#"><span class="material-symbols-outlined text-headline-sm text-primary-container">code</span><span>Mã Nguồn Mở (GitHub)</span></a></div></div></footer></body></html>

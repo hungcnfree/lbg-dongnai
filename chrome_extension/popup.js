@@ -1,4 +1,4 @@
-// popup.js - Trợ Lý CSDL Đồng Nai v5.1 (Toàn Tỉnh & THCS Đăk Ơ)
+// popup.js - Trợ Lý CSDL Đồng Nai v5.2 (Toàn Tỉnh & Telerik Engine)
 
 let currentConfig = {
   mode: 'dako', // 'dako' hoặc 'province'
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadSavedConfig();
 
-  // Khi chọn tên giáo viên THCS Đăk Ơ
+  // Khi chọn tên giáo viên danh sách sở tại
   teacherSelect.addEventListener('change', () => {
     currentConfig.name = teacherSelect.value;
     if (!userInput.value) {

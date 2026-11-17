@@ -1,13 +1,13 @@
-# 🤖 Trợ Lý Tự Động CSDL Đồng Nai (v5.1 Toàn Tỉnh)
+# 🤖 Trợ Lý Tự Động CSDL Đồng Nai (v5.2 Telerik Engine)
 
 > **Tiện ích mở rộng Google Chrome (Manifest V3) chuyển đổi số & tự động hóa nghiệp vụ CSDL Giáo dục tỉnh Đồng Nai.**  
-> Tác giả: **Thầy Nông Văn Hùng** (Trường THCS Đăk Ơ, Huyện Bù Gia Mập, Tỉnh Đồng Nai) & Cộng đồng AI Giáo dục Đồng Nai.
+> Tác quyền: **Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai**.
 
 🌐 **Trang web hướng dẫn trực tuyến (GitHub Pages):**  
 👉 **[https://hungcnfree.github.io/lbg-dongnai/](https://hungcnfree.github.io/lbg-dongnai/)**
 
 📦 **Tải trực tiếp gói tiện ích đã đóng gói (ZIP ~180KB):**  
-👉 **[Tải file TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.1.zip](https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.1/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.1.zip)**
+👉 **[Tải file TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip](https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip)**
 
 💬 **Nhóm Zalo AI chia sẻ & hỗ trợ giáo viên Đồng Nai:**  
 👉 **[https://zalo.me/g/2vhbtmsqdr06gyfiuru8](https://zalo.me/g/2vhbtmsqdr06gyfiuru8)**
@@ -16,9 +16,10 @@
 
 ## 🌟 TÍNH NĂNG CHÍNH
 
-1. **Đăng nhập tự động 100%:**
-   - Tự động điền đầy đủ: **Cấp học** (Mầm non, Tiểu học, THCS, THPT, GDTX), **Phường/Xã** (96 Xã/Phường), **Trường học** (2.178 trường), **Số điện thoại** & **Mật khẩu**.
-   - Con trỏ chuột tự động focus vào ô CAPTCHA, Thầy/Cô chỉ cần gõ 4 ký tự rồi ấn **ENTER** là vào ngay hệ thống.
+1. **Đăng nhập tự động 100% bằng Telerik RadComboBox Client Engine:**
+   - Tự động kích hoạt API `$find().findItemByText().select()` chuẩn của Telerik trên cổng ASP.NET WebForms.
+   - Chọn tự động và cascade chuẩn: **Cấp học** (Mầm non, Tiểu học, THCS, THPT, GDTX) ➔ nạp AJAX ➔ **Phường/Xã** (96 Xã/Phường) ➔ nạp AJAX ➔ **Trường học** (2.178 trường) ➔ **Số điện thoại** & **Mật khẩu**.
+   - Con trỏ chuột tự động focus vào ô CAPTCHA, Thầy/Cô chỉ cần gõ 8 ký tự CAPTCHA rồi ấn **ENTER** là vào ngay hệ thống.
    - Không can thiệp giải mã CAPTCHA, đảm bảo 100% tuân thủ quy chuẩn an toàn thông tin của ngành Giáo dục.
 
 2. **Xác nhận Hoàn thành Lịch báo giảng (0.5 giây):**
@@ -26,11 +27,11 @@
    - 1 click là tự động chuyển toàn bộ 15-18 tiết trong tuần sang "Hoàn thành" và tự động bấm nút **Ghi**.
 
 3. **Hỗ trợ 2 chế độ thông minh:**
-   - **THCS Đăk Ơ (Mặc định):** Tích hợp sẵn danh sách 60 giáo viên THCS Đăk Ơ chọn 1 click ra ngay tên.
+   - **Trường sở tại (Đăk Ơ):** Tích hợp sẵn danh bạ chọn nhanh 1 click ra ngay tên.
    - **Toàn tỉnh Đồng Nai (Trường khác / Xã khác):** Lựa chọn linh hoạt Cấp học, Phường/Xã trong 96 xã toàn tỉnh, danh sách trường học tự động lọc chuẩn xác tương ứng.
 
 4. **Bảo mật tuyệt đối 100%:**
-   - Toàn bộ thông tin tài khoản được lưu cục bộ trên trình duyệt máy tính của Thầy/Cô (`chrome.storage.sync`), không gửi qua bất kỳ máy chủ nào.
+   - Toàn bộ thông tin tài khoản được lưu cục bộ trên trình duyệt máy tính của Thầy/Cô (`chrome.storage`), không gửi qua bất kỳ máy chủ nào.
 
 ---
 
@@ -61,31 +62,7 @@ BAN_CHIA_SE_DONG_NGHIEP/
    *(Chương trình sẽ tự động sao chép đường dẫn ổ cứng vào Clipboard và mở sẵn trang quản lý tiện ích `chrome://extensions` trên Chrome).*
 2. Tại trang `chrome://extensions`, bật công tắc **"Chế độ dành cho nhà phát triển"** ở góc trên cùng bên phải. Bấm nút **"Tải tiện ích đã giải nén"** ở góc trên bên trái ➔ Dán đường dẫn hoặc chọn thư mục `chrome_extension`.
 3. Bấm vào biểu tượng Tiện ích (🧩) trên thanh công cụ Chrome ➔ Chọn Tên/Trường và nhập SĐT + Mật khẩu ➔ Bấm **Lưu cấu hình của tôi**.
-4. **Sử dụng:** Mở `truong.dongnai.edu.vn` ➔ Robot tự động điền 100%, Thầy/Cô chỉ cần gõ 4 ký tự CAPTCHA rồi ấn **Enter**!
-
----
-
-## 🌐 HƯỚNG DẪN DEPLOY LÊN GITHUB & GITHUB PAGES
-
-Để đưa trang hướng dẫn và mã nguồn lên GitHub của Thầy Hùng:
-
-1. **Đẩy mã nguồn lên GitHub:**
-   ```bash
-   git init
-   git remote add origin https://github.com/hungcnfree/lbg-dongnai.git
-   git branch -M main
-   git add .
-   git commit -m "Release v5.1: CSDL Dong Nai Chrome Extension"
-   git push -u origin main
-   ```
-
-2. **Bật GitHub Pages:**
-   - Vào GitHub Repository: `https://github.com/hungcnfree/lbg-dongnai`.
-   - Chọn **Settings** (Cài đặt) ➔ chọn mục **Pages** ở menu bên trái.
-   - Tại phần **Build and deployment** ➔ **Source**: Chọn **Deploy from a branch**.
-   - Tại phần **Branch**: Chọn nhánh `main`, thư mục giữ nguyên `/ (root)` ➔ bấm **Save**.
-   - Sau 1 phút, trang web hướng dẫn sẽ trực tuyến tại:  
-     👉 **`https://hungcnfree.github.io/lbg-dongnai/`**
+4. **Sử dụng:** Mở `truong.dongnai.edu.vn` ➔ Robot tự động điền 100%, Thầy/Cô chỉ cần gõ 8 ký tự CAPTCHA rồi ấn **Enter**!
 
 ---
 
@@ -95,4 +72,4 @@ BAN_CHIA_SE_DONG_NGHIEP/
 - **Kho lưu trữ GitHub:** [https://github.com/hungcnfree/lbg-dongnai](https://github.com/hungcnfree/lbg-dongnai)
 
 ---
-*Bản quyền © 2026 Thầy Nông Văn Hùng (Trường THCS Đăk Ơ) & Cộng đồng AI Giáo dục Đồng Nai.*
+*Bản quyền © 2026 Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai.*
