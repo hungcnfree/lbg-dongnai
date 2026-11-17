@@ -20,7 +20,7 @@
    - Tự động kích hoạt API `$find().findItemByText().select()` chuẩn của Telerik trên cổng ASP.NET WebForms.
    - Chọn tự động và cascade chuẩn: **Cấp học** (Mầm non, Tiểu học, THCS, THPT, GDTX) ➔ nạp AJAX ➔ **Phường/Xã** (96 Xã/Phường) ➔ nạp AJAX ➔ **Trường học** (2.178 trường) ➔ **Số điện thoại** & **Mật khẩu**.
    - Con trỏ chuột tự động focus vào ô CAPTCHA, Thầy/Cô chỉ cần gõ 8 ký tự CAPTCHA rồi ấn **ENTER** là vào ngay hệ thống.
-   - Không can thiệp giải mã CAPTCHA, đảm bảo 100% tuân thủ quy chuẩn an toàn thông tin của ngành Giáo dục.
+   - Không can thiệp giải mã CAPTCHA, đảm bảo 100% tuân thủ quy chuẩn an toàn thông tin theo quy định hiện hành.
 
 2. **Xác nhận Hoàn thành Lịch báo giảng (0.5 giây):**
    - Tại mục **3.6.2 Khai báo lịch báo giảng**, Robot tự động hiển thị nút bấm nổi `✅ BẤM ĐỂ HOÀN THÀNH`.
