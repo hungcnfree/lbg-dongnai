@@ -2,12 +2,12 @@
   "version": "5.3.1",
   "versionCode": 531,
   "releaseDate": "17/11/2026",
-  "title": "Trợ Lý CSDL v5.3.1 - Fix Truyền Dữ Liệu World & Khóa Cứng Mã Trường 70691515",
+  "title": "Trợ Lý CSDL v5.3.1 - Phương Pháp Telerik Macro-Task Claude AI & Icon Hoa Hướng Dương",
   "changelog": [
-    "Khắc phục triệt để lỗi CustomEvent object qua ranh giới World bằng chuỗi JSON (JSON.stringify / JSON.parse).",
+    "Áp dụng phương pháp kích hoạt Telerik qua Macro-Task & mô phỏng tương tác chuột thực tế của Claude AI.",
     "Khóa cứng mã trường THCS Đăk Ơ (70691515), loại trừ 100% Trường Trương Định (70691426) và Mầm non.",
-    "Kịch bản cập nhật tự động đọc đường dẫn từ version.json động, đảm bảo luôn tải đúng bản mới nhất.",
-    "Nâng cấp tính năng lấy lịch TKB kiểm tra phản hồi thực tế."
+    "Bộ Icon Hoa Hướng Dương màu vàng rực rỡ, tươi vui, hiển thị sắc nét trên thanh công cụ Chrome.",
+    "Bảo tồn 100% mật khẩu và dữ liệu của thầy cô khi cập nhật tự động."
   ],
   "downloadUrls": {
     "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.1.zip",

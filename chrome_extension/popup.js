@@ -1,8 +1,8 @@
 // popup.js - Trợ Lý CSDL Toàn Tỉnh Đồng Nai v5.3.0
 // Paper Neo-Brutalism UI & Tự động cập nhật 1-click
 
-const CURRENT_VERSION = '5.3.0';
-const CURRENT_VERSION_CODE = 530;
+const CURRENT_VERSION = '5.3.1';
+const CURRENT_VERSION_CODE = 531;
 
 let currentConfig = {
   mode: 'dako',

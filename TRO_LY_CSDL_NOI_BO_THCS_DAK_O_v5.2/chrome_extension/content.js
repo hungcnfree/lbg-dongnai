@@ -1,17 +1,28 @@
-// content.js - Trợ Lý CSDL Bản Nội Bộ THCS Đăk Ơ v5.3.1 (Isolated World)
-// Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
+// content.js - Trợ Lý CSDL Bản Nội Bộ THCS Đăk Ơ v5.3.1
+// Giao diện Banner Neo-Brutalism đồng bộ với Trang chủ trung tâm
 
 (function () {
-  console.log('[CSDL Robot v5.3.1] Khởi động content.js THCS Đăk Ơ...');
+  console.log('[CSDL Robot v5.3.1] Đang khởi động tiện ích THCS Đăk Ơ...');
 
-  let bridgeLoaded = false;
-  let cachedConfig = null;
+  function injectBridgeScript() {
+    if (document.getElementById('csdl-bridge-script')) return;
+    try {
+      const s = document.createElement('script');
+      s.id = 'csdl-bridge-script';
+      s.src = chrome.runtime.getURL('page_bridge.js');
+      (document.head || document.documentElement).appendChild(s);
+    } catch (e) {
+      console.error('[CSDL Robot] Không thể tiêm page_bridge:', e);
+    }
+  }
+
+  injectBridgeScript();
 
   function getDefaultConfig() {
     return {
       mode: 'dako',
-      name: 'Nông Văn Hùng',
-      username: '0976579151',
+      name: 'Thầy/Cô THCS Đăk Ơ',
+      username: '',
       password: '',
       capHoc: 'Trung học cơ sở',
       phuongXa: 'Xã Đăk Ơ',
@@ -21,23 +32,25 @@
 
   function getTeacherConfig(cb) {
     if (typeof chrome !== 'undefined' && chrome.storage) {
-      chrome.storage.local.get(['csdl_teacher_config'], (localRes) => {
-        if (localRes && localRes.csdl_teacher_config && localRes.csdl_teacher_config.username) {
-          cachedConfig = localRes.csdl_teacher_config;
-          cb(cachedConfig);
-        } else if (chrome.storage.sync) {
-          chrome.storage.sync.get(['csdl_teacher_config'], (syncRes) => {
-            if (syncRes && syncRes.csdl_teacher_config && syncRes.csdl_teacher_config.username) {
-              cachedConfig = syncRes.csdl_teacher_config;
-              cb(cachedConfig);
-            } else {
-              cb(getDefaultConfig());
-            }
-          });
-        } else {
-          cb(getDefaultConfig());
-        }
-      });
+      if (chrome.storage.local) {
+        chrome.storage.local.get(['csdl_teacher_config'], (localRes) => {
+          if (localRes && localRes.csdl_teacher_config) {
+            cb(localRes.csdl_teacher_config);
+          } else if (chrome.storage.sync) {
+            chrome.storage.sync.get(['csdl_teacher_config'], (syncRes) => {
+              cb(syncRes && syncRes.csdl_teacher_config ? syncRes.csdl_teacher_config : getDefaultConfig());
+            });
+          } else {
+            cb(getDefaultConfig());
+          }
+        });
+      } else if (chrome.storage.sync) {
+        chrome.storage.sync.get(['csdl_teacher_config'], (syncRes) => {
+          cb(syncRes && syncRes.csdl_teacher_config ? syncRes.csdl_teacher_config : getDefaultConfig());
+        });
+      } else {
+        cb(getDefaultConfig());
+      }
     } else {
       cb(getDefaultConfig());
     }
@@ -81,21 +94,14 @@
     }
   }
 
-  // Lắng nghe sự kiện tiến trình từ page_bridge.js (giải mã chuỗi JSON an toàn)
   window.addEventListener('CSDL_BRIDGE_PROGRESS', (e) => {
-    let detail = null;
-    try {
-      if (typeof e.detail === 'string') {
-        detail = JSON.parse(e.detail);
-      } else {
-        detail = e.detail;
-      }
-    } catch (err) {
-      console.error('[CSDL Robot] Lỗi giải mã tiến trình:', err);
+    // v5.3.1: dữ liệu đi qua ranh giới content-script <-> trang web phải là CHUỖI JSON
+    // (object trong CustomEvent.detail bị Chrome biến thành null khi sang "thế giới" khác)
+    let detail = e.detail;
+    if (typeof detail === 'string') {
+      try { detail = JSON.parse(detail); } catch (err) { return; }
     }
-
     if (!detail) return;
-
     if (detail.isDone) {
       updateRobotBanner(`
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -123,42 +129,27 @@
     }
   });
 
-  // Tiêm page_bridge.js vào Main World với callback onload
-  function injectBridgeScript(callback) {
-    let s = document.getElementById('csdl-bridge-script');
-    if (!s) {
-      s = document.createElement('script');
-      s.id = 'csdl-bridge-script';
-      s.src = chrome.runtime.getURL('page_bridge.js');
-      s.onload = function () {
-        bridgeLoaded = true;
-        if (callback) callback();
-      };
-      (document.head || document.documentElement).appendChild(s);
-    } else {
-      bridgeLoaded = true;
-      if (callback) callback();
-    }
-  }
-
-  // Gửi lệnh qua ranh giới World bằng chuỗi JSON (Khắc phục triệt để lỗi null object)
   function triggerAutoLogin(cfg) {
-    updateRobotBanner(`🌻 <strong>TRỢ LÝ CSDL v5.3.1:</strong> Đang kết nối điều khiển chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
-    injectBridgeScript(() => {
-      setTimeout(() => {
-        const payload = JSON.stringify(cfg);
-        window.dispatchEvent(new CustomEvent('CSDL_RUN_BRIDGE_FLOW', { detail: payload }));
-      }, 100);
-    });
+    injectBridgeScript();
+    updateRobotBanner(`🌻 <strong>TRỢ LÝ CSDL v5.3.1:</strong> Đang tự động chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
+    // Chờ page_bridge.js nạp xong (nó gắn data-csdl-bridge="ready" lên thẻ <html>) rồi mới gửi lệnh.
+    // Cấu hình được gửi dưới dạng chuỗi JSON (xem ghi chú ở trên).
+    let tries = 0;
+    const send = () => {
+      const ready = document.documentElement.getAttribute('data-csdl-bridge') === 'ready';
+      if (ready) {
+        window.dispatchEvent(new CustomEvent('CSDL_RUN_BRIDGE_FLOW', { detail: JSON.stringify(cfg || {}) }));
+        return;
+      }
+      if (tries >= 40) {
+        updateRobotBanner('<div style="color: #991B1B; font-weight: bold; font-size: 12.5px;">⚠️ Không nạp được page_bridge.js vào trang. Thầy/Cô thử bấm Reload tiện ích ở chrome://extensions rồi F5 lại trang.</div>', false, true);
+        return;
+      }
+      tries++;
+      setTimeout(send, 150);
+    };
+    send();
   }
-
-  // Lắng nghe khi bridge phát tín hiệu sẵn sàng
-  window.addEventListener('CSDL_BRIDGE_READY', () => {
-    bridgeLoaded = true;
-    getTeacherConfig((cfg) => {
-      triggerAutoLogin(cfg);
-    });
-  });
 
   function injectDoneShortcutButton() {
     if (document.getElementById('csdl-quick-confirm-bar')) return;
@@ -222,15 +213,13 @@
     document.body.appendChild(bar);
 
     document.getElementById('csdl-btn-quick-confirm').onclick = () => {
-      injectBridgeScript(() => {
-        window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
-      });
+      injectBridgeScript();
+      window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
     };
 
     document.getElementById('csdl-btn-quick-tkb').onclick = () => {
-      injectBridgeScript(() => {
-        window.dispatchEvent(new CustomEvent('CSDL_RUN_AUTO_FILL_TKB'));
-      });
+      injectBridgeScript();
+      window.dispatchEvent(new CustomEvent('CSDL_RUN_AUTO_FILL_TKB'));
     };
   }
 
@@ -239,14 +228,12 @@
       triggerAutoLogin(request.data);
       sendResponse({ success: true });
     } else if (request.action === 'CONFIRM_DONE') {
-      injectBridgeScript(() => {
-        window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
-      });
+      injectBridgeScript();
+      window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
       sendResponse({ success: true });
     } else if (request.action === 'AUTO_FILL_TKB') {
-      injectBridgeScript(() => {
-        window.dispatchEvent(new CustomEvent('CSDL_RUN_AUTO_FILL_TKB'));
-      });
+      injectBridgeScript();
+      window.dispatchEvent(new CustomEvent('CSDL_RUN_AUTO_FILL_TKB'));
       sendResponse({ success: true });
     }
   });
@@ -255,10 +242,9 @@
     const url = window.location.href.toLowerCase();
     if (url.includes('login.aspx') || document.getElementById('ContentPlaceHolder1_ctl00_tbU') || document.querySelector('input[id*="tbU"]')) {
       getTeacherConfig((cfg) => {
-        if (!cfg) cfg = getDefaultConfig();
         setTimeout(() => {
           triggerAutoLogin(cfg);
-        }, 400);
+        }, 600);
       });
     }
 

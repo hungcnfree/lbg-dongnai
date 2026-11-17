@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Trợ Lý CSDL - THCS Đăk Ơ",
-  "version": "5.3.0",
+  "version": "5.3.1",
   "description": "Tiện ích tự động điền đăng nhập và hoàn thành lịch báo giảng 1-click dành riêng cho giáo viên trường THCS Đăk Ơ",
   "author": "Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai",
   "permissions": [
