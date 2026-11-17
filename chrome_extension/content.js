@@ -137,7 +137,7 @@
     window.dispatchEvent(new CustomEvent('CSDL_RUN_BRIDGE_FLOW', { detail: cfg }));
   }
 
-  // Nút nổi xác nhận hoàn thành lịch báo giảng 0.5s
+  // Nút nổi thao tác lịch báo giảng: Tự điền từ TKB & Xác nhận hoàn thành
   function injectDoneShortcutButton() {
     if (document.getElementById('csdl-quick-confirm-bar')) return;
 
@@ -161,17 +161,34 @@
 
     bar.innerHTML = `
       <div style="display: flex; flex-direction: column;">
-        <span style="font-size: 13px; font-weight: bold; color: #10b981;">⚡ XÁC NHẬN LỊCH TUẦN (0.5 GIÂY)</span>
-        <span style="font-size: 11px; color: #94a3b8;">Tự chọn Hoàn thành tất cả các tiết & tự bấm GHI</span>
+        <span style="font-size: 13px; font-weight: bold; color: #10b981;">⚡ TRỢ LÝ LỊCH BÁO GIẢNG</span>
+        <span style="font-size: 11px; color: #94a3b8;">Tự điền lịch tuần mới & hoàn thành tuần cũ</span>
       </div>
+      <button id="btn-quick-fill-tkb" style="
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        color: white;
+        border: none;
+        padding: 9px 14px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        transition: 0.2s;
+      ">
+        📥 TỰ ĐIỀN LỊCH TỪ TKB
+      </button>
       <button id="btn-quick-confirm-done" style="
         background: linear-gradient(135deg, #10b981, #059669);
         color: white;
         border: none;
-        padding: 9px 16px;
+        padding: 9px 14px;
         border-radius: 8px;
         font-weight: bold;
-        font-size: 13px;
+        font-size: 12px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -179,11 +196,17 @@
         box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         transition: 0.2s;
       ">
-        ✅ BẤM ĐỂ HOÀN THÀNH
+        ✅ HOÀN THÀNH TUẦN (0.5s)
       </button>
     `;
 
     document.body.appendChild(bar);
+
+    document.getElementById('btn-quick-fill-tkb').onclick = () => {
+      injectBridgeScript();
+      window.dispatchEvent(new CustomEvent('CSDL_RUN_AUTO_FILL_TKB'));
+    };
+
     document.getElementById('btn-quick-confirm-done').onclick = () => {
       injectBridgeScript();
       window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
@@ -224,6 +247,10 @@
       } else if (req.action === 'CONFIRM_DONE') {
         injectBridgeScript();
         window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
+        sendResponse({ status: 'OK' });
+      } else if (req.action === 'AUTO_FILL_TKB') {
+        injectBridgeScript();
+        window.dispatchEvent(new CustomEvent('CSDL_RUN_AUTO_FILL_TKB'));
         sendResponse({ status: 'OK' });
       }
     });

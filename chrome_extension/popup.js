@@ -272,6 +272,14 @@ document.addEventListener('DOMContentLoaded', () => {
     sendActionToTab('CONFIG_SAVED', currentConfig);
   });
 
+  // Nút Tự động điền lịch từ TKB
+  const btnAutoTkb = document.getElementById('btn-auto-fill-tkb');
+  if (btnAutoTkb) {
+    btnAutoTkb.addEventListener('click', () => {
+      sendActionToTab('AUTO_FILL_TKB');
+    });
+  }
+
   document.getElementById('btn-confirm-done').addEventListener('click', () => {
     sendActionToTab('CONFIRM_DONE');
   });

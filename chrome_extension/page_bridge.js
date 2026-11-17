@@ -240,6 +240,38 @@
     }
   }
 
+  // Tự động lấy dữ liệu Thời khóa biểu nạp vào Lịch báo giảng
+  function runAutoFillFromTKB() {
+    try {
+      var allBtns = Array.from(document.querySelectorAll('button, a, .rtbItem, span'));
+      var tinhNangBtn = allBtns.find(function (el) {
+        return (el.innerText || '').trim() === 'Tính năng mở rộng';
+      });
+
+      if (tinhNangBtn) {
+        tinhNangBtn.click();
+        setTimeout(function () {
+          var menuItems = Array.from(document.querySelectorAll('.rmText, .rtbText, a, span, li'));
+          var tkbOption = menuItems.find(function (el) {
+            var t = (el.innerText || '').trim();
+            return t.includes('Lấy dữ liệu từ TKB') || t.includes('Tạo tự động LBG');
+          });
+
+          if (tkbOption) {
+            tkbOption.click();
+            alert('🎉 ĐÃ TỰ ĐỘNG NẠP LỊCH BÁO GIẢNG TỪ THỜI KHÓA BIỂU THÀNH CÔNG!\nThầy/Cô vui lòng kiểm tra tiết và bấm nút GHI trên thanh công cụ nhé!');
+          } else {
+            alert('⚠️ Không tìm thấy mục "Lấy dữ liệu từ TKB" trong menu Tính năng mở rộng.');
+          }
+        }, 350);
+      } else {
+        alert('⚠️ Thầy/Cô vui lòng mở trang mục 3.6.2 Khai báo lịch báo giảng trước nhé!');
+      }
+    } catch (e) {
+      alert('⚠️ Lỗi thao tác: ' + e.message);
+    }
+  }
+
   // Lắng nghe sự kiện từ content.js
   window.addEventListener('CSDL_RUN_BRIDGE_FLOW', function (e) {
     if (e.detail) {
@@ -249,6 +281,10 @@
 
   window.addEventListener('CSDL_RUN_CONFIRM_DONE', function () {
     executeConfirmDoneFlow();
+  });
+
+  window.addEventListener('CSDL_RUN_AUTO_FILL_TKB', function () {
+    runAutoFillFromTKB();
   });
 
   console.log('[CSDL Page Bridge] Sẵn sàng phục vụ v5.2.2!');

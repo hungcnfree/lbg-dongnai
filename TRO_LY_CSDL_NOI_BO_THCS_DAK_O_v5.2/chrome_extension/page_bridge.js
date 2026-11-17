@@ -1,8 +1,8 @@
-// page_bridge.js - Telerik Engine Bản Nội Bộ THCS Đăk Ơ v5.2.1 (Sloppy Mode)
-// Tác quyền: Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
+// page_bridge.js - Telerik Engine Bản Nội Bộ THCS Đăk Ơ v5.2.2 (Sloppy Mode)
+// Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.2.1...');
+  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.2.2...');
 
   function sleep(ms) {
     return new Promise(function (resolve) {
@@ -16,10 +16,13 @@
     }));
   }
 
-  // Chờ ASP.NET AJAX PostBack hoàn tất bằng cách thăm dò get_isInAsyncPostBack (KHÔNG dùng callback để tránh lỗi .caller)
-  async function waitAjax(maxWaitMs) {
-    if (!maxWaitMs) maxWaitMs = 8000;
-    await sleep(350); // Chờ ASP.NET AJAX bật cờ async postback
+  // Chờ ASP.NET AJAX PostBack hoàn tất hoàn toàn
+  async function waitForAjaxPostBack(minWaitMs, maxWaitMs) {
+    if (!minWaitMs) minWaitMs = 1200;
+    if (!maxWaitMs) maxWaitMs = 10000;
+    
+    // Luôn đợi tối thiểu minWaitMs để request được gửi và server phản hồi
+    await sleep(minWaitMs);
     var start = Date.now();
     while (Date.now() - start < maxWaitMs) {
       var isBusy = false;
@@ -33,21 +36,61 @@
       if (!isBusy) break;
       await sleep(150);
     }
-    await sleep(400); // Đợi Telerik render lại các phần tử DOM
+    await sleep(500); // Chờ Telerik render lại DOM hoàn tất
   }
 
-  // Chờ Telerik RadComboBox sẵn sàng
-  async function waitCombo(id, maxWaitMs) {
-    if (!maxWaitMs) maxWaitMs = 10000;
-    var start = Date.now();
-    while (Date.now() - start < maxWaitMs) {
-      if (typeof window.$find === 'function') {
-        var c = window.$find(id);
-        if (c && typeof c.findItemByText === 'function') return c;
+  // Hàm chọn item bằng cách giả lập click DOM (100% kích hoạt AJAX chuẩn của Telerik)
+  async function clickSelectComboItem(inputId, targetText) {
+    var inp = document.getElementById(inputId);
+    if (!inp) return false;
+
+    // 1. Click vào input để mở dropdown Telerik
+    inp.focus();
+    inp.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    inp.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+    inp.click();
+    await sleep(350);
+
+    // 2. Tìm dropdown đang hiển thị trên màn hình
+    var dropDowns = document.querySelectorAll('.RadComboBoxDropDown');
+    var targetLi = null;
+
+    for (var d = 0; d < dropDowns.length; d++) {
+      var dd = dropDowns[d];
+      var items = dd.querySelectorAll('.rcbItem');
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        var txt = (it.innerText || '').trim().toLowerCase();
+        if (txt.includes(targetText.toLowerCase())) {
+          targetLi = it;
+          break;
+        }
       }
-      await sleep(150);
+      if (targetLi) break;
     }
-    return null;
+
+    if (targetLi) {
+      targetLi.scrollIntoView({ block: 'nearest' });
+      targetLi.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+      targetLi.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+      targetLi.click();
+      return true;
+    }
+
+    // 3. Fallback dùng Telerik Client API nếu không click được DOM
+    var comboId = inputId.replace(/_Input$/, '');
+    if (typeof window.$find === 'function') {
+      var combo = window.$find(comboId);
+      if (combo && typeof combo.findItemByText === 'function') {
+        var item = combo.findItemByText(targetText);
+        if (item) {
+          item.select();
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   // Thực thi quy trình đăng nhập dành riêng cho THCS Đăk Ơ
@@ -58,114 +101,53 @@
       // =====================================================================
       // 1. CẤP HỌC: Trung học cơ sở
       // =====================================================================
-      var comboCap = await waitCombo('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc', 10000);
-      if (!comboCap) {
-        notify('⚠️ Không tìm thấy điều khiển cbCapHoc trên trang.', false, true);
-        return;
-      }
+      var inpCap = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input');
+      var curCap = inpCap ? (inpCap.value || '').trim() : '';
 
-      var curCap = (comboCap.get_text() || '').trim();
       if (!curCap.toLowerCase().includes('trung học cơ sở')) {
         notify('⏳ Đang chọn Cấp học: <strong>Trung học cơ sở</strong>...', false);
-        var itCap = comboCap.findItemByText('Trung học cơ sở');
-        if (!itCap) {
-          var capItems = comboCap.get_items();
-          for (var i = 0; i < capItems.get_count(); i++) {
-            var it = capItems.getItem(i);
-            if (it.get_text().toLowerCase().includes('trung học cơ sở')) {
-              itCap = it;
-              break;
-            }
-          }
-        }
-        if (itCap) {
-          itCap.select();
-          await waitAjax(8000);
-        }
+        await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input', 'Trung học cơ sở');
+        // CHỜ POSTBACK CẤP HỌC (Server CSDL mất ~3 giây để nạp lại Xã)
+        await waitForAjaxPostBack(2500, 10000);
       }
 
       // =====================================================================
       // 2. PHƯỜNG / XÃ: Xã Đăk Ơ
       // =====================================================================
-      var comboXa = await waitCombo('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD', 8000);
-      if (comboXa) {
-        var curXa = (comboXa.get_text() || '').trim();
-        if (!curXa.toLowerCase().includes('đăk ơ') && !curXa.toLowerCase().includes('đắk ơ')) {
-          notify('⏳ Đang chọn Phường/Xã: <strong>Xã Đăk Ơ</strong>...', false);
-          var itXa = comboXa.findItemByText('Xã Đăk Ơ');
-          if (!itXa) {
-            var xaItems = comboXa.get_items();
-            for (var j = 0; j < xaItems.get_count(); j++) {
-              var itx = xaItems.getItem(j);
-              var txtXa = itx.get_text().toLowerCase();
-              if (txtXa.includes('đăk ơ') || txtXa.includes('đắk ơ')) {
-                itXa = itx;
-                break;
-              }
-            }
-          }
-          if (itXa) {
-            itXa.select();
-            // CHỜ MÁY CHỦ NẠP DANH SÁCH TRƯỜNG THCS CỦA XÃ ĐĂK Ơ
-            await waitAjax(8000);
-          }
-        }
+      var inpXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input');
+      var curXa = inpXa ? (inpXa.value || '').trim() : '';
+
+      if (!curXa.toLowerCase().includes('đăk ơ') && !curXa.toLowerCase().includes('đắk ơ')) {
+        notify('⏳ Đang chọn Phường/Xã: <strong>Xã Đăk Ơ</strong>...', false);
+        await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input', 'Xã Đăk Ơ');
+        // CHỜ POSTBACK XÃ ĐĂK Ơ (Server CSDL nạp danh sách trường THCS Đăk Ơ)
+        await waitForAjaxPostBack(1500, 8000);
       }
 
       // =====================================================================
       // 3. TRƯỜNG HỌC: CỐ ĐỊNH TRƯỜNG THCS ĐĂK Ơ (Mã: 70691515)
-      // TUYỆT ĐỐI KHÔNG ĐƯỢC CHỌN NHẦM TRƯỜNG MẦM NON ĐĂK Ơ (70691213)
+      // TUYỆT ĐỐI CHỜ ĐÚNG TRƯỜNG THCS XUẤT HIỆN, KHÔNG BAO GIỜ CHỌN MẦM NON
       // =====================================================================
-      var comboTruong = null;
-      var itTruong = null;
+      notify('⏳ Đang chọn Trường: <strong>Trường THCS Đăk Ơ</strong>...', false);
+      var schoolSelected = false;
       var startFind = Date.now();
 
-      // Thăm dò cho đến khi đúng trường THCS Đăk Ơ xuất hiện (tối đa 15 giây)
       while (Date.now() - startFind < 15000) {
-        comboTruong = window.$find('ctl00_ContentPlaceHolder1_ctl00_cbTruong');
-        if (comboTruong && comboTruong.get_items && comboTruong.get_items().get_count() > 0) {
-          // Ưu tiên 1: Tìm theo đúng mã trường 70691515 của THCS Đăk Ơ
-          itTruong = comboTruong.findItemByValue('70691515');
-
-          // Ưu tiên 2: Tìm theo text (BẮT BUỘC có cả THCS và Đăk Ơ, LOẠI BỎ Mầm non)
-          if (!itTruong) {
-            var trItems = comboTruong.get_items();
-            for (var k = 0; k < trItems.get_count(); k++) {
-              var itemTr = trItems.getItem(k);
-              var tTr = (itemTr.get_text() || '').toLowerCase();
-              var valTr = (itemTr.get_value() || '').trim();
-
-              if (valTr === '70691515') {
-                itTruong = itemTr;
-                break;
-              }
-
-              // TUYỆT ĐỐI BỎ QUA nếu chứa "mầm non" hoặc "mẫu giáo"
-              if (tTr.includes('mầm non') || tTr.includes('mẫu giáo')) {
-                continue;
-              }
-
-              if (tTr.includes('thcs') && (tTr.includes('đăk ơ') || tTr.includes('đắk ơ'))) {
-                itTruong = itemTr;
-                break;
-              }
-            }
-          }
-
-          if (itTruong) break; // Đã tìm thấy đúng Trường THCS Đăk Ơ!
+        var inpTr = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input');
+        var curTr = inpTr ? (inpTr.value || '').trim() : '';
+        if (curTr.toLowerCase().includes('thcs') && curTr.toLowerCase().includes('đăk ơ')) {
+          schoolSelected = true;
+          break;
         }
-        await sleep(300);
-      }
 
-      if (comboTruong && itTruong) {
-        var curTr = (comboTruong.get_text() || '').trim();
-        if (curTr !== itTruong.get_text()) {
-          notify('⏳ Đang chọn Trường: <strong>' + itTruong.get_text() + '</strong>...', false);
-          itTruong.select();
-          await sleep(400);
+        // Mở dropdown trường và click vào Trường THCS Đăk Ơ
+        var ok = await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input', 'Trường THCS Đăk Ơ');
+        if (ok) {
+          schoolSelected = true;
+          await sleep(500);
+          break;
         }
-      } else {
-        console.warn('[CSDL Robot] Chưa tìm thấy trường THCS Đăk Ơ trong cbTruong');
+        await sleep(500);
       }
 
       // =====================================================================
@@ -202,7 +184,7 @@
 
       var finalCap = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input')?.value || 'Trung học cơ sở';
       var finalXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input')?.value || 'Xã Đăk Ơ';
-      var finalTruong = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input')?.value || (itTruong ? itTruong.get_text() : 'Trường THCS Đăk Ơ');
+      var finalTruong = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input')?.value || 'Trường THCS Đăk Ơ (70691515)';
 
       var teacherName = cfg.name || 'Thầy/Cô THCS Đăk Ơ';
       notify('🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN XONG CHO ' + teacherName + '!</strong><br><span style="color:#38bdf8;">' + finalCap + ' | ' + finalXa + ' | ' + finalTruong + '</span>', true);
@@ -260,5 +242,5 @@
     runConfirmDone();
   });
 
-  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ đã sẵn sàng phục vụ!');
+  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.2.2 đã sẵn sàng!');
 })();
