@@ -1,5 +1,8 @@
-// popup.js - Trợ Lý CSDL Bản Nội Bộ THCS Đăk Ơ v5.2
-// Cố định 100%: Trung học cơ sở | Xã Đăk Ơ | Trường THCS Đăk Ơ (70691515)
+// popup.js - Trợ Lý CSDL Bản Nội Bộ THCS Đăk Ơ v5.3.0
+// Paper Neo-Brutalism UI & Tự động cập nhật 1-click
+
+const CURRENT_VERSION = '5.3.0';
+const CURRENT_VERSION_CODE = 530;
 
 let currentConfig = {
   mode: 'dako',
@@ -16,6 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const teacherSelect = document.getElementById('cfg-teacher-select');
   const userInput = document.getElementById('cfg-username');
   const passInput = document.getElementById('cfg-password');
+  const btnTogglePass = document.getElementById('btn-toggle-pass');
+
+  // Toggle ẩn hiện mật khẩu
+  if (btnTogglePass && passInput) {
+    btnTogglePass.addEventListener('click', () => {
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        btnTogglePass.innerText = '🔒';
+      } else {
+        passInput.type = 'password';
+        btnTogglePass.innerText = '👁️';
+      }
+    });
+  }
 
   // Tải cấu hình đã lưu
   function loadSavedConfig() {
@@ -24,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyConfig = (saved) => {
       if (!saved) return;
       currentConfig = Object.assign(currentConfig, saved);
-      // Đảm bảo luôn cố định THCS Đăk Ơ
       currentConfig.capHoc = 'Trung học cơ sở';
       currentConfig.capCode = '03';
       currentConfig.phuongXa = 'Xã Đăk Ơ';
@@ -69,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateQuickBtnText();
   });
 
-  // Nút Lưu
+  // Nút Lưu cấu hình
   document.getElementById('btn-save').addEventListener('click', () => {
     const teacherName = teacherSelect.value;
     if (!teacherName) {
@@ -138,15 +154,42 @@ document.addEventListener('DOMContentLoaded', () => {
     sendActionToTab('CONFIG_SAVED', currentConfig);
   });
 
+  // Nút Tự động điền lịch từ TKB
+  const btnAutoTkb = document.getElementById('btn-auto-fill-tkb');
+  if (btnAutoTkb) {
+    btnAutoTkb.addEventListener('click', () => {
+      sendActionToTab('AUTO_FILL_TKB');
+    });
+  }
+
   // Nút Xác nhận hoàn thành
   document.getElementById('btn-confirm-done').addEventListener('click', () => {
     sendActionToTab('CONFIRM_DONE');
   });
 
-  // Đóng modal
+  // Đóng modal success
   document.getElementById('btn-close-modal').addEventListener('click', () => {
     document.getElementById('modal-success').style.display = 'none';
   });
+
+  // CƠ CHẾ KIỂM TRA & CẬP NHẬT TỰ ĐỘNG
+  const btnHeaderUpdate = document.getElementById('btn-header-update');
+  const btnCheckUpdate = document.getElementById('btn-check-update');
+  const linkFooterUpdate = document.getElementById('link-footer-update');
+  const btnCloseUpdateModal = document.getElementById('btn-close-update-modal');
+
+  if (btnHeaderUpdate) btnHeaderUpdate.addEventListener('click', () => checkForUpdates(true));
+  if (btnCheckUpdate) btnCheckUpdate.addEventListener('click', () => checkForUpdates(true));
+  if (linkFooterUpdate) linkFooterUpdate.addEventListener('click', (e) => {
+    e.preventDefault();
+    checkForUpdates(true);
+  });
+  if (btnCloseUpdateModal) btnCloseUpdateModal.addEventListener('click', () => {
+    document.getElementById('modal-update').style.display = 'none';
+  });
+
+  // Tự động kiểm tra âm thầm khi mở popup
+  checkForUpdates(false);
 });
 
 function updateQuickBtnText() {
@@ -163,6 +206,86 @@ function updateQuickBtnText() {
 function showSuccessModal(teacherName) {
   document.getElementById('modal-teacher-name').innerText = teacherName;
   document.getElementById('modal-success').style.display = 'flex';
+}
+
+function showUpdateModal(info, hasNew) {
+  const modal = document.getElementById('modal-update');
+  const title = document.getElementById('update-modal-title');
+  const body = document.getElementById('update-modal-body');
+  const dlBtn = document.getElementById('btn-modal-download-zip');
+
+  if (hasNew) {
+    title.innerHTML = `🚀 CÓ PHIÊN BẢN MỚI v${info.version}!`;
+    title.style.color = '#B91C1C';
+    let changelogHtml = '';
+    if (info.changelog && Array.isArray(info.changelog)) {
+      changelogHtml = '<ul style="margin: 6px 0 8px 18px; padding:0;">' + 
+        info.changelog.map(c => `<li>${c}</li>`).join('') + '</ul>';
+    }
+    body.innerHTML = `
+      <div style="background:#FEF2F2; border:2px solid #0F172A; border-radius:10px; padding:10px; margin-bottom:10px;">
+        <strong style="color:#B91C1C;">Đã có bản cập nhật mới v${info.version} (${info.releaseDate})!</strong>
+        <div style="font-size:11px; color:#475569; margin-top:4px;">${info.title || ''}</div>
+      </div>
+      <div style="font-weight:bold; margin-bottom:4px;">Điểm mới:</div>
+      ${changelogHtml}
+      <div style="background:#F0FDF4; border:2px solid #0F172A; border-radius:10px; padding:9px; margin-top:8px; font-size:11px; color:#065F46;">
+        💡 <strong>Cách cập nhật 1-click (Giữ nguyên mật khẩu):</strong><br>
+        Chỉ cần nhấp đúp file <code style="background:#DCFCE7; padding:2px 4px; border-radius:4px; font-weight:bold;">CAP_NHAT_TU_DONG.bat</code> trong thư mục tiện ích là xong ngay!
+      </div>
+    `;
+    if (dlBtn) {
+      dlBtn.style.display = 'flex';
+      dlBtn.href = info.downloadUrls?.dakoZip || 'https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip';
+    }
+  } else {
+    title.innerHTML = '✅ BẢN MỚI NHẤT';
+    title.style.color = '#047857';
+    body.innerHTML = `
+      <div style="background:#F0FDF4; border:2px solid #0F172A; border-radius:10px; padding:12px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:4px;">🎉</div>
+        <strong style="color:#047857; font-size:13px;">Thầy/Cô đang dùng bản v${CURRENT_VERSION} mới nhất!</strong>
+        <p style="margin-top:6px; font-size:11.5px; color:#475569;">
+          Toàn bộ tính năng tự động điền Đăng nhập & Hoàn thành lịch báo giảng 0.5s đang hoạt động ở trạng thái tối ưu nhất.
+        </p>
+      </div>
+    `;
+    if (dlBtn) dlBtn.style.display = 'none';
+  }
+
+  modal.style.display = 'flex';
+}
+
+async function checkForUpdates(isManual = false) {
+  const badgeBtn = document.getElementById('btn-header-update');
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json?t=${Date.now()}`);
+    if (!res.ok) throw new Error('Không phản hồi');
+    const data = await res.json();
+    if (data.versionCode > CURRENT_VERSION_CODE) {
+      if (badgeBtn) {
+        badgeBtn.innerHTML = `🔥 Có bản v${data.version}!`;
+        badgeBtn.style.background = '#FCA5A5';
+        badgeBtn.style.color = '#991B1B';
+      }
+      if (isManual) {
+        showUpdateModal(data, true);
+      }
+    } else {
+      if (badgeBtn) {
+        badgeBtn.innerHTML = `✅ v${CURRENT_VERSION} mới nhất`;
+        badgeBtn.style.background = '#D1FAE5';
+        badgeBtn.style.color = '#065F46';
+      }
+      if (isManual) {
+        showUpdateModal(data, false);
+      }
+    }
+  } catch (e) {
+    if (isManual) {
+      alert('⚠️ Không thể kiểm tra cập nhật lúc này. Vui lòng kiểm tra kết nối mạng hoặc truy cập GitHub!');
+    }
+  }
 }
 
 function sendActionToTab(action, data = null) {

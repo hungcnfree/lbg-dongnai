@@ -2,229 +2,403 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Trợ Lý CSDL - THCS Đăk Ơ v5.2</title>
+  <title>Trợ Lý CSDL - THCS Đăk Ơ v5.3.0</title>
   <style>
-    body {
-      width: 380px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    :root {
+      --bg-paper: #FFFDF5;
+      --bg-surface: #FBF9F1;
+      --border-dark: #0F172A;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
+      --primary-blue: #2563EB;
+      --primary-hover: #1D4ED8;
+      --emerald-green: #10B981;
+      --emerald-hover: #059669;
+      --chalk-orange: #FFEDD5;
+      --sprout-green: #D1FAE5;
+      --sticker-yellow: #FEF3C7;
+      --shadow-hard: 3px 3px 0px #0F172A;
+      --shadow-sm: 2px 2px 0px #0F172A;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background: #0f172a;
-      color: #f8fafc;
-      font-size: 13px;
-      box-sizing: border-box;
     }
+    body {
+      width: 390px;
+      font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-paper);
+      color: var(--text-dark);
+      font-size: 13px;
+      line-height: 1.4;
+      overflow-x: hidden;
+    }
+    /* HEADER */
     .header {
-      background: #1e293b;
-      padding: 12px 16px;
-      border-bottom: 1px solid #334155;
+      background: var(--bg-paper);
+      padding: 12px 14px;
+      border-bottom: 2px solid var(--border-dark);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
-    .header h3 {
-      margin: 0;
-      color: #38bdf8;
-      font-size: 15px;
+    .header-left {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
-    .ver-tag {
-      font-size: 10px;
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-weight: 700;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+    .avatar-box {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--chalk-orange);
+      border: 2px solid var(--border-dark);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
     }
+    .title-box h3 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-dark);
+      letter-spacing: -0.3px;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+    .title-box span {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .btn-update-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--sticker-yellow);
+      color: #854D0E;
+      border: 2px solid var(--border-dark);
+      box-shadow: var(--shadow-sm);
+      border-radius: 20px;
+      padding: 4px 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .btn-update-badge:hover {
+      background: #FDE68A;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px var(--border-dark);
+    }
+    .btn-update-badge:active {
+      transform: translate(1.5px, 1.5px);
+      box-shadow: 0.5px 0.5px 0px var(--border-dark);
+    }
+    /* CONTENT */
     .content {
-      padding: 12px 16px;
+      padding: 12px 14px;
     }
-    .auto-badge {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-left: 3px solid #10b981;
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      color: #cbd5e1;
-      margin-bottom: 14px;
-      line-height: 1.5;
-    }
-    .form-group {
+    /* MODE SWITCH TABS */
+    .mode-switch {
+      display: flex;
+      background: #F1F5F9;
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      padding: 3px;
       margin-bottom: 11px;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+    .mode-btn {
+      flex: 1;
+      padding: 7px 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+    .mode-btn.active {
+      background: var(--primary-blue);
+      color: #FFFFFF;
+      box-shadow: 1px 1px 0px var(--border-dark);
+    }
+    /* BANNER INFO */
+    .info-card {
+      background: var(--sprout-green);
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: 9px 12px;
+      font-size: 11.5px;
+      color: #064E3B;
+      margin-bottom: 11px;
+      line-height: 1.45;
+    }
+    .info-card strong {
+      color: #065F46;
+    }
+    /* FORMS */
+    .form-group {
+      margin-bottom: 10px;
     }
     label {
       display: block;
-      margin-bottom: 5px;
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-dark);
+      font-size: 10.5px;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
     }
-    input, select {
+    select, input[type="text"], input[type="password"] {
       width: 100%;
-      box-sizing: border-box;
-      padding: 9px 11px;
-      border-radius: 6px;
-      border: 1px solid #334155;
-      background: #1e293b;
-      color: #f8fafc;
-      font-size: 13px;
+      padding: 8.5px 11px;
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      background: #FFFFFF;
+      color: var(--text-dark);
+      font-size: 12.5px;
+      font-weight: 500;
+      box-shadow: var(--shadow-sm);
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.15s ease;
     }
-    input:focus, select:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    select:focus, input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 2.5px 2.5px 0px var(--primary-blue);
     }
-    button.btn-save {
-      width: 100%;
-      padding: 11px;
+    .password-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .btn-toggle-eye {
+      position: absolute;
+      right: 8px;
+      background: transparent;
       border: none;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: white;
-      font-weight: 700;
       cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+      color: var(--text-muted);
+    }
+    /* SAVE BUTTON */
+    .btn-save {
+      width: 100%;
+      padding: 10.5px 14px;
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      background: var(--primary-blue);
+      color: #FFFFFF;
+      font-weight: 800;
       font-size: 13px;
-      margin-top: 6px;
-      transition: 0.2s;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      cursor: pointer;
+      box-shadow: var(--shadow-hard);
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 4px;
     }
-    button.btn-save:hover {
-      background: #0284c7;
-      transform: translateY(-1px);
+    .btn-save:hover {
+      background: var(--primary-hover);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px var(--border-dark);
     }
+    .btn-save:active {
+      transform: translate(1.5px, 1.5px);
+      box-shadow: 1.5px 1.5px 0px var(--border-dark);
+    }
+    /* QUICK ACTIONS */
     .quick-actions {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid #334155;
+      margin-top: 13px;
+      padding-top: 11px;
+      border-top: 2px dashed #CBD5E1;
     }
     .quick-btn {
       width: 100%;
-      padding: 9px 11px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
+      padding: 8px 10px;
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 11px;
       cursor: pointer;
-      font-size: 11.5px;
       margin-bottom: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: 0.2s;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+    }
+    .quick-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px var(--border-dark);
+    }
+    .quick-btn:active {
+      transform: translate(1.5px, 1.5px);
+      box-shadow: 0.5px 0.5px 0px var(--border-dark);
     }
     .btn-login {
-      background: #334155;
-      color: #38bdf8;
+      background: #FFFFFF;
+      color: var(--primary-blue);
     }
-    .btn-login:hover {
-      background: #475569;
+    .btn-tkb {
+      background: #DBEAFE;
+      color: #1E40AF;
     }
     .btn-done {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: var(--sprout-green);
+      color: #065F46;
     }
-    .btn-done:hover {
-      background: rgba(16, 185, 129, 0.25);
+    .btn-update {
+      background: var(--sticker-yellow);
+      color: #854D0E;
     }
     .btn-ext {
-      background: #1e293b;
-      color: #94a3b8;
-      border: 1px solid #334155;
+      background: #F1F5F9;
+      color: #475569;
     }
-    .btn-ext:hover {
-      background: #334155;
-      color: #f8fafc;
-    }
+    /* TIP BOX */
     .tip-box {
-      margin-top: 12px;
-      padding: 9px 11px;
-      background: rgba(56, 189, 248, 0.08);
-      border-left: 3px solid #38bdf8;
-      border-radius: 6px;
+      margin-top: 10px;
+      padding: 8px 10px;
+      background: var(--chalk-orange);
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
       font-size: 11px;
-      color: #94a3b8;
-      line-height: 1.4;
+      color: #9A3412;
+      line-height: 1.45;
     }
+    /* FOOTER */
     .footer {
-      background: #090d16;
-      padding: 10px 16px;
-      border-top: 1px solid #1e293b;
+      background: var(--bg-surface);
+      border-top: 2px solid var(--border-dark);
+      padding: 10px 14px;
+      font-size: 10.5px;
+      color: var(--text-muted);
       text-align: center;
-      font-size: 11px;
-      color: #64748b;
+      line-height: 1.45;
+    }
+    .footer strong {
+      color: var(--text-dark);
     }
     .footer-links {
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin-top: 6px;
+      margin-top: 5px;
     }
     .footer-link {
-      color: #38bdf8;
+      color: var(--primary-blue);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
     }
     .footer-link:hover {
       text-decoration: underline;
     }
+    /* MODALS */
     .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
       display: none;
-      align-items: center;
-      justify-content: center;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(2px);
       z-index: 99999;
-      padding: 20px;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
     }
     .modal-box {
-      background: #1e293b;
-      border: 1px solid #10b981;
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      text-align: center;
-      max-width: 320px;
+      background: var(--bg-paper);
+      border: 3px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      box-shadow: 5px 5px 0px var(--border-dark);
+      padding: 16px;
+      max-width: 340px;
       width: 100%;
+      text-align: left;
     }
     .modal-box h4 {
-      margin: 0 0 10px 0;
-      color: #10b981;
-      font-size: 16px;
+      margin: 0 0 8px 0;
+      color: var(--text-dark);
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .btn-modal-close {
-      margin-top: 14px;
+    .modal-body {
+      font-size: 11.5px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .btn-modal-action {
       width: 100%;
-      padding: 8px;
-      background: #10b981;
-      color: #0f172a;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
+      padding: 8px 10px;
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 11.5px;
       cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-  </style>
+    .btn-modal-action.primary {
+      background: var(--emerald-green);
+      color: #FFFFFF;
+    }
+    .btn-modal-action.secondary {
+      background: #FFFFFF;
+      color: var(--text-dark);
+    }
+</style>
 </head>
 <body>
   <div class="header">
-    <h3>🏫 THCS Đăk Ơ - Trợ Lý CSDL</h3>
-    <span class="ver-tag">BẢN NỘI BỘ v5.2.1</span>
+    <div class="header-left">
+      <div class="avatar-box">🤖</div>
+      <div class="title-box">
+        <h3>TRỢ LÝ CSDL</h3>
+        <span>THCS Đăk Ơ • v5.3.0</span>
+      </div>
+    </div>
+    <button type="button" id="btn-header-update" class="btn-update-badge" title="Bấm để kiểm tra và cập nhật phiên bản mới">
+      🔄 Cập nhật
+    </button>
   </div>
 
   <div class="content">
-    <div class="auto-badge">
-      ✅ <strong>Cố định 100%:</strong> THCS | Xã Đăk Ơ | Trường THCS Đăk Ơ.<br>
+    <div class="info-card">
+      🏫 <strong>Cố định 100%:</strong> THCS | Xã Đăk Ơ | Trường THCS Đăk Ơ (70691515).<br>
       Thầy/Cô chỉ cần chọn tên mình và lưu mật khẩu 1 lần duy nhất:
     </div>
 
@@ -297,21 +471,26 @@
 
     <div class="form-group">
       <label>2. Số điện thoại (Tên đăng nhập CSDL)</label>
-      <input type="text" id="cfg-username" placeholder="Ví dụ: 0976579151" />
+      <input type="text" id="cfg-username" placeholder="Ví dụ: 0976579151" autocomplete="off" />
     </div>
 
     <div class="form-group">
       <label>3. Mật khẩu đăng nhập CSDL</label>
-      <input type="password" id="cfg-password" placeholder="Nhập mật khẩu CSDL" />
+      <div class="password-wrap">
+        <input type="password" id="cfg-password" placeholder="Nhập mật khẩu CSDL" autocomplete="off" />
+        <button type="button" id="btn-toggle-pass" class="btn-toggle-eye" title="Hiện/Ẩn mật khẩu">👁️</button>
+      </div>
     </div>
 
-    <button id="btn-save" class="btn-save">💾 LƯU CẤU HÌNH CỦA TÔI</button>
+    <button type="button" id="btn-save" class="btn-save">💾 LƯU CẤU HÌNH CỦA TÔI</button>
 
     <div class="quick-actions">
       <label style="margin-bottom: 6px;">⚡ Thao tác nhanh:</label>
-      <button id="btn-fill-account" class="quick-btn btn-login">🔑 Tự Động Điền Đăng Nhập</button>
-      <button id="btn-confirm-done" class="quick-btn btn-done">✅ Xác Nhận Hoàn Thành Tuần (0.5s)</button>
-      <button id="btn-open-extensions" class="quick-btn btn-ext">⚙️ Quản Lý Tiện Ích (chrome://extensions)</button>
+      <button type="button" id="btn-fill-account" class="quick-btn btn-login">🔑 Tự Động Điền Đăng Nhập</button>
+      <button type="button" id="btn-auto-fill-tkb" class="quick-btn btn-tkb">📥 Tự Động Điền Lịch Từ TKB</button>
+      <button type="button" id="btn-confirm-done" class="quick-btn btn-done">✅ Xác Nhận Hoàn Thành Tuần (0.5s)</button>
+      <button type="button" id="btn-check-update" class="quick-btn btn-update">🔄 Kiểm Tra & Cập Nhật Tự Động</button>
+      <button type="button" id="btn-open-extensions" class="quick-btn btn-ext">⚙️ Quản Lý Tiện Ích (chrome://extensions)</button>
     </div>
 
     <div class="tip-box">
@@ -324,19 +503,38 @@
     <div class="footer-links">
       <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="footer-link">💬 Nhóm Zalo AI</a>
       <span>•</span>
-      <a href="https://github.com/hungcnfree/lbg-dongnai" target="_blank" class="footer-link">🚀 Bản mới (GitHub)</a>
+      <a href="https://github.com/hungcnfree/lbg-dongnai" target="_blank" class="footer-link">🚀 GitHub</a>
+      <span>•</span>
+      <a href="#" id="link-footer-update" class="footer-link">🔄 Cập nhật</a>
     </div>
   </div>
 
+  <!-- Modal Success -->
   <div id="modal-success" class="modal-overlay">
     <div class="modal-box">
       <h4>🎉 ĐÃ LƯU THÀNH CÔNG!</h4>
-      <div style="font-size: 11px; color: #cbd5e1; line-height: 1.5;">
-        Chào Thầy/Cô: <strong id="modal-teacher-name" style="color: #38bdf8;"></strong>!<br>
-        Trường: <strong style="color: #10b981;">THCS Đăk Ơ (70691515)</strong>.<br><br>
+      <div class="modal-body">
+        Chào Thầy/Cô: <strong id="modal-teacher-name" style="color: #2563EB;"></strong>!<br>
+        Trường: <strong style="color: #059669;">THCS Đăk Ơ (70691515)</strong>.<br><br>
         Từ bây giờ, mỗi khi mở trang CSDL, Robot sẽ tự động chọn đúng <strong>Trường THCS Đăk Ơ</strong> và điền sẵn tài khoản. Thầy/Cô chỉ việc gõ 8 ký tự CAPTCHA rồi ấn <strong>Enter</strong>!
       </div>
-      <button id="btn-close-modal" class="btn-modal-close">ĐÃ HIỂU, ĐÓNG CỬA SỔ</button>
+      <div class="modal-actions">
+        <button type="button" id="btn-close-modal" class="btn-modal-action primary">ĐÃ HIỂU, ĐÓNG CỬA SỔ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Update -->
+  <div id="modal-update" class="modal-overlay">
+    <div class="modal-box">
+      <h4 id="update-modal-title">🚀 KIỂM TRA BẢN MỚI</h4>
+      <div id="update-modal-body" class="modal-body">
+        Đang kiểm tra kết nối...
+      </div>
+      <div class="modal-actions">
+        <a href="https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip" id="btn-modal-download-zip" target="_blank" class="btn-modal-action primary" style="display:none;">📥 Tải Bản Cập Nhật ZIP</a>
+        <button type="button" id="btn-close-update-modal" class="btn-modal-action secondary">ĐÓNG</button>
+      </div>
     </div>
   </div>
 

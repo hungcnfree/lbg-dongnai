@@ -1,7 +1,11 @@
-// popup.js - Trợ Lý CSDL Đồng Nai v5.2 (Toàn Tỉnh & Telerik Engine)
+// popup.js - Trợ Lý CSDL Toàn Tỉnh Đồng Nai v5.3.0
+// Paper Neo-Brutalism UI & Tự động cập nhật 1-click
+
+const CURRENT_VERSION = '5.3.0';
+const CURRENT_VERSION_CODE = 530;
 
 let currentConfig = {
-  mode: 'dako', // 'dako' hoặc 'province'
+  mode: 'dako',
   name: '',
   username: '',
   password: '',
@@ -25,18 +29,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const userInput = document.getElementById('cfg-username');
   const passInput = document.getElementById('cfg-password');
+  const btnTogglePass = document.getElementById('btn-toggle-pass');
 
-  // 1. Nạp danh sách 96 Xã/Phường từ window.DONGNAI_WARDS
+  // Toggle ẩn hiện mật khẩu
+  if (btnTogglePass && passInput) {
+    btnTogglePass.addEventListener('click', () => {
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        btnTogglePass.innerText = '🔒';
+      } else {
+        passInput.type = 'password';
+        btnTogglePass.innerText = '👁️';
+      }
+    });
+  }
+
+  // Nạp 96 xã phường
   initWardsDropdown();
 
-  // 2. Chuyển đổi giữa 2 tab chế độ
-  tabDako.addEventListener('click', () => {
-    switchMode('dako');
-  });
-
-  tabProvince.addEventListener('click', () => {
-    switchMode('province');
-  });
+  // Chuyển đổi tab
+  tabDako.addEventListener('click', () => switchMode('dako'));
+  tabProvince.addEventListener('click', () => switchMode('province'));
 
   function switchMode(m) {
     currentConfig.mode = m;
@@ -98,15 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  capHocSelect.addEventListener('change', () => {
-    updateSchoolsDropdown();
-  });
+  capHocSelect.addEventListener('change', updateSchoolsDropdown);
+  phuongXaSelect.addEventListener('change', updateSchoolsDropdown);
 
-  phuongXaSelect.addEventListener('change', () => {
-    updateSchoolsDropdown();
-  });
-
-  // 3. Tải cấu hình đã lưu trong chrome.storage (cả local và sync)
+  // Tải cấu hình
   function loadSavedConfig() {
     if (typeof chrome === 'undefined' || !chrome.storage) return;
 
@@ -118,21 +126,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (currentConfig.mode === 'province') {
         switchMode('province');
-        customNameInput.value = currentConfig.name || '';
-        if (currentConfig.capCode) capHocSelect.value = currentConfig.capCode;
-        if (currentConfig.phuongXa) phuongXaSelect.value = currentConfig.phuongXa;
-        updateSchoolsDropdown();
-        if (currentConfig.truong) {
-          for (let i = 0; i < truongSelect.options.length; i++) {
-            if (truongSelect.options[i].value.includes(currentConfig.truong) || currentConfig.truong.includes(truongSelect.options[i].value)) {
-              truongSelect.selectedIndex = i;
-              break;
-            }
+        if (customNameInput) customNameInput.value = currentConfig.name || '';
+        if (capHocSelect) capHocSelect.value = currentConfig.capCode || '03';
+        if (phuongXaSelect && currentConfig.phuongXa) {
+          phuongXaSelect.value = currentConfig.phuongXa;
+          updateSchoolsDropdown();
+          if (truongSelect && currentConfig.truong) {
+            truongSelect.value = currentConfig.truong;
           }
         }
       } else {
         switchMode('dako');
-        teacherSelect.value = currentConfig.name || '';
+        if (teacherSelect && currentConfig.name) {
+          teacherSelect.value = currentConfig.name;
+        }
       }
       updateQuickBtnText();
     };
@@ -160,55 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadSavedConfig();
 
-  // Khi chọn tên giáo viên danh sách sở tại
-  teacherSelect.addEventListener('change', () => {
-    currentConfig.name = teacherSelect.value;
-    if (!userInput.value) {
-      userInput.placeholder = `SĐT đăng nhập của ${teacherSelect.value}...`;
-      userInput.focus();
-    }
-    updateQuickBtnText();
-  });
-
-  // 4. Nút Lưu cấu hình
+  // Nút Lưu cấu hình
   document.getElementById('btn-save').addEventListener('click', () => {
-    const isDako = currentConfig.mode === 'dako';
-    let teacherName = '';
-    let capHocText = 'Trung học cơ sở';
-    let capCodeVal = '03';
-    let wardText = 'Xã Đăk Ơ';
-    let schoolText = 'Trường THCS Đăk Ơ';
-
-    if (isDako) {
-      teacherName = teacherSelect.value;
-      if (!teacherName) {
-        alert('⚠️ Thầy/Cô vui lòng chọn Tên của mình trong danh sách trước nhé!');
-        teacherSelect.focus();
-        return;
-      }
-    } else {
-      teacherName = customNameInput.value.trim();
-      if (!teacherName) {
-        alert('⚠️ Thầy/Cô vui lòng nhập Họ và tên của mình!');
-        customNameInput.focus();
-        return;
-      }
-      capCodeVal = capHocSelect.value;
-      capHocText = capHocSelect.options[capHocSelect.selectedIndex]?.getAttribute('data-name') || capHocSelect.options[capHocSelect.selectedIndex]?.text || 'Trung học cơ sở';
-      wardText = phuongXaSelect.value;
-      if (!wardText) {
-        alert('⚠️ Thầy/Cô vui lòng chọn Phường / Xã!');
-        phuongXaSelect.focus();
-        return;
-      }
-      schoolText = truongSelect.value;
-      if (!schoolText) {
-        alert('⚠️ Thầy/Cô vui lòng chọn Trường học!');
-        truongSelect.focus();
-        return;
-      }
-    }
-
     const phone = userInput.value.trim();
     const pass = passInput.value.trim();
 
@@ -217,27 +177,57 @@ document.addEventListener('DOMContentLoaded', () => {
       userInput.focus();
       return;
     }
-
     if (!pass) {
       alert('⚠️ Thầy/Cô vui lòng nhập Mật khẩu CSDL!');
       passInput.focus();
       return;
     }
 
-    currentConfig.name = teacherName;
+    if (currentConfig.mode === 'dako') {
+      const tName = teacherSelect.value;
+      if (!tName) {
+        alert('⚠️ Thầy/Cô vui lòng chọn Tên trong danh sách 60 giáo viên!');
+        teacherSelect.focus();
+        return;
+      }
+      currentConfig.name = tName;
+      currentConfig.capHoc = 'Trung học cơ sở';
+      currentConfig.capCode = '03';
+      currentConfig.phuongXa = 'Xã Đăk Ơ';
+      currentConfig.truong = 'Trường THCS Đăk Ơ (70691515) - Xã Đăk Ơ';
+    } else {
+      const cName = customNameInput.value.trim();
+      const capOpt = capHocSelect.options[capHocSelect.selectedIndex];
+      const capName = capOpt ? capOpt.getAttribute('data-name') || capOpt.text : 'Trung học cơ sở';
+      const capCode = capHocSelect.value;
+      const ward = phuongXaSelect.value;
+      const schoolOpt = truongSelect.options[truongSelect.selectedIndex];
+      const schoolVal = truongSelect.value;
+
+      if (!ward) {
+        alert('⚠️ Thầy/Cô vui lòng chọn Phường / Xã!');
+        phuongXaSelect.focus();
+        return;
+      }
+      if (!schoolVal) {
+        alert('⚠️ Thầy/Cô vui lòng chọn Trường học!');
+        truongSelect.focus();
+        return;
+      }
+
+      currentConfig.name = cName || 'Thầy/Cô Giáo';
+      currentConfig.capHoc = capName;
+      currentConfig.capCode = capCode;
+      currentConfig.phuongXa = ward;
+      currentConfig.truong = schoolVal;
+    }
+
     currentConfig.username = phone;
     currentConfig.password = pass;
-    currentConfig.capHoc = capHocText;
-    currentConfig.capCode = capCodeVal;
-    currentConfig.phuongXa = wardText;
-    currentConfig.truong = schoolText;
-    currentConfig.schoolCode = isDako ? '70691515' : (truongSelect.options[truongSelect.selectedIndex]?.getAttribute('data-code') || '');
 
     if (typeof chrome !== 'undefined' && chrome.storage) {
       const savePayload = { csdl_teacher_config: currentConfig };
-      if (chrome.storage.local) {
-        chrome.storage.local.set(savePayload);
-      }
+      if (chrome.storage.local) chrome.storage.local.set(savePayload);
       if (chrome.storage.sync) {
         chrome.storage.sync.set(savePayload, () => {
           showSuccessModal(currentConfig.name, currentConfig.truong);
@@ -254,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 5. Nút Mở trang chrome://extensions (1-click)
+  // Nút Thao tác nhanh
   document.getElementById('btn-open-extensions').addEventListener('click', () => {
     if (typeof chrome !== 'undefined' && chrome.tabs && chrome.tabs.create) {
       chrome.tabs.create({ url: 'chrome://extensions' });
@@ -263,7 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 6. Các thao tác nhanh
   document.getElementById('btn-fill-account').addEventListener('click', () => {
     if (!currentConfig.username) {
       alert('⚠️ Thầy/Cô hãy nhập thông tin và bấm Lưu trước nhé!');
@@ -272,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sendActionToTab('CONFIG_SAVED', currentConfig);
   });
 
-  // Nút Tự động điền lịch từ TKB
   const btnAutoTkb = document.getElementById('btn-auto-fill-tkb');
   if (btnAutoTkb) {
     btnAutoTkb.addEventListener('click', () => {
@@ -284,10 +272,27 @@ document.addEventListener('DOMContentLoaded', () => {
     sendActionToTab('CONFIRM_DONE');
   });
 
-  // 7. Đóng modal
   document.getElementById('btn-close-modal').addEventListener('click', () => {
     document.getElementById('modal-success').style.display = 'none';
   });
+
+  // CƠ CHẾ KIỂM TRA & CẬP NHẬT TỰ ĐỘNG
+  const btnHeaderUpdate = document.getElementById('btn-header-update');
+  const btnCheckUpdate = document.getElementById('btn-check-update');
+  const linkFooterUpdate = document.getElementById('link-footer-update');
+  const btnCloseUpdateModal = document.getElementById('btn-close-update-modal');
+
+  if (btnHeaderUpdate) btnHeaderUpdate.addEventListener('click', () => checkForUpdates(true));
+  if (btnCheckUpdate) btnCheckUpdate.addEventListener('click', () => checkForUpdates(true));
+  if (linkFooterUpdate) linkFooterUpdate.addEventListener('click', (e) => {
+    e.preventDefault();
+    checkForUpdates(true);
+  });
+  if (btnCloseUpdateModal) btnCloseUpdateModal.addEventListener('click', () => {
+    document.getElementById('modal-update').style.display = 'none';
+  });
+
+  checkForUpdates(false);
 });
 
 function updateQuickBtnText() {
@@ -303,8 +308,88 @@ function updateQuickBtnText() {
 
 function showSuccessModal(teacherName, schoolName) {
   document.getElementById('modal-teacher-name').innerText = teacherName;
-  document.getElementById('modal-school-name').innerText = schoolName || 'Đồng Nai';
+  document.getElementById('modal-school-name').innerText = schoolName;
   document.getElementById('modal-success').style.display = 'flex';
+}
+
+function showUpdateModal(info, hasNew) {
+  const modal = document.getElementById('modal-update');
+  const title = document.getElementById('update-modal-title');
+  const body = document.getElementById('update-modal-body');
+  const dlBtn = document.getElementById('btn-modal-download-zip');
+
+  if (hasNew) {
+    title.innerHTML = `🚀 CÓ PHIÊN BẢN MỚI v${info.version}!`;
+    title.style.color = '#B91C1C';
+    let changelogHtml = '';
+    if (info.changelog && Array.isArray(info.changelog)) {
+      changelogHtml = '<ul style="margin: 6px 0 8px 18px; padding:0;">' + 
+        info.changelog.map(c => `<li>${c}</li>`).join('') + '</ul>';
+    }
+    body.innerHTML = `
+      <div style="background:#FEF2F2; border:2px solid #0F172A; border-radius:10px; padding:10px; margin-bottom:10px;">
+        <strong style="color:#B91C1C;">Đã có bản cập nhật mới v${info.version} (${info.releaseDate})!</strong>
+        <div style="font-size:11px; color:#475569; margin-top:4px;">${info.title || ''}</div>
+      </div>
+      <div style="font-weight:bold; margin-bottom:4px;">Điểm mới:</div>
+      ${changelogHtml}
+      <div style="background:#F0FDF4; border:2px solid #0F172A; border-radius:10px; padding:9px; margin-top:8px; font-size:11px; color:#065F46;">
+        💡 <strong>Cách cập nhật 1-click (Giữ nguyên mật khẩu):</strong><br>
+        Chỉ cần nhấp đúp file <code style="background:#DCFCE7; padding:2px 4px; border-radius:4px; font-weight:bold;">CAP_NHAT_TU_DONG.bat</code> trong thư mục tiện ích là xong ngay!
+      </div>
+    `;
+    if (dlBtn) {
+      dlBtn.style.display = 'flex';
+      dlBtn.href = info.downloadUrls?.provinceZip || 'https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip';
+    }
+  } else {
+    title.innerHTML = '✅ BẢN MỚI NHẤT';
+    title.style.color = '#047857';
+    body.innerHTML = `
+      <div style="background:#F0FDF4; border:2px solid #0F172A; border-radius:10px; padding:12px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:4px;">🎉</div>
+        <strong style="color:#047857; font-size:13px;">Thầy/Cô đang dùng bản v${CURRENT_VERSION} mới nhất!</strong>
+        <p style="margin-top:6px; font-size:11.5px; color:#475569;">
+          Toàn bộ tính năng tự động điền Đăng nhập & Hoàn thành lịch báo giảng 0.5s đang hoạt động ở trạng thái tối ưu nhất.
+        </p>
+      </div>
+    `;
+    if (dlBtn) dlBtn.style.display = 'none';
+  }
+
+  modal.style.display = 'flex';
+}
+
+async function checkForUpdates(isManual = false) {
+  const badgeBtn = document.getElementById('btn-header-update');
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json?t=${Date.now()}`);
+    if (!res.ok) throw new Error('Không phản hồi');
+    const data = await res.json();
+    if (data.versionCode > CURRENT_VERSION_CODE) {
+      if (badgeBtn) {
+        badgeBtn.innerHTML = `🔥 Có bản v${data.version}!`;
+        badgeBtn.style.background = '#FCA5A5';
+        badgeBtn.style.color = '#991B1B';
+      }
+      if (isManual) {
+        showUpdateModal(data, true);
+      }
+    } else {
+      if (badgeBtn) {
+        badgeBtn.innerHTML = `✅ v${CURRENT_VERSION} mới nhất`;
+        badgeBtn.style.background = '#D1FAE5';
+        badgeBtn.style.color = '#065F46';
+      }
+      if (isManual) {
+        showUpdateModal(data, false);
+      }
+    }
+  } catch (e) {
+    if (isManual) {
+      alert('⚠️ Không thể kiểm tra cập nhật lúc này. Vui lòng kiểm tra kết nối mạng hoặc truy cập GitHub!');
+    }
+  }
 }
 
 function sendActionToTab(action, data = null) {
