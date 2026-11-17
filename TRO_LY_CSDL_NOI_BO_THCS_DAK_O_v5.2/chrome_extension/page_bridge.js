@@ -1,8 +1,8 @@
-// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.0 (Sloppy Mode)
+// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.1 (Sloppy Mode)
 // Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.0...');
+  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.1...');
 
   function sleep(ms) {
     return new Promise(function (resolve) {
@@ -16,118 +16,56 @@
     }));
   }
 
-  // Chờ ASP.NET AJAX PostBack hoàn tất hoàn toàn
-  function waitForAjaxPostBack(minWaitMs, maxWaitMs) {
+  // Đảm bảo an toàn 100% trước lỗi caller/callee của MicrosoftAjaxWebForms
+  function safeDoPostBack(targetId, elem) {
+    try {
+      Object.defineProperty(window, 'event', {
+        value: { target: elem, srcElement: elem },
+        configurable: true,
+        writable: true
+      });
+    } catch (e) {
+      window.event = { target: elem, srcElement: elem };
+    }
+    window.__doPostBack(targetId, '');
+  }
+
+  // Chờ ASP.NET AJAX PostBack hoàn tất
+  function waitForAjax(minWaitMs, maxWaitMs) {
     if (!minWaitMs) minWaitMs = 1200;
-    if (!maxWaitMs) maxWaitMs = 10000;
-    
+    if (!maxWaitMs) maxWaitMs = 12000;
     return new Promise(function (resolve) {
       setTimeout(function () {
         var start = Date.now();
         var timer = setInterval(function () {
           var isBusy = false;
           try {
-            if (window.Sys && window.Sys.WebForms && window.Sys.WebForms.PageRequestManager) {
-              isBusy = window.Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();
+            if (window.Sys && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+              isBusy = Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();
             }
-          } catch (e) {
-            isBusy = false;
-          }
-          if (!isBusy || (Date.now() - start >= maxWaitMs)) {
+          } catch (e) {}
+          if (!isBusy || (Date.now() - start > maxWaitMs)) {
             clearInterval(timer);
-            setTimeout(resolve, 500); // Chờ Telerik render lại DOM
+            setTimeout(resolve, 800);
           }
         }, 150);
       }, minWaitMs);
     });
   }
 
-  // Hàm chọn item an toàn tuyệt đối không bao giờ kích hoạt lỗi strict mode caller/callee
-  function clickSelectComboItem(inputId, targetFilter) {
+  // Chờ Telerik $find sẵn sàng
+  function waitForTelerik(timeoutMs) {
+    if (!timeoutMs) timeoutMs = 15000;
     return new Promise(function (resolve) {
-      var inp = document.getElementById(inputId);
-      if (!inp) {
-        resolve(false);
-        return;
-      }
-
-      // Mở dropdown trong một detached macro-task (khởi tạo callstack độc lập)
-      setTimeout(function () {
-        try {
-          inp.focus();
-          inp.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
-          inp.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
-          inp.click();
-        } catch (e) {
-          console.warn('Error opening dropdown:', e);
+      var start = Date.now();
+      var timer = setInterval(function () {
+        var ok = (typeof window.$find === 'function') &&
+                 window.$find('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc') !== null;
+        if (ok || (Date.now() - start > timeoutMs)) {
+          clearInterval(timer);
+          resolve(ok);
         }
-
-        setTimeout(function () {
-          try {
-            var dropDowns = document.querySelectorAll('.RadComboBoxDropDown');
-            var targetLi = null;
-
-            for (var d = 0; d < dropDowns.length; d++) {
-              var dd = dropDowns[d];
-              var items = dd.querySelectorAll('.rcbItem');
-              for (var i = 0; i < items.length; i++) {
-                var it = items[i];
-                var txt = (it.innerText || '').trim();
-                var matched = false;
-
-                if (typeof targetFilter === 'function') {
-                  matched = targetFilter(txt, it);
-                } else {
-                  matched = txt.toLowerCase().includes(targetFilter.toLowerCase());
-                }
-
-                if (matched) {
-                  targetLi = it;
-                  break;
-                }
-              }
-              if (targetLi) break;
-            }
-
-            if (targetLi) {
-              targetLi.scrollIntoView({ block: 'nearest' });
-              targetLi.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
-              targetLi.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
-              targetLi.click();
-              resolve(true);
-              return;
-            }
-
-            // Fallback Telerik Client API
-            var comboId = inputId.replace(/_Input$/, '');
-            if (typeof window.$find === 'function') {
-              var combo = window.$find(comboId);
-              if (combo && typeof combo.get_items === 'function') {
-                var cItems = combo.get_items();
-                for (var ci = 0; ci < cItems.get_count(); ci++) {
-                  var itemObj = cItems.getItem(ci);
-                  var itemText = itemObj ? itemObj.get_text() : '';
-                  var isMatch = false;
-                  if (typeof targetFilter === 'function') {
-                    isMatch = targetFilter(itemText, null);
-                  } else {
-                    isMatch = itemText.toLowerCase().includes(targetFilter.toLowerCase());
-                  }
-                  if (isMatch) {
-                    itemObj.select();
-                    resolve(true);
-                    return;
-                  }
-                }
-              }
-            }
-            resolve(false);
-          } catch (err) {
-            console.warn('clickSelectComboItem error:', err);
-            resolve(false);
-          }
-        }, 350);
-      }, 0);
+      }, 200);
     });
   }
 
@@ -136,33 +74,55 @@
     try {
       notify('⏳ Đang kết nối điều khiển CSDL Đồng Nai...', false);
 
+      var ready = await waitForTelerik(15000);
+      if (!ready) {
+        notify('⚠️ Hệ thống CSDL đang tải chậm, vui lòng đợi thêm giây lát...', false);
+        await sleep(1500);
+      }
+
       // =====================================================================
       // 1. CẤP HỌC: Trung học cơ sở
       // =====================================================================
-      var inpCap = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input');
-      var curCap = inpCap ? (inpCap.value || '').trim() : '';
-
-      if (!curCap.toLowerCase().includes('trung học cơ sở')) {
+      var curCap = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input')?.value || '';
+      if (!curCap.includes('Trung học cơ sở')) {
         notify('⏳ Đang chọn Cấp học: <strong>Trung học cơ sở</strong>...', false);
-        await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input', 'Trung học cơ sở');
-        // CHỜ POSTBACK CẤP HỌC (Server CSDL mất ~2.5 - 3 giây)
-        await waitForAjaxPostBack(2500, 10000);
+        var comboCap = window.$find('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc');
+        if (comboCap) {
+          var itemCap = comboCap.findItemByText('Trung học cơ sở');
+          if (itemCap) {
+            comboCap.set_text('Trung học cơ sở');
+            comboCap.set_value(itemCap.get_value());
+            safeDoPostBack('ctl00$ContentPlaceHolder1$ctl00$cbCapHoc', document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input'));
+            await waitForAjax();
+          }
+        }
       }
 
       // =====================================================================
       // 2. PHƯỜNG / XÃ: Xã Đăk Ơ
       // =====================================================================
-      var inpXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input');
-      var curXa = inpXa ? (inpXa.value || '').trim() : '';
-
+      var curXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input')?.value || '';
       if (!curXa.toLowerCase().includes('đăk ơ') && !curXa.toLowerCase().includes('đắk ơ')) {
         notify('⏳ Đang chọn Phường/Xã: <strong>Xã Đăk Ơ</strong>...', false);
-        await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input', function (txt) {
-          var t = txt.toLowerCase();
-          return t.includes('đăk ơ') || t.includes('đắk ơ');
-        });
-        // CHỜ POSTBACK XÃ ĐĂK Ơ (Server nạp trường THCS Đăk Ơ)
-        await waitForAjaxPostBack(1500, 8000);
+        var comboXa = window.$find('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD');
+        if (comboXa) {
+          var itemXa = null;
+          var xaItems = comboXa.get_items();
+          for (var i = 0; i < xaItems.get_count(); i++) {
+            var it = xaItems.getItem(i);
+            var t = it.get_text().toLowerCase();
+            if (t.includes('đăk ơ') || t.includes('đắk ơ')) {
+              itemXa = it;
+              break;
+            }
+          }
+          if (itemXa) {
+            comboXa.set_text(itemXa.get_text());
+            comboXa.set_value(itemXa.get_value());
+            safeDoPostBack('ctl00$ContentPlaceHolder1$ctl00$rcbPhongGD', document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input'));
+            await waitForAjax();
+          }
+        }
       }
 
       // =====================================================================
@@ -170,50 +130,34 @@
       // TUYỆT ĐỐI KHÔNG BAO GIỜ CHỌN MẦM NON HAY TIỂU HỌC!
       // =====================================================================
       notify('⏳ Đang chọn Trường: <strong>Trường THCS Đăk Ơ</strong>...', false);
-      var schoolSelected = false;
-      var startFind = Date.now();
-
-      while (Date.now() - startFind < 15000) {
-        var inpTr = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input');
-        var curTr = inpTr ? (inpTr.value || '').trim() : '';
-        
-        // Kiểm tra xem trường hiện tại đã chuẩn THCS Đăk Ơ chưa
-        if ((curTr.includes('70691515') || curTr.toLowerCase().includes('thcs')) && 
-            (curTr.toLowerCase().includes('đăk ơ') || curTr.toLowerCase().includes('đắk ơ')) && 
-            !curTr.toLowerCase().includes('mầm non') && 
-            !curTr.toLowerCase().includes('tiểu học')) {
-          schoolSelected = true;
-          break;
+      var comboTr = window.$find('ctl00_ContentPlaceHolder1_ctl00_cbTruong');
+      if (comboTr) {
+        var itemTr = null;
+        var trItems = comboTr.get_items();
+        for (var j = 0; j < trItems.get_count(); j++) {
+          var sItem = trItems.getItem(j);
+          var st = sItem.get_text().toLowerCase();
+          if (st.includes('70691515') || (st.includes('thcs') && st.includes('đăk ơ') && !st.includes('trương định'))) {
+            itemTr = sItem;
+            break;
+          }
         }
-
-        // Chọn bằng bộ lọc thông minh: Phải chứa 70691515 hoặc THCS Đăk Ơ, cấm tuyệt đối mầm non/tiểu học
-        var ok = await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input', function (txt) {
-          var t = txt.toLowerCase();
-          if (t.includes('mầm non') || t.includes('tiểu học')) return false;
-          if (t.includes('70691515')) return true;
-          if (t.includes('thcs') && (t.includes('đăk ơ') || t.includes('đắk ơ'))) return true;
-          return false;
-        });
-
-        if (ok) {
-          schoolSelected = true;
-          await sleep(500);
-          break;
+        if (itemTr) {
+          itemTr.select();
         }
-        await sleep(600);
       }
 
       // =====================================================================
-      // 4. ĐIỀN SĐT, MẬT KHẨU & FOCUS CAPTCHA (8 KÝ TỰ)
+      // 4. ĐIỀN TÀI KHOẢN, MẬT KHẨU & FOCUS CAPTCHA (8 KÝ TỰ)
       // =====================================================================
       var uInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
       var pInp = document.getElementById('ContentPlaceHolder1_ctl00_tbP');
-      if (uInp && cfg.username) {
+      if (uInp && cfg && cfg.username) {
         uInp.value = cfg.username;
         uInp.dispatchEvent(new Event('input', { bubbles: true }));
         uInp.dispatchEvent(new Event('change', { bubbles: true }));
       }
-      if (pInp && cfg.password) {
+      if (pInp && cfg && cfg.password) {
         pInp.value = cfg.password;
         pInp.dispatchEvent(new Event('input', { bubbles: true }));
         pInp.dispatchEvent(new Event('change', { bubbles: true }));
@@ -239,7 +183,7 @@
       var finalXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input')?.value || 'Xã Đăk Ơ';
       var finalTruong = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input')?.value || 'Trường THCS Đăk Ơ (70691515)';
 
-      var teacherName = cfg.name || 'Thầy/Cô THCS Đăk Ơ';
+      var teacherName = (cfg && cfg.name) ? cfg.name : 'Thầy/Cô THCS Đăk Ơ';
       notify('🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN XONG CHO ' + teacherName + '!</strong><br><span style="color:#2563EB;">' + finalCap + ' | ' + finalXa + ' | ' + finalTruong + '</span>', true);
     } catch (err) {
       console.error('[CSDL Robot] Lỗi:', err);
@@ -332,5 +276,8 @@ Thầy/Cô vui lòng kiểm tra tiết và bấm nút GHI trên thanh công cụ
     runAutoFillFromTKB();
   });
 
-  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.0 đã sẵn sàng!');
+  // Báo hiệu bridge đã sẵn sàng
+  window.CSDL_BRIDGE_READY = true;
+  window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_READY'));
+  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.1 đã sẵn sàng!');
 })();

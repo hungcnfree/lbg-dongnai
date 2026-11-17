@@ -1,9 +1,8 @@
-// page_bridge.js - Telerik RadComboBox Client Engine v5.3.0 (Toàn Tỉnh Đồng Nai)
+// page_bridge.js - Telerik RadComboBox Client Engine v5.3.1 (Toàn Tỉnh Đồng Nai)
 // Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Page Bridge] Đã nạp vào Page Context v5.3.0 (Sloppy Mode)');
-  window.CSDL_BRIDGE_READY = true;
+  console.log('[CSDL Page Bridge] Đã nạp vào Page Context v5.3.1 (Sloppy Mode)');
 
   function sleep(ms) {
     return new Promise(function (resolve) {
@@ -17,115 +16,53 @@
     }));
   }
 
-  function waitForAjaxPostBack(minWaitMs, maxWaitMs) {
+  function safeDoPostBack(targetId, elem) {
+    try {
+      Object.defineProperty(window, 'event', {
+        value: { target: elem, srcElement: elem },
+        configurable: true,
+        writable: true
+      });
+    } catch (e) {
+      window.event = { target: elem, srcElement: elem };
+    }
+    window.__doPostBack(targetId, '');
+  }
+
+  function waitForAjax(minWaitMs, maxWaitMs) {
     if (!minWaitMs) minWaitMs = 1200;
-    if (!maxWaitMs) maxWaitMs = 10000;
-    
+    if (!maxWaitMs) maxWaitMs = 12000;
     return new Promise(function (resolve) {
       setTimeout(function () {
         var start = Date.now();
         var timer = setInterval(function () {
           var isBusy = false;
           try {
-            if (window.Sys && window.Sys.WebForms && window.Sys.WebForms.PageRequestManager) {
-              isBusy = window.Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();
+            if (window.Sys && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+              isBusy = Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();
             }
-          } catch (e) {
-            isBusy = false;
-          }
-          if (!isBusy || (Date.now() - start >= maxWaitMs)) {
+          } catch (e) {}
+          if (!isBusy || (Date.now() - start > maxWaitMs)) {
             clearInterval(timer);
-            setTimeout(resolve, 500);
+            setTimeout(resolve, 800);
           }
         }, 150);
       }, minWaitMs);
     });
   }
 
-  function clickSelectComboItem(inputId, targetFilter) {
+  function waitForTelerik(timeoutMs) {
+    if (!timeoutMs) timeoutMs = 15000;
     return new Promise(function (resolve) {
-      var inp = document.getElementById(inputId);
-      if (!inp) {
-        resolve(false);
-        return;
-      }
-
-      setTimeout(function () {
-        try {
-          inp.focus();
-          inp.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
-          inp.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
-          inp.click();
-        } catch (e) {
-          console.warn('Error opening dropdown:', e);
+      var start = Date.now();
+      var timer = setInterval(function () {
+        var ok = (typeof window.$find === 'function') &&
+                 window.$find('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc') !== null;
+        if (ok || (Date.now() - start > timeoutMs)) {
+          clearInterval(timer);
+          resolve(ok);
         }
-
-        setTimeout(function () {
-          try {
-            var dropDowns = document.querySelectorAll('.RadComboBoxDropDown');
-            var targetLi = null;
-
-            for (var d = 0; d < dropDowns.length; d++) {
-              var dd = dropDowns[d];
-              var items = dd.querySelectorAll('.rcbItem');
-              for (var i = 0; i < items.length; i++) {
-                var it = items[i];
-                var txt = (it.innerText || '').trim();
-                var matched = false;
-
-                if (typeof targetFilter === 'function') {
-                  matched = targetFilter(txt, it);
-                } else {
-                  matched = txt.toLowerCase().includes(targetFilter.toLowerCase());
-                }
-
-                if (matched) {
-                  targetLi = it;
-                  break;
-                }
-              }
-              if (targetLi) break;
-            }
-
-            if (targetLi) {
-              targetLi.scrollIntoView({ block: 'nearest' });
-              targetLi.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
-              targetLi.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
-              targetLi.click();
-              resolve(true);
-              return;
-            }
-
-            // Fallback Telerik Client API
-            var comboId = inputId.replace(/_Input$/, '');
-            if (typeof window.$find === 'function') {
-              var combo = window.$find(comboId);
-              if (combo && typeof combo.get_items === 'function') {
-                var cItems = combo.get_items();
-                for (var ci = 0; ci < cItems.get_count(); ci++) {
-                  var itemObj = cItems.getItem(ci);
-                  var itemText = itemObj ? itemObj.get_text() : '';
-                  var isMatch = false;
-                  if (typeof targetFilter === 'function') {
-                    isMatch = targetFilter(itemText, null);
-                  } else {
-                    isMatch = itemText.toLowerCase().includes(targetFilter.toLowerCase());
-                  }
-                  if (isMatch) {
-                    itemObj.select();
-                    resolve(true);
-                    return;
-                  }
-                }
-              }
-            }
-            resolve(false);
-          } catch (err) {
-            console.warn('clickSelectComboItem error:', err);
-            resolve(false);
-          }
-        }, 350);
-      }, 0);
+      }, 200);
     });
   }
 
@@ -133,85 +70,96 @@
     try {
       sendProgress('init', '⏳ Robot đang kết nối điều khiển CSDL Đồng Nai...', false);
 
-      var isDakoMode = (cfg.mode === 'dako') || (cfg.truong && cfg.truong.includes('THCS Đăk Ơ'));
+      var ready = await waitForTelerik(15000);
+      if (!ready) {
+        sendProgress('wait', '⚠️ Hệ thống CSDL đang tải, vui lòng chờ giây lát...', false);
+        await sleep(1500);
+      }
+
+      var isDakoMode = (!cfg.mode || cfg.mode === 'dako') || (cfg.truong && cfg.truong.includes('THCS Đăk Ơ'));
 
       // 1. CẤP HỌC
-      var targetCap = cfg.capHoc || 'Trung học cơ sở';
-      var inpCap = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input');
-      var curCap = inpCap ? (inpCap.value || '').trim() : '';
+      var targetCap = (isDakoMode) ? 'Trung học cơ sở' : (cfg.capHoc || 'Trung học cơ sở');
+      var curCap = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input')?.value || '';
 
-      if (!curCap.toLowerCase().includes(targetCap.toLowerCase()) && !targetCap.toLowerCase().includes(curCap.toLowerCase())) {
+      if (!curCap.toLowerCase().includes(targetCap.toLowerCase())) {
         sendProgress('capHoc', '⏳ Đang chọn Cấp học: <strong>' + targetCap + '</strong>...', false);
-        await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input', targetCap);
-        await waitForAjaxPostBack(2500, 10000);
+        var comboCap = window.$find('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc');
+        if (comboCap) {
+          var itemCap = comboCap.findItemByText(targetCap);
+          if (itemCap) {
+            comboCap.set_text(targetCap);
+            comboCap.set_value(itemCap.get_value());
+            safeDoPostBack('ctl00$ContentPlaceHolder1$ctl00$cbCapHoc', document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input'));
+            await waitForAjax();
+          }
+        }
       }
 
       // 2. PHƯỜNG / XÃ
-      var targetXa = cfg.phuongXa || 'Xã Đăk Ơ';
-      var inpXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input');
-      var curXa = inpXa ? (inpXa.value || '').trim() : '';
+      var targetXa = (isDakoMode) ? 'Xã Đăk Ơ' : (cfg.phuongXa || 'Xã Đăk Ơ');
+      var curXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input')?.value || '';
 
-      if (!curXa.toLowerCase().includes(targetXa.toLowerCase()) && !targetXa.toLowerCase().includes(curXa.toLowerCase())) {
+      if (!curXa.toLowerCase().includes(targetXa.toLowerCase())) {
         sendProgress('phuongXa', '⏳ Đang chọn Phường/Xã: <strong>' + targetXa + '</strong>...', false);
-        await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input', targetXa);
-        await waitForAjaxPostBack(1500, 8000);
+        var comboXa = window.$find('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD');
+        if (comboXa) {
+          var itemXa = null;
+          var xaItems = comboXa.get_items();
+          for (var i = 0; i < xaItems.get_count(); i++) {
+            var it = xaItems.getItem(i);
+            var t = it.get_text().toLowerCase();
+            if (t.includes(targetXa.toLowerCase()) || (targetXa.toLowerCase().includes('đăk ơ') && t.includes('đắk ơ'))) {
+              itemXa = it;
+              break;
+            }
+          }
+          if (itemXa) {
+            comboXa.set_text(itemXa.get_text());
+            comboXa.set_value(itemXa.get_value());
+            safeDoPostBack('ctl00$ContentPlaceHolder1$ctl00$rcbPhongGD', document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input'));
+            await waitForAjax();
+          }
+        }
       }
 
       // 3. TRƯỜNG HỌC
-      var targetTruong = cfg.truong || 'Trường THCS Đăk Ơ';
+      var targetTruong = (isDakoMode) ? 'Trường THCS Đăk Ơ' : (cfg.truong || 'Trường THCS Đăk Ơ');
       sendProgress('truong', '⏳ Đang chọn Trường: <strong>' + targetTruong + '</strong>...', false);
 
-      var startFind = Date.now();
-      var schoolSelected = false;
-
-      while (Date.now() - startFind < 15000) {
-        var inpTr = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input');
-        var curTr = inpTr ? (inpTr.value || '').trim() : '';
-
-        if (isDakoMode) {
-          if ((curTr.includes('70691515') || curTr.toLowerCase().includes('thcs')) && 
-              (curTr.toLowerCase().includes('đăk ơ') || curTr.toLowerCase().includes('đắk ơ')) && 
-              !curTr.toLowerCase().includes('mầm non') && 
-              !curTr.toLowerCase().includes('tiểu học')) {
-            schoolSelected = true;
-            break;
-          }
-          var ok = await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input', function (txt) {
-            var t = txt.toLowerCase();
-            if (t.includes('mầm non') || t.includes('tiểu học')) return false;
-            if (t.includes('70691515')) return true;
-            if (t.includes('thcs') && (t.includes('đăk ơ') || t.includes('đắk ơ'))) return true;
-            return false;
-          });
-          if (ok) {
-            schoolSelected = true;
-            await sleep(500);
-            break;
-          }
-        } else {
-          if (curTr.toLowerCase().includes(targetTruong.toLowerCase())) {
-            schoolSelected = true;
-            break;
-          }
-          var ok = await clickSelectComboItem('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input', targetTruong);
-          if (ok) {
-            schoolSelected = true;
-            await sleep(500);
-            break;
+      var comboTr = window.$find('ctl00_ContentPlaceHolder1_ctl00_cbTruong');
+      if (comboTr) {
+        var itemTr = null;
+        var trItems = comboTr.get_items();
+        for (var j = 0; j < trItems.get_count(); j++) {
+          var sItem = trItems.getItem(j);
+          var st = sItem.get_text().toLowerCase();
+          if (isDakoMode) {
+            if (st.includes('70691515') || (st.includes('thcs') && st.includes('đăk ơ') && !st.includes('trương định'))) {
+              itemTr = sItem;
+              break;
+            }
+          } else {
+            if (st.includes(targetTruong.toLowerCase()) || targetTruong.toLowerCase().includes(st)) {
+              itemTr = sItem;
+              break;
+            }
           }
         }
-        await sleep(500);
+        if (itemTr) {
+          itemTr.select();
+        }
       }
 
       // 4. ĐIỀN TÀI KHOẢN, MẬT KHẨU & FOCUS CAPTCHA
       var uInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
       var pInp = document.getElementById('ContentPlaceHolder1_ctl00_tbP');
-      if (uInp && cfg.username) {
+      if (uInp && cfg && cfg.username) {
         uInp.value = cfg.username;
         uInp.dispatchEvent(new Event('input', { bubbles: true }));
         uInp.dispatchEvent(new Event('change', { bubbles: true }));
       }
-      if (pInp && cfg.password) {
+      if (pInp && cfg && cfg.password) {
         pInp.value = cfg.password;
         pInp.dispatchEvent(new Event('input', { bubbles: true }));
         pInp.dispatchEvent(new Event('change', { bubbles: true }));
@@ -327,5 +275,7 @@ Thầy/Cô vui lòng kiểm tra tiết và bấm nút GHI trên thanh công cụ
     runAutoFillFromTKB();
   });
 
-  console.log('[CSDL Page Bridge] Sẵn sàng phục vụ v5.3.0!');
+  window.CSDL_BRIDGE_READY = true;
+  window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_READY'));
+  console.log('[CSDL Page Bridge] Sẵn sàng phục vụ v5.3.1!');
 })();
