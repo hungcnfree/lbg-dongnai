@@ -3,13 +3,13 @@ chcp 65001 >nul
 title CÀI ĐẶT TIỆN ÍCH CHROME - CSDL TOÀN TỈNH ĐỒNG NAI
 cls
 echo ====================================================================
-echo   🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI v5.2.1 - TOÀN TỈNH ĐỒNG NAI
-echo   Tác quyền: Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
+echo   TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI v5.2.1 - TOÀN TỈNH ĐỒNG NAI
+echo   Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 echo ====================================================================
 echo.
 set EXT_DIR=%~dp0chrome_extension
-echo 📁 ĐƯỜNG DẪN THƯ MỤC TIỆN ÍCH TRÊN Ổ CỨNG:
-echo    "%EXT_DIR%"
+echo [*] ĐƯỜNG DẪN THƯ MỤC TIỆN ÍCH TRÊN MÁY TÍNH:
+echo     "%EXT_DIR%"
 echo.
 :: Tự động sao chép đường dẫn thư mục vào Clipboard
 echo %EXT_DIR%| clip
@@ -39,7 +39,7 @@ echo   [BƯỚC 4] Mở trang https://truong.dongnai.edu.vn:
 echo            Robot sẽ TỰ ĐỘNG ĐIỀN TOÀN BỘ và nhắc Thầy/Cô gõ 8 ký tự CAPTCHA!
 echo ====================================================================
 echo.
-echo 💬 Nhóm Zalo AI chia sẻ & hỗ trợ: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
-echo 🚀 GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/lbg-dongnai
+echo [*] Nhóm Zalo AI chia sẻ và hỗ trợ: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
+echo [*] GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/lbg-dongnai
 echo.
 pause

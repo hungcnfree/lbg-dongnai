@@ -72,6 +72,19 @@
     return null;
   }
 
+  // Telerik đôi khi ném TypeError "caller/callee/arguments" NGAY SAU khi đã áp dụng lựa chọn
+  // và kích hoạt postback. Bọc try/catch để không làm gãy toàn bộ quy trình (lỗi v5.2.1).
+  function safeSelect(item) {
+    if (!item) return false;
+    try {
+      item.select();
+      return true;
+    } catch (e) {
+      console.warn('[CSDL Page Bridge] select() báo lỗi (đã bỏ qua, lựa chọn vẫn áp dụng):', e && e.message);
+      return true;
+    }
+  }
+
   // Helper tìm item Trường học: TUYỆT ĐỐI KHÔNG CHỌN NHẦM CẤP (Ví dụ: THCS không bao giờ chọn Mầm non)
   function findSchoolComboItem(combo, targetSchoolName, targetCapHoc, targetSchoolCode) {
     if (!combo) return null;
@@ -153,7 +166,7 @@
         sendProgress('capHoc', '⏳ Đang chọn Cấp học: <strong>' + targetCap + '</strong>...', false);
         var itemCap = findComboItem(comboCap, targetCap);
         if (itemCap) {
-          itemCap.select();
+          safeSelect(itemCap);
           await waitForPostBack(8000);
         } else {
           console.warn('[CSDL Page Bridge] Không tìm thấy item Cấp học:', targetCap);
@@ -171,7 +184,7 @@
           sendProgress('phuongXa', '⏳ Đang chọn Phường/Xã: <strong>' + targetXa + '</strong>...', false);
           var itemXa = findComboItem(comboXa, targetXa);
           if (itemXa) {
-            itemXa.select();
+            safeSelect(itemXa);
             // CHỜ MÁY CHỦ NẠP DANH SÁCH TRƯỜNG PHÙ HỢP CỦA XÃ ĐÓ
             await waitForPostBack(8000);
           } else {
@@ -204,7 +217,7 @@
         var curTruong = (comboTruong.get_text() || '').trim();
         if (curTruong !== itemTruong.get_text()) {
           sendProgress('truong', '⏳ Đang chọn Trường: <strong>' + itemTruong.get_text() + '</strong>...', false);
-          itemTruong.select();
+          safeSelect(itemTruong);
           await sleep(400);
         }
       } else {
@@ -272,7 +285,7 @@
             if (combo) {
               var itDone = combo.findItemByText('Hoàn thành');
               if (itDone) {
-                itDone.select();
+                safeSelect(itDone);
                 updatedCount++;
               }
             }
