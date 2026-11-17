@@ -15,7 +15,13 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Trợ Lý CSDL THCS Đăk Ơ v5.3"
+    "default_title": "Trợ Lý CSDL THCS Đăk Ơ v5.3.1",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "content_scripts": [
     {
@@ -31,11 +37,21 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "page_bridge.js"
+        "page_bridge.js",
+        "icons/icon16.png",
+        "icons/icon32.png",
+        "icons/icon48.png",
+        "icons/icon128.png"
       ],
       "matches": [
         "*://truong.dongnai.edu.vn/*"
       ]
     }
-  ]
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }

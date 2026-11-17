@@ -116,7 +116,7 @@
     } else {
       updateRobotBanner(`
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 16px;">🤖</span>
+          <img src="${chrome.runtime.getURL('icons/icon32.png')}" style="width: 20px; height: 20px; vertical-align: middle;">
           <span>${detail.message}</span>
         </div>
       `);
@@ -143,7 +143,7 @@
 
   // Gửi lệnh qua ranh giới World bằng chuỗi JSON (Khắc phục triệt để lỗi null object)
   function triggerAutoLogin(cfg) {
-    updateRobotBanner(`🤖 <strong>ROBOT CSDL v5.3.1:</strong> Đang kết nối điều khiển chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
+    updateRobotBanner(`🌻 <strong>TRỢ LÝ CSDL v5.3.1:</strong> Đang kết nối điều khiển chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
     injectBridgeScript(() => {
       setTimeout(() => {
         const payload = JSON.stringify(cfg);
@@ -183,7 +183,7 @@
 
     bar.innerHTML = `
       <div style="display: flex; align-items: center; gap: 6px;">
-        <span style="font-size: 20px;">🤖</span>
+        <img src="${chrome.runtime.getURL('icons/icon32.png')}" style="width: 24px; height: 24px; vertical-align: middle;">
         <div style="font-size: 11px; font-weight: 800; color: #0F172A; line-height: 1.2;">
           TRỢ LÝ CSDL<br>
           <span style="color: #2563EB;">THCS Đăk Ơ</span>
