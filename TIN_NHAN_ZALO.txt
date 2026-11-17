@@ -14,8 +14,11 @@ Kính gửi Quý Thầy/Cô đồng nghiệp,
 3. Xác nhận Hoàn thành Lịch báo giảng tuần trong 0.5 giây: 1 click là tự động chuyển toàn bộ 15-18 tiết trong tuần sang "Hoàn thành" và bấm GHI lưu xong xuôi.
 4. Bảo mật 100%: Mọi thông tin chỉ lưu cục bộ trên trình duyệt máy tính của Thầy/Cô, tuyệt đối không gửi ra ngoài.
 
-👉 3 BƯỚC CÀI ĐẶT SIÊU NHANH:
-1. Thầy/Cô tải file ZIP đính kèm về, giải nén ra thư mục máy tính.
+👉 3 BƯỚC CÀI ĐẶT SIÊU NHANH (HOẶC XEM HƯỚNG DẪN TRỰC TUYẾN):
+🌐 Trang web hướng dẫn trực tuyến: https://hungcnfree.github.io/lbg-dongnai/
+📦 Link tải trực tiếp gói cài đặt (ZIP ~180KB): https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.1/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.1.zip
+
+1. Thầy/Cô tải file ZIP về, giải nén ra thư mục máy tính.
 2. Nhấp đúp vào file [CAI_DAT_TIEN_ICH_CHROME.bat] (máy sẽ tự sao chép đường dẫn và mở sẵn trang chrome://extensions).
 3. Bật "Chế độ dành cho nhà phát triển" ở góc trên bên phải ➔ Bấm "Tải tiện ích đã giải nén" và dán hoặc chọn thư mục "chrome_extension". Bấm vào biểu tượng Tiện ích, chọn Tên/Trường và lưu mật khẩu 1 lần là xong!
 

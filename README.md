@@ -6,6 +6,9 @@
 🌐 **Trang web hướng dẫn trực tuyến (GitHub Pages):**  
 👉 **[https://hungcnfree.github.io/lbg-dongnai/](https://hungcnfree.github.io/lbg-dongnai/)**
 
+📦 **Tải trực tiếp gói tiện ích đã đóng gói (ZIP ~180KB):**  
+👉 **[Tải file TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.1.zip](https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.1/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.1.zip)**
+
 💬 **Nhóm Zalo AI chia sẻ & hỗ trợ giáo viên Đồng Nai:**  
 👉 **[https://zalo.me/g/2vhbtmsqdr06gyfiuru8](https://zalo.me/g/2vhbtmsqdr06gyfiuru8)**
 
