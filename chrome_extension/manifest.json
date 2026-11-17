@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Trợ Lý CSDL Giáo Dục Toàn Tỉnh Đồng Nai",
-  "version": "5.3.3",
+  "version": "5.3.4",
   "description": "Tự động điền Cấp học, Xã/Phường, Trường, Đăng nhập CSDL và nạp Lịch báo giảng từ file Excel Thời khóa biểu",
   "author": "Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai",
   "permissions": [
@@ -15,7 +15,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Trợ Lý CSDL Toàn Tỉnh v5.3.3",
+    "default_title": "Trợ Lý CSDL Toàn Tỉnh v5.3.4",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

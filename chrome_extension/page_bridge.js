@@ -1,8 +1,8 @@
-// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.3 (Sloppy Mode)
+// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.4 (Sloppy Mode)
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.3...');
+  console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.4...');
 
   function sleep(ms) {
     return new Promise(function (resolve) {
@@ -11,7 +11,7 @@
   }
 
   function notify(msg, isDone, isError) {
-    // v5.3.3: gửi dưới dạng chuỗi JSON để content.js (thế giới khác) đọc được
+    // v5.3.4: gửi dưới dạng chuỗi JSON để content.js (thế giới khác) đọc được
     window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_PROGRESS', {
       detail: JSON.stringify({ message: msg, isDone: !!isDone, isError: !!isError })
     }));
@@ -249,7 +249,7 @@
         };
       }
 
-      // v5.3.3: đọc giá trị THẬT trên trang (không dùng giá trị mặc định cứng) để biết đã chọn đúng chưa
+      // v5.3.4: đọc giá trị THẬT trên trang (không dùng giá trị mặc định cứng) để biết đã chọn đúng chưa
       var capEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input');
       var xaEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input');
       var truongEl = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input');
@@ -472,5 +472,5 @@
 
   document.documentElement.setAttribute('data-csdl-bridge', 'ready');
 
-  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.3 đã sẵn sàng!');
+  console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.4 đã sẵn sàng!');
 })();

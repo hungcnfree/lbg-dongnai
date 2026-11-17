@@ -1,18 +1,18 @@
 {
-  "version": "5.3.3",
-  "versionCode": 533,
-  "releaseDate": "17/11/2026",
-  "title": "Trợ Lý CSDL v5.3.3 - Hệ Thống Hybrid TKB Excel & Kỹ Năng Soi Tuần Cũ",
+  "version": "5.3.4",
+  "versionCode": 534,
+  "releaseDate": "18/11/2026",
+  "title": "Trợ Lý CSDL v5.3.4 - Bộ Giải Mã Thời Khóa Biểu Toàn Trường & Tự Động Nạp CSDL",
   "changelog": [
-    "Hệ thống Hybrid thông minh: Nạp Excel TKB ở Tuần 1 làm mốc gốc.",
-    "Kỹ năng Soi Tuần Cũ trên CSDL: Tự động lùi về tuần trước đối chiếu tiết PPCT thực tế chống lệch tiết khi nghỉ lễ/dạy bù.",
-    "3 Tùy chọn trực quan: Nạp tiếp tuần này | Soi tuần cũ đối chiếu | Nạp file Excel mới khi đổi TKB.",
-    "Tích hợp bộ máy SheetJS & mẫu CSDL chuẩn, tự động sinh và nạp file Excel trong 1 click.",
-    "Bộ Icon Hoa Hướng Dương vàng rực rỡ, tươi vui, hiển thị sắc nét trên Chrome."
+    "Hỗ trợ giải mã ma trận Thời khóa biểu thực tế của nhà trường (tệp toàn trường 58 giáo viên hoặc tệp riêng).",
+    "Tự động nhận diện giáo viên trong bảng TKB trường học và trích xuất chuẩn 100% tiết dạy.",
+    "Bổ sung tính năng Dán trực tiếp văn bản TKB (Paste Text) cực kỳ tiện lợi không cần lưu file.",
+    "Tự động bơm file vào cửa sổ popup 'Nhập từ Excel' của CSDL Đồng Nai bằng DataTransfer.",
+    "Tự động hoàn thành tuần và bấm Ghi trong 0.5s."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.3.zip",
-    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.3.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.4.zip",
+    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.4.zip",
     "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip",
     "provinceZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"

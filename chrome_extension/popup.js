@@ -1,8 +1,8 @@
 // popup.js - Trợ Lý CSDL Toàn Tỉnh Đồng Nai v5.3.0
 // Paper Neo-Brutalism UI & Tự động cập nhật 1-click
 
-const CURRENT_VERSION = '5.3.3';
-const CURRENT_VERSION_CODE = 533;
+const CURRENT_VERSION = '5.3.4';
+const CURRENT_VERSION_CODE = 534;
 
 let currentConfig = {
   mode: 'dako',
@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
         return;
       }
-      window.LbgExcelEngine.parseTkbExcel(file).then((parsedCfg) => {
+      window.LbgExcelEngine.parseTkbExcel(file, currentConfig.name || 'Nông Văn Hùng').then((parsedCfg) => {
         chrome.storage.local.set({ csdl_tkb_config: parsedCfg }, () => {
           alert('🎉 Đã nạp thành công ' + parsedCfg.totalLessons + ' tiết dạy!');
           updateTkbStatusUI();
