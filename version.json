@@ -1,17 +1,17 @@
 {
-  "version": "5.3.1",
-  "versionCode": 531,
+  "version": "5.3.2",
+  "versionCode": 532,
   "releaseDate": "17/11/2026",
-  "title": "Trợ Lý CSDL v5.3.1 - Phương Pháp Telerik Macro-Task Claude AI & Icon Hoa Hướng Dương",
+  "title": "Trợ Lý CSDL v5.3.2 - Hỏi Nạp Excel TKB Đầu Tiên & Tự Tính Lũy Kế PPCT",
   "changelog": [
-    "Áp dụng phương pháp kích hoạt Telerik qua Macro-Task & mô phỏng tương tác chuột thực tế của Claude AI.",
-    "Khóa cứng mã trường THCS Đăk Ơ (70691515), loại trừ 100% Trường Trương Định (70691426) và Mầm non.",
-    "Bộ Icon Hoa Hướng Dương màu vàng rực rỡ, tươi vui, hiển thị sắc nét trên thanh công cụ Chrome.",
-    "Bảo tồn 100% mật khẩu và dữ liệu của thầy cô khi cập nhật tự động."
+    "Hỏi và cho phép nạp file Excel Thời khóa biểu (.xlsx) ở lần đầu sử dụng.",
+    "Những lần sau: Hỏi 'TKB có đổi không?' -> Không đổi tự động tính lũy kế PPCT theo tuần và nạp CSDL; Có đổi cho tải lên file mới.",
+    "Tích hợp sẵn bộ máy đọc & sinh file Excel chuẩn CSDL ngay trên trình duyệt bằng SheetJS.",
+    "Bộ Icon Hoa Hướng Dương vàng rực rỡ, tươi vui, hiển thị chuẩn xác trên thanh công cụ Chrome."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.1.zip",
-    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.1.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.2.zip",
+    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.2.zip",
     "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip",
     "provinceZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"

@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Trợ Lý CSDL - THCS Đăk Ơ v5.3.1</title>
+  <title>Trợ Lý CSDL - THCS Đăk Ơ v5.3.2</title>
   <style>
     :root {
       --bg-paper: #FFFDF5;
@@ -388,7 +388,7 @@
       <div class="avatar-box" style="background: #FEF3C7;"><img src="icons/icon48.png" style="width: 24px; height: 24px; display: block;" alt="Sunflower"/></div>
       <div class="title-box">
         <h3>TRỢ LÝ CSDL</h3>
-        <span>THCS Đăk Ơ • v5.3.1</span>
+        <span>THCS Đăk Ơ • v5.3.2</span>
       </div>
     </div>
     <button type="button" id="btn-header-update" class="btn-update-badge" title="Bấm để kiểm tra và cập nhật phiên bản mới">
@@ -484,6 +484,25 @@
 
     <button type="button" id="btn-save" class="btn-save">💾 LƯU CẤU HÌNH CỦA TÔI</button>
 
+    
+    <!-- Thẻ Quản Lý Thời Khóa Biểu Excel -->
+    <div id="card-tkb-management" style="background: #FFFBEB; border: 2px solid #0F172A; border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 12px; box-shadow: var(--shadow-sm);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <strong style="font-size: 12.5px; color: #854D0E; display: flex; align-items: center; gap: 5px;">
+          <span>🌻</span> Quản Lý TKB Excel
+        </strong>
+        <span id="tkb-badge-status" style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; border: 1.5px solid #0F172A; background: #FEF3C7; color: #854D0E;">Đang kiểm tra...</span>
+      </div>
+      <div id="tkb-summary-text" style="font-size: 11px; color: #475569; line-height: 1.4; margin-bottom: 8px;">
+        Đang đọc cấu hình Thời khóa biểu...
+      </div>
+      <div style="display: flex; gap: 6px;">
+        <button type="button" id="btn-popup-upload-tkb" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; background: #2563EB; color: white; border: 2px solid #0F172A; border-radius: 8px; cursor: pointer; box-shadow: 2px 2px 0px #0F172A;">📁 Nạp Excel TKB</button>
+        <button type="button" id="btn-popup-default-tkb" style="flex: 1; padding: 6px 8px; font-size: 11px; font-weight: 700; background: #10B981; color: white; border: 2px solid #0F172A; border-radius: 8px; cursor: pointer; box-shadow: 2px 2px 0px #0F172A;">⚡ Mẫu Thầy Hùng</button>
+      </div>
+      <input type="file" id="input-popup-tkb-file" accept=".xlsx" style="display: none;" />
+    </div>
+
     <div class="quick-actions">
       <label style="margin-bottom: 6px;">⚡ Thao tác nhanh:</label>
       <button type="button" id="btn-fill-account" class="quick-btn btn-login">🔑 Tự Động Điền Đăng Nhập</button>
@@ -538,6 +557,9 @@
     </div>
   </div>
 
+  <script src="xlsx.mini.min.js"></script>
+  <script src="template_lbg_base64.js"></script>
+  <script src="lbg_excel_engine.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

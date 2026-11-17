@@ -1,8 +1,8 @@
 // popup.js - Trợ Lý CSDL Bản Nội Bộ THCS Đăk Ơ v5.3.0
 // Paper Neo-Brutalism UI & Tự động cập nhật 1-click
 
-const CURRENT_VERSION = '5.3.1';
-const CURRENT_VERSION_CODE = 531;
+const CURRENT_VERSION = '5.3.2';
+const CURRENT_VERSION_CODE = 532;
 
 let currentConfig = {
   mode: 'dako',
@@ -301,3 +301,70 @@ function sendActionToTab(action, data = null) {
     });
   }
 }
+
+
+// =============================================================================
+// QUẢN LÝ THỜI KHÓA BIỂU EXCEL TRONG POPUP
+// =============================================================================
+function updateTkbStatusUI() {
+  const badge = document.getElementById('tkb-badge-status');
+  const summary = document.getElementById('tkb-summary-text');
+  if (!badge || !summary) return;
+
+  chrome.storage.local.get(['csdl_tkb_config'], (res) => {
+    if (res && res.csdl_tkb_config && res.csdl_tkb_config.hasTkb) {
+      const cfg = res.csdl_tkb_config;
+      badge.innerText = 'Đã lưu ' + (cfg.totalLessons || cfg.lessons.length) + ' tiết';
+      badge.style.background = '#D1FAE5';
+      badge.style.color = '#065F46';
+      summary.innerHTML = 'GV: <strong>' + (cfg.teacherName || 'Nông Văn Hùng') + '</strong> • Mốc: Tuần ' + (cfg.baseWeek || 11);
+    } else {
+      badge.innerText = 'Chưa có TKB';
+      badge.style.background = '#FEF3C7';
+      badge.style.color = '#854D0E';
+      summary.innerText = 'Chưa có dữ liệu TKB. Vui lòng bấm Nạp Excel hoặc Mẫu Thầy Hùng.';
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateTkbStatusUI();
+
+  const btnUpload = document.getElementById('btn-popup-upload-tkb');
+  const btnDefault = document.getElementById('btn-popup-default-tkb');
+  const fileInp = document.getElementById('input-popup-tkb-file');
+
+  if (btnUpload && fileInp) {
+    btnUpload.onclick = () => fileInp.click();
+    fileInp.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (typeof window.LbgExcelEngine === 'undefined') {
+        alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
+        return;
+      }
+      window.LbgExcelEngine.parseTkbExcel(file).then((parsedCfg) => {
+        chrome.storage.local.set({ csdl_tkb_config: parsedCfg }, () => {
+          alert('🎉 Đã nạp thành công ' + parsedCfg.totalLessons + ' tiết dạy!');
+          updateTkbStatusUI();
+        });
+      }).catch((err) => {
+        alert('⚠️ Lỗi đọc file Excel: ' + (err.message || err));
+      });
+    };
+  }
+
+  if (btnDefault) {
+    btnDefault.onclick = () => {
+      if (typeof window.LbgExcelEngine === 'undefined') {
+        alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
+        return;
+      }
+      const defaultCfg = window.LbgExcelEngine.getDefaultTkbConfig();
+      chrome.storage.local.set({ csdl_tkb_config: defaultCfg }, () => {
+        alert('🎉 Đã kích hoạt 15 tiết TKB chuẩn của Thầy Nông Văn Hùng!');
+        updateTkbStatusUI();
+      });
+    };
+  }
+});
