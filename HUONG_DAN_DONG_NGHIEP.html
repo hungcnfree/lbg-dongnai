@@ -3,216 +3,265 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hướng Dẫn Sử Dụng Trợ Lý CSDL Đồng Nai (v5.1 Toàn Tỉnh)</title>
+  <title>Hướng Dẫn Cài Đặt Tiện Ích Trợ Lý CSDL Đồng Nai (v5.1 Toàn Tỉnh)</title>
   <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --success: #10b981;
+      --accent: #38bdf8;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       line-height: 1.6;
-      background: #f8fafc;
-      color: #1e293b;
+      background: var(--bg);
+      color: var(--text);
       margin: 0;
-      padding: 30px 15px;
+      padding: 30px 15px 50px;
     }
     .wrapper {
       max-width: 820px;
       margin: 0 auto;
-      background: #ffffff;
+      background: var(--card);
       border-radius: 16px;
       padding: 36px 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
     }
     .header {
-      border-bottom: 2px solid #0284c7;
+      border-bottom: 2px solid var(--primary);
       padding-bottom: 20px;
       margin-bottom: 24px;
     }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
     .header h1 {
       margin: 0;
-      color: #0369a1;
-      font-size: 22px;
+      color: var(--accent);
+      font-size: 24px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
     .header p {
-      margin: 6px 0 0 0;
-      color: #64748b;
+      margin: 8px 0 0 0;
+      color: var(--muted);
       font-size: 14px;
     }
     .highlight-card {
-      background: #f0fdf4;
-      border: 1px solid #86efac;
-      border-left: 5px solid #10b981;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-left: 5px solid var(--success);
       padding: 16px 20px;
-      border-radius: 8px;
-      margin-bottom: 24px;
+      border-radius: 10px;
+      margin-bottom: 28px;
       font-size: 14px;
-      color: #166534;
+      color: #6ee7b7;
       line-height: 1.6;
     }
     h2 {
-      color: #0284c7;
-      font-size: 17px;
-      margin-top: 28px;
-      border-bottom: 1px dashed #cbd5e1;
+      color: var(--accent);
+      font-size: 18px;
+      margin-top: 32px;
+      border-bottom: 1px dashed var(--border);
       padding-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .step-box {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 16px 20px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 22px;
       margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .step-box:hover {
+      border-color: var(--accent);
     }
     .step-title {
       font-weight: bold;
-      color: #0f172a;
-      font-size: 14px;
-      margin-bottom: 6px;
+      color: #ffffff;
+      font-size: 15px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .badge-step {
-      background: #0284c7;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
       color: white;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 12px;
       font-size: 12px;
+      font-weight: 700;
     }
     .kbd {
-      background: #e2e8f0;
-      padding: 2px 6px;
+      background: #334155;
+      padding: 2px 7px;
       border-radius: 4px;
       font-family: monospace;
       font-weight: bold;
-      color: #0369a1;
-      border: 1px solid #cbd5e1;
+      color: var(--accent);
+      border: 1px solid #475569;
     }
     .note-box {
-      background: #fffbeb;
+      background: rgba(245, 158, 11, 0.08);
       border-left: 4px solid #f59e0b;
-      padding: 12px 16px;
-      border-radius: 6px;
+      padding: 14px 18px;
+      border-radius: 8px;
       font-size: 13px;
-      color: #b45309;
-      margin: 16px 0;
-      line-height: 1.5;
+      color: #fde68a;
+      margin: 24px 0;
+      line-height: 1.6;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .action-btn:hover {
+      background: #0284c7;
+      transform: translateY(-1px);
     }
     .footer {
-      margin-top: 36px;
-      padding-top: 20px;
-      border-top: 1px solid #e2e8f0;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
       font-size: 12px;
-      color: #64748b;
+      color: var(--muted);
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.7;
     }
     .footer-links {
       display: flex;
       justify-content: center;
       gap: 16px;
-      margin-top: 8px;
+      margin-top: 12px;
       flex-wrap: wrap;
     }
     .footer-link-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      background: #f1f5f9;
-      color: #0369a1;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
+      padding: 7px 14px;
+      background: #0f172a;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
       font-size: 12px;
       transition: 0.2s;
     }
     .footer-link-btn:hover {
-      background: #e2e8f0;
-      border-color: #0284c7;
+      background: #334155;
+      border-color: var(--accent);
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <div class="header">
+      <span class="badge">CHUYỂN ĐỔI SỐ GIÁO DỤC ĐỒNG NAI</span>
       <h1>🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI (v5.1)</h1>
-      <p>Dành cho Quý Thầy/Cô trường THCS Đăk Ơ và tất cả các trường học trên toàn tỉnh Đồng Nai</p>
+      <p>Giải pháp Tiện ích mở rộng Google Chrome dành cho giáo viên trường THCS Đăk Ơ và các trường toàn tỉnh Đồng Nai</p>
     </div>
 
     <div class="highlight-card">
-      🎯 <strong>MỤC TIÊU:</strong> Giúp Thầy/Cô <strong>đăng nhập tự động 100%</strong> (tự điền Cấp học, Xã, Trường, SĐT, Mật khẩu, Thầy/Cô chỉ cần gõ 4 ký tự CAPTCHA rồi ấn Enter) và <strong>xác nhận hoàn thành Lịch báo giảng tuần trong 0.5 giây</strong> (không phải click thủ công từng tiết).
+      🎯 <strong>MỤC TIÊU DUY NHẤT:</strong> Cài đặt 1 lần duy nhất, từ đó về sau khi mở <code>truong.dongnai.edu.vn</code> là <strong>Robot tự động điền 100%</strong> (Cấp học, Xã/Phường, Trường học, Số điện thoại, Mật khẩu). Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA, Thầy/Cô chỉ cần gõ 4 ký tự rồi ấn <strong>Enter</strong> là vào thẳng hệ thống!
     </div>
 
-    <!-- CÁCH 1 -->
-    <h2>🌟 CÁCH 1: DÙNG DẤU TRANG 1-CLICK (KHUYÊN DÙNG - KHÔNG CẦN CÀI ĐẶT)</h2>
-    <p><em>Dùng được ngay trên mọi máy tính ở trường lẫn ở nhà, không cần bật chế độ nhà phát triển.</em></p>
+    <h2>🚀 HƯỚNG DẪN CÀI ĐẶT 1 LẦN DUY NHẤT (CHỈ 3 BƯỚC)</h2>
 
     <div class="step-box">
-      <div class="step-title"><span class="badge-step">Bước 1</span> Tạo Dấu Trang Cá Nhân của Thầy/Cô</div>
-      <p style="margin: 0; font-size: 13px;">
-        1. Mở file: <strong><code>Cai_Dat_Dau_Trang_1Click.html</code></strong> (hoặc nhấp đúp file <code>1_CAI_DAT_DAU_TRANG.bat</code>).<br>
-        2. <strong>Nếu ở THCS Đăk Ơ:</strong> Chọn Tên Thầy/Cô trong danh sách 60 giáo viên.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<strong>Nếu ở Trường khác / Xã khác:</strong> Bấm sang tab <em>"Trường khác / Xã khác"</em> ➔ Nhập Họ tên, chọn Cấp học (Mầm non, Tiểu học, THCS, THPT, GDTX), chọn Xã/Phường và Trường của mình.<br>
-        3. Nhập <strong>Số điện thoại</strong> và <strong>Mật khẩu CSDL</strong> của Thầy/Cô.<br>
-        4. Bấm nút <strong>⚡ BẤM ĐỂ TẠO DẤU TRANG CỦA TÔI</strong>.
+      <div class="step-title"><span class="badge-step">Bước 1</span> Mở Quản Lý Tiện Ích Chrome & Sao Chép Thư Mục</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        • Nhấp đúp vào file: <strong><code>CAI_DAT_TIEN_ICH_CHROME.bat</code></strong> trong thư mục vừa giải nén.<br>
+        • Chương trình sẽ <strong>tự động sao chép đường dẫn thư mục</strong> vào bộ nhớ tạm (Clipboard), đồng thời tự mở sẵn trang <span class="kbd">chrome://extensions</span> trên trình duyệt Chrome và mở cửa sổ thư mục <code>chrome_extension</code>.
       </p>
     </div>
 
     <div class="step-box">
-      <div class="step-title"><span class="badge-step">Bước 2</span> Kéo thả lên thanh Dấu Trang (Bookmarks Bar)</div>
-      <p style="margin: 0; font-size: 13px;">
-        1. Bấm tổ hợp phím <span class="kbd">Ctrl + Shift + B</span> trên bàn phím để bật thanh Dấu trang của Chrome / Cốc Cốc.<br>
-        2. Giữ chuột trái vào 2 nút màu vừa hiện ra và <strong>kéo thả thẳng lên thanh Dấu trang</strong>:<br>
-        &nbsp;&nbsp;&nbsp;⭐ <strong>[🔑 Đăng Nhập CSDL - Tên Thầy/Cô]</strong><br>
-        &nbsp;&nbsp;&nbsp;⭐ <strong>[✅ Hoàn Thành Lịch Báo Giảng (0.5s)]</strong>
+      <div class="step-title"><span class="badge-step">Bước 2</span> Nạp Thư Mục Tiện Ích Vào Chrome</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        1. Tại trang Quản lý tiện ích Chrome, bật công tắc <strong>"Chế độ dành cho nhà phát triển" (Developer mode)</strong> ở góc trên cùng bên phải màn hình.<br>
+        2. Bấm nút <strong>"Tải tiện ích đã giải nén" (Load unpacked)</strong> ở góc trên cùng bên trái.<br>
+        3. Dán đường dẫn thư mục (ấn <span class="kbd">Ctrl + V</span>) hoặc chọn đúng thư mục <code>chrome_extension</code> ➔ Bấm <strong>Select Folder</strong> là xong!
       </p>
     </div>
 
     <div class="step-box">
-      <div class="step-title"><span class="badge-step">Bước 3</span> Sử dụng hàng ngày siêu tốc</div>
-      <p style="margin: 0; font-size: 13px;">
-        • <strong>Khi đăng nhập:</strong> Mở trang <code>truong.dongnai.edu.vn</code> ➔ Bấm nút <strong>[🔑 Đăng Nhập CSDL]</strong> trên thanh dấu trang ➔ Mọi thông tin (Cấp học, Xã, Trường, SĐT, Mật khẩu) tự động điền trong tích tắc ➔ Thầy/Cô <strong>gõ mã CAPTCHA rồi ấn Enter</strong> là vào thẳng hệ thống!<br><br>
-        • <strong>Khi xác nhận lịch báo giảng:</strong> Vào mục <strong>3.6.2 Khai báo lịch báo giảng</strong> ➔ Bấm nút <strong>[✅ Hoàn Thành Lịch Báo Giảng]</strong> ➔ Tự động chọn 15-18 tiết Hoàn thành và bấm GHI lưu xong xuôi trong 0.5 giây!
+      <div class="step-title"><span class="badge-step">Bước 3</span> Chọn Trường & Lưu Thông Tin Của Thầy/Cô</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        1. Bấm vào biểu tượng <strong>Tiện ích (hình mảnh ghép 🧩)</strong> ở góc trên bên phải thanh công cụ Chrome, chọn ghim biểu tượng <strong>🤖 Trợ Lý CSDL</strong>.<br>
+        2. Bấm vào biểu tượng Trợ lý:<br>
+        &nbsp;&nbsp;&nbsp;• <strong>Nếu là giáo viên THCS Đăk Ơ:</strong> Chọn Tên Thầy/Cô trong danh sách 60 giáo viên.<br>
+        &nbsp;&nbsp;&nbsp;• <strong>Nếu ở Trường khác / Xã khác:</strong> Bấm sang tab <em>"Trường khác / Xã khác"</em> ➔ Nhập Họ tên, chọn Cấp học (Mầm non, Tiểu học, THCS, THPT, GDTX), chọn Xã/Phường và Trường của mình.<br>
+        3. Nhập <strong>Số điện thoại</strong> và <strong>Mật khẩu CSDL</strong> ➔ Bấm <strong>💾 LƯU CẤU HÌNH CỦA TÔI</strong>!
       </p>
     </div>
 
-    <!-- CÁCH 2 -->
-    <h2>🧩 CÁCH 2: DÙNG TIỆN ÍCH MỞ RỘNG (CHROME EXTENSION v5.1)</h2>
-    <p><em>Tự động nhận diện và tự điền ngay lập tức khi mở trang web, không cần bấm thêm nút nào!</em></p>
+    <h2>⚡ TRẢI NGHIỆM SỬ DỤNG HÀNG NGÀY</h2>
 
     <div class="step-box">
-      <div class="step-title"><span class="badge-step">Cài đặt 1 lần duy nhất</span></div>
-      <p style="margin: 0; font-size: 13px;">
-        1. Nhấp đúp file <strong><code>2_CAI_DAT_TIEN_ICH_CHROME.bat</code></strong> (hệ thống sẽ tự động sao chép đường dẫn thư mục vào bộ nhớ tạm và mở sẵn trang quản lý tiện ích).<br>
-        2. Bật công tắc <strong>"Chế độ dành cho nhà phát triển"</strong> (ở góc trên cùng bên phải màn hình Chrome).<br>
-        3. Bấm <strong>"Tải tiện ích đã giải nén"</strong> (ở góc trên cùng bên trái) ➔ Dán hoặc chọn thư mục <code>chrome_extension</code>.<br>
-        4. Bấm vào biểu tượng Tiện ích ở góc trên Chrome ➔ Chọn Trường/Tên mình và nhập SĐT + Mật khẩu ➔ Bấm <strong>Lưu cấu hình của tôi</strong>.<br>
-        5. <strong>Trải nghiệm:</strong> Từ nay, mỗi khi Thầy/Cô mở trang CSDL Đồng Nai, Robot tự động điền toàn bộ mọi thứ và con trỏ chuột tự nhảy sẵn vào ô CAPTCHA, nhắc Thầy/Cô chỉ việc gõ mã CAPTCHA rồi ấn <strong>Enter</strong>!
+      <div class="step-title">🔑 Đăng nhập CSDL tự động 100%</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        Mở trang <code>https://truong.dongnai.edu.vn</code> ➔ Robot tự động điền đầy đủ mọi thông tin trong tích tắc ➔ Con trỏ chuột đã nằm sẵn trong ô CAPTCHA, Thầy/Cô <strong>gõ mã CAPTCHA rồi ấn phím ENTER</strong> là vào ngay!
+      </p>
+    </div>
+
+    <div class="step-box">
+      <div class="step-title">✅ Hoàn thành Lịch báo giảng tuần trong 0.5 giây</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        Khi vào mục <strong>3.6.2 Khai báo lịch báo giảng</strong> ➔ Ở góc dưới bên phải màn hình sẽ xuất hiện nút màu xanh: <strong>"✅ BẤM ĐỂ HOÀN THÀNH"</strong>. Chỉ cần bấm 1 click là Robot tự chọn Hoàn thành cho 15-18 tiết và tự động bấm nút <strong>Ghi</strong> lưu xong xuôi!
       </p>
     </div>
 
     <div class="note-box">
       🔒 <strong>BẢO MẬT TUYỆT ĐỐI 100%:</strong><br>
-      • Mọi thông tin cá nhân và mật khẩu chỉ được lưu trực tiếp trên máy tính của Thầy/Cô, tuyệt đối không gửi đi bất kỳ đâu.<br>
-      • Robot <strong>không can thiệp giải mã CAPTCHA</strong> (Thầy/Cô vẫn tự tay gõ CAPTCHA) nhằm đảm bảo 100% tuân thủ quy định an toàn bảo mật thông tin ngành Giáo dục.
+      • Toàn bộ tài khoản và mật khẩu chỉ lưu cục bộ trên máy tính của Thầy/Cô (`chrome.storage.sync`), không gửi qua bất kỳ máy chủ nào.<br>
+      • Robot <strong>không can thiệp giải mã CAPTCHA</strong> (Thầy/Cô vẫn tự tay gõ CAPTCHA) nhằm đảm bảo tuân thủ 100% quy định an toàn thông tin của ngành Giáo dục.
     </div>
 
     <div class="footer">
       <div>© 2026 <strong>Thầy Nông Văn Hùng</strong> (Trường THCS Đăk Ơ, Huyện Bù Gia Mập, Tỉnh Đồng Nai) & Cộng đồng AI Giáo dục Đồng Nai</div>
-      <div style="font-size: 11px; margin-top: 4px;">Dự án phi lợi nhuận đồng hành cùng giáo viên toàn tỉnh trong chuyển đổi số giáo dục.</div>
+      <div style="font-size: 11px; margin-top: 4px; color: #64748b;">Sáng kiến phi lợi nhuận hỗ trợ giáo viên toàn tỉnh tối ưu hóa thời gian & chuyển đổi số hiệu quả.</div>
       <div class="footer-links">
-        <a href="https://zalo.me/g/csdl-dongnai-ai" target="_blank" class="footer-link-btn">
+        <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="footer-link-btn">
           💬 Tham Gia Nhóm Zalo AI
         </a>
-        <a href="https://github.com/hungdak-o/tro-ly-csdl-dong-nai" target="_blank" class="footer-link-btn">
-          🚀 Cập Nhật Phiên Bản Mới (GitHub)
+        <a href="https://github.com/hungcnfree/csdl-dongnai-extension" target="_blank" class="footer-link-btn">
+          🚀 Cập Nhật Mã Nguồn (GitHub)
         </a>
       </div>
     </div>

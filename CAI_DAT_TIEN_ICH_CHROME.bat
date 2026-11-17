@@ -4,6 +4,7 @@ title CÀI ĐẶT TIỆN ÍCH CHROME - CSDL TOÀN TỈNH ĐỒNG NAI
 cls
 echo ====================================================================
 echo   🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI v5.1 - TOÀN TỈNH ĐỒNG NAI
+echo   Tác giả: Thầy Nông Văn Hùng (THCS Đăk Ơ)
 echo ====================================================================
 echo.
 set EXT_DIR=%~dp0chrome_extension
@@ -22,20 +23,23 @@ echo 2. Đang mở thư mục tiện ích trong máy tính...
 explorer "%EXT_DIR%"
 echo.
 echo ====================================================================
-echo   HƯỚNG DẪN 3 BƯỚC NẠP VÀO GOOGLE CHROME:
+echo   HƯỚNG DẪN 3 BƯỚC NẠP VÀO GOOGLE CHROME / CỐC CỐC:
 echo ====================================================================
 echo.
 echo   [BƯỚC 1] Bật công tắc "Chế độ dành cho nhà phát triển"
 echo            (Ở góc trên cùng bên phải màn hình Chrome).
 echo.
 echo   [BƯỚC 2] Bấm nút "Tải tiện ích đã giải nén" (Góc trên cùng bên trái)
-echo            và dán hoặc chọn thư mục "chrome_extension" vừa mở ra!
+echo            và DÁN hoặc CHỌN thư mục "chrome_extension" vừa mở ra!
 echo.
-echo   [BƯỚC 3] Nhấp vào biểu tượng Tiện ích ở góc trên Chrome,
-echo            chọn Trường/Tên Thầy Cô và nhập SĐT + Mật khẩu rồi bấm Lưu!
+echo   [BƯỚC 3] Nhấp vào biểu tượng Tiện ích ở góc trên Chrome (hình mảnh ghép),
+echo            chọn Trường/Tên Thầy Cô và nhập SĐT + Mật khẩu rồi bấm LƯU!
 echo.
 echo   [BƯỚC 4] Mở trang https://truong.dongnai.edu.vn:
 echo            Robot sẽ TỰ ĐỘNG ĐIỀN TOÀN BỘ và nhắc Thầy/Cô nhập CAPTCHA!
 echo ====================================================================
+echo.
+echo 💬 Nhóm Zalo AI chia sẻ & hỗ trợ: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
+echo 🚀 GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/csdl-dongnai-extension
 echo.
 pause

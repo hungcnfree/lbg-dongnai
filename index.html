@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cài Đặt Dấu Trang 1-Click - CSDL Toàn Tỉnh Đồng Nai</title>
+  <title>Hướng Dẫn Cài Đặt Tiện Ích Trợ Lý CSDL Đồng Nai (v5.1 Toàn Tỉnh)</title>
   <style>
     :root {
       --primary: #0284c7;
-      --primary-hover: #0369a1;
+      --primary-dark: #0369a1;
       --success: #10b981;
-      --success-hover: #059669;
+      --accent: #38bdf8;
       --bg: #0f172a;
       --card: #1e293b;
       --border: #334155;
@@ -17,821 +17,254 @@
       --muted: #94a3b8;
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.6;
       background: var(--bg);
       color: var(--text);
       margin: 0;
-      padding: 24px 15px 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      box-sizing: border-box;
+      padding: 30px 15px 50px;
     }
-    .container {
+    .wrapper {
+      max-width: 820px;
+      margin: 0 auto;
       background: var(--card);
-      max-width: 650px;
-      width: 100%;
       border-radius: 16px;
-      padding: 28px 32px;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+      padding: 36px 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
       border: 1px solid var(--border);
-      box-sizing: border-box;
+    }
+    .header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 20px;
+      margin-bottom: 24px;
     }
     .badge {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       font-size: 11px;
       font-weight: 700;
       background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
+      color: var(--success);
       border: 1px solid rgba(16, 185, 129, 0.3);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    h2 {
-      margin: 0 0 6px 0;
-      color: #38bdf8;
-      font-size: 20px;
+    .header h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: 24px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    p.subtitle {
-      margin: 0 0 16px 0;
+    .header p {
+      margin: 8px 0 0 0;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    /* Mode switcher */
-    .mode-switch {
-      display: flex;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 16px;
-      gap: 6px;
-    }
-    .mode-btn {
-      flex: 1;
-      padding: 10px 12px;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: 0.2s;
-      text-align: center;
-    }
-    .mode-btn.active {
-      background: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
-    }
-    .auto-fill-card {
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--success);
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #cbd5e1;
-      margin-bottom: 18px;
-      line-height: 1.5;
-    }
-    .form-group {
-      margin-bottom: 14px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    input, select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: #0f172a;
-      color: #f8fafc;
       font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    input:focus, select:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-    }
-    .btn-create {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: #fff;
-      border: none;
+    .highlight-card {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-left: 5px solid var(--success);
+      padding: 16px 20px;
       border-radius: 10px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
-      transition: 0.2s;
-      letter-spacing: 0.5px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      color: #6ee7b7;
+      line-height: 1.6;
     }
-    .btn-create:hover {
-      background: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
-    }
-    /* Results */
-    .result-section {
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px dashed var(--border);
+    h2 {
+      color: var(--accent);
+      font-size: 18px;
+      margin-top: 32px;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .step-box {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #6ee7b7;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 22px;
       margin-bottom: 16px;
-      line-height: 1.5;
+      transition: border-color 0.2s;
+    }
+    .step-box:hover {
+      border-color: var(--accent);
+    }
+    .step-title {
+      font-weight: bold;
+      color: #ffffff;
+      font-size: 15px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge-step {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
     }
     .kbd {
       background: #334155;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 4px;
       font-family: monospace;
-      color: #38bdf8;
+      font-weight: bold;
+      color: var(--accent);
       border: 1px solid #475569;
     }
-    .bookmark-drag-btn {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px 16px;
-      border-radius: 10px;
-      text-align: center;
+    .note-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 4px solid #f59e0b;
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #fde68a;
+      margin: 24px 0;
+      line-height: 1.6;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
       font-weight: 700;
-      font-size: 14px;
       text-decoration: none;
-      cursor: move;
-      margin-bottom: 10px;
-      user-select: none;
-      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      transition: transform 0.2s, background 0.2s;
     }
-    .btn-bm-login {
+    .action-btn:hover {
       background: #0284c7;
-      color: white;
-      border: 1px solid #38bdf8;
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+      transform: translateY(-1px);
     }
-    .btn-bm-done {
-      background: #10b981;
-      color: white;
-      border: 1px solid #34d399;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-    }
-    .bookmark-drag-btn:hover {
-      transform: translateY(-2px);
-    }
-    .drag-hint {
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-      margin-top: -6px;
-      margin-bottom: 12px;
-    }
-    /* Modal popup */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 99999;
-      justify-content: center;
-      align-items: center;
-      box-sizing: border-box;
-      padding: 15px;
-    }
-    .modal-box {
-      background: #1e293b;
-      border: 1px solid #10b981;
-      border-radius: 16px;
-      padding: 24px 28px;
-      max-width: 540px;
-      width: 100%;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-      text-align: left;
-    }
-    .modal-box h3 {
-      margin: 0 0 10px 0;
-      color: #10b981;
-      font-size: 17px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .path-copy-box {
-      display: flex;
-      align-items: center;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin: 12px 0;
-      gap: 8px;
-    }
-    .path-text {
-      font-family: monospace;
-      font-size: 11px;
-      color: #38bdf8;
-      word-break: break-all;
-      flex: 1;
-    }
-    .btn-copy {
-      background: #334155;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: 0.2s;
-    }
-    .btn-copy:hover {
-      background: #475569;
-    }
-    .modal-steps {
-      background: rgba(2, 132, 199, 0.08);
-      border-left: 3px solid #38bdf8;
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-size: 12px;
-      line-height: 1.6;
-      color: #cbd5e1;
-      margin-bottom: 14px;
-    }
-    .btn-modal-close {
-      width: 100%;
-      padding: 11px;
-      background: #334155;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .btn-modal-close:hover {
-      background: #475569;
-    }
-    /* Footer */
     .footer {
-      max-width: 650px;
-      width: 100%;
-      margin-top: 24px;
-      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
       font-size: 12px;
       color: var(--muted);
-      line-height: 1.6;
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
+      text-align: center;
+      line-height: 1.7;
     }
     .footer-links {
       display: flex;
       justify-content: center;
-      align-items: center;
       gap: 16px;
-      margin-top: 8px;
+      margin-top: 12px;
       flex-wrap: wrap;
     }
-    .footer-btn {
+    .footer-link-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      background: #1e293b;
-      color: #38bdf8;
+      padding: 7px 14px;
+      background: #0f172a;
+      color: var(--accent);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
       font-size: 12px;
       transition: 0.2s;
     }
-    .footer-btn:hover {
+    .footer-link-btn:hover {
       background: #334155;
-      border-color: #38bdf8;
+      border-color: var(--accent);
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <span class="badge">🚀 PHIÊN BẢN 5.1 - TOÀN TỈNH ĐỒNG NAI</span>
-    <h2>🤖 Cài Đặt Trợ Lý Tự Động CSDL</h2>
-    <p class="subtitle">Tự động điền 100% Cấp học, Xã, Trường, SĐT & Mật khẩu khi đăng nhập; xác nhận Lịch báo giảng trong 0.5s.</p>
-
-    <!-- Chọn chế độ Trường -->
-    <div class="mode-switch">
-      <button type="button" id="tab-dako" class="mode-btn active" onclick="setMode('dako')">🏫 THCS Đăk Ơ</button>
-      <button type="button" id="tab-province" class="mode-btn" onclick="setMode('province')">🌐 Trường khác / Xã khác (Toàn tỉnh)</button>
+  <div class="wrapper">
+    <div class="header">
+      <span class="badge">CHUYỂN ĐỔI SỐ GIÁO DỤC ĐỒNG NAI</span>
+      <h1>🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI (v5.1)</h1>
+      <p>Giải pháp Tiện ích mở rộng Google Chrome dành cho giáo viên trường THCS Đăk Ơ và các trường toàn tỉnh Đồng Nai</p>
     </div>
 
-    <!-- KHU VỰC 1: DÀNH RIÊNG THCS ĐĂK Ơ -->
-    <div id="panel-dako">
-      <div class="auto-fill-card">
-        ✅ <strong>MẶC ĐỊNH SẴN:</strong> Cấp: <em>Trung học cơ sở</em> | Xã: <em>Xã Đăk Ơ</em> | Trường: <em>Trường THCS Đăk Ơ</em>.<br>
-        Thầy/Cô chỉ cần chọn tên trong danh sách 60 giáo viên:
-      </div>
-
-      <div class="form-group">
-        <label>1. Chọn Tên Thầy/Cô (THCS Đăk Ơ)</label>
-        <select id="sel-teacher">
-          <option value="">-- Chọn tên Thầy/Cô trong danh sách 60 GV --</option>
-          <option value="Bùi Văn Chính">Bùi Văn Chính</option>
-          <option value="Bùi Văn Đãi">Bùi Văn Đãi</option>
-          <option value="Bùi Văn Giang">Bùi Văn Giang</option>
-          <option value="Bùi Thị Hiền">Bùi Thị Hiền</option>
-          <option value="Bùi Thị Hưởng">Bùi Thị Hưởng</option>
-          <option value="Bùi Văn Tuyên">Bùi Văn Tuyên</option>
-          <option value="Cao thị Tuyết Phương">Cao thị Tuyết Phương</option>
-          <option value="Dương Thanh Thừa">Dương Thanh Thừa</option>
-          <option value="Đặng Thị Oanh">Đặng Thị Oanh</option>
-          <option value="Đặng Thị Uyên">Đặng Thị Uyên</option>
-          <option value="Hà Văn Lập">Hà Văn Lập</option>
-          <option value="Hoàng Thị Nguyệt">Hoàng Thị Nguyệt</option>
-          <option value="Hoàng Thị Thúy">Hoàng Thị Thúy</option>
-          <option value="Hoàng Văn Huy">Hoàng Văn Huy</option>
-          <option value="Hồ Đình triệu">Hồ Đình triệu</option>
-          <option value="Hồ Thị Quỳnh">Hồ Thị Quỳnh</option>
-          <option value="Hỏa Thị Chính">Hỏa Thị Chính</option>
-          <option value="Lê Thị Hằng">Lê Thị Hằng</option>
-          <option value="Lê Thị Hồng Lan">Lê Thị Hồng Lan</option>
-          <option value="Lê Hữu Thọ">Lê Hữu Thọ</option>
-          <option value="Lê Nguyễn Cẩm Hương">Lê Nguyễn Cẩm Hương</option>
-          <option value="Lê Thị Ngọc Tú">Lê Thị Ngọc Tú</option>
-          <option value="Lê Thị Sông Hồng">Lê Thị Sông Hồng</option>
-          <option value="Lê Thị Trinh">Lê Thị Trinh</option>
-          <option value="Lương Thị Thu">Lương Thị Thu</option>
-          <option value="Nguyễn Chí Công">Nguyễn Chí Công</option>
-          <option value="Nguyễn Thị Đan">Nguyễn Thị Đan</option>
-          <option value="Nguyễn Thị Lan Anh">Nguyễn Thị Lan Anh</option>
-          <option value="Nguyễn Thị Lương">Nguyễn Thị Lương</option>
-          <option value="Nguyễn Thị Nga">Nguyễn Thị Nga</option>
-          <option value="Nguyễn Thị Oanh">Nguyễn Thị Oanh</option>
-          <option value="Nguyễn Thanh Hồng">Nguyễn Thanh Hồng</option>
-          <option value="Nguyễn Thị Thu Hằng">Nguyễn Thị Thu Hằng</option>
-          <option value="Nguyễn Trung Ấn">Nguyễn Trung Ấn</option>
-          <option value="Nguyễn Văn Linh">Nguyễn Văn Linh</option>
-          <option value="Nguyễn Văn Thụ">Nguyễn Văn Thụ</option>
-          <option value="Nguyễn Thị Vân">Nguyễn Thị Vân</option>
-          <option value="Nông Văn Hùng">Nông Văn Hùng</option>
-          <option value="Phạm Kim Chi">Phạm Kim Chi</option>
-          <option value="Phạm Tới">Phạm Tới</option>
-          <option value="Tô Hồng Đình Khiết">Tô Hồng Đình Khiết</option>
-          <option value="Trần Đình Hồ">Trần Đình Hồ</option>
-          <option value="Trần Thu Hà">Trần Thu Hà</option>
-          <option value="Trần Thị Hồng Hạnh">Trần Thị Hồng Hạnh</option>
-          <option value="Trần Thị Huệ">Trần Thị Huệ</option>
-          <option value="Trần Ngọc Thìn">Trần Ngọc Thìn</option>
-          <option value="Trần Thị Thoan">Trần Thị Thoan</option>
-          <option value="Trần Văn Hòa">Trần Văn Hòa</option>
-          <option value="Triệu Thị Nhập">Triệu Thị Nhập</option>
-          <option value="Trịnh Thị Hương">Trịnh Thị Hương</option>
-          <option value="Trịnh Thị Toàn">Trịnh Thị Toàn</option>
-          <option value="Trương Thị Như Thủy">Trương Thị Như Thủy</option>
-          <option value="Trương Thị Nhung">Trương Thị Nhung</option>
-          <option value="Võ Huy Cường">Võ Huy Cường</option>
-          <option value="Võ Thị Hoa Nữ">Võ Thị Hoa Nữ</option>
-          <option value="Vũ Thị Chiều">Vũ Thị Chiều</option>
-          <option value="Vũ Thị Hằng">Vũ Thị Hằng</option>
-          <option value="Vũ Văn Hiệp">Vũ Văn Hiệp</option>
-          <option value="Vũ Thị Huyền">Vũ Thị Huyền</option>
-          <option value="Vũ Thị Tuyến">Vũ Thị Tuyến</option>
-        </select>
-      </div>
+    <div class="highlight-card">
+      🎯 <strong>MỤC TIÊU DUY NHẤT:</strong> Cài đặt 1 lần duy nhất, từ đó về sau khi mở <code>truong.dongnai.edu.vn</code> là <strong>Robot tự động điền 100%</strong> (Cấp học, Xã/Phường, Trường học, Số điện thoại, Mật khẩu). Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA, Thầy/Cô chỉ cần gõ 4 ký tự rồi ấn <strong>Enter</strong> là vào thẳng hệ thống!
     </div>
 
-    <!-- KHU VỰC 2: TOÀN TỈNH ĐỒNG NAI (TRƯỜNG KHÁC / XÃ KHÁC) -->
-    <div id="panel-province" style="display: none;">
-      <div class="auto-fill-card" style="border-left-color: #38bdf8;">
-        🌐 <strong>TOÀN TỈNH ĐỒNG NAI:</strong> Chọn Cấp học và Phường/Xã (96 Xã/Phường), danh sách Trường học sẽ tự động hiển thị tương ứng!
-      </div>
+    <h2>🚀 HƯỚNG DẪN CÀI ĐẶT 1 LẦN DUY NHẤT (CHỈ 3 BƯỚC)</h2>
 
-      <div class="form-group">
-        <label>1. Họ và tên Thầy/Cô</label>
-        <input type="text" id="inp-custom-name" placeholder="Ví dụ: Thầy Nguyễn Văn A">
-      </div>
-
-      <div class="form-group">
-        <label>2. Chọn Cấp học</label>
-        <select id="sel-cap" onchange="onCapOrWardChange()">
-          <option value="03" data-name="Trung học cơ sở" selected>Trung học cơ sở</option>
-          <option value="02" data-name="Tiểu học">Tiểu học</option>
-          <option value="01" data-name="Mầm non">Mầm non</option>
-          <option value="04" data-name="Trung học phổ thông">Trung học phổ thông</option>
-          <option value="05" data-name="Giáo dục thường xuyên">Giáo dục thường xuyên</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>3. Chọn Phường / Xã (96 Xã/Phường)</label>
-        <select id="sel-xa" onchange="onCapOrWardChange()">
-          <option value="">-- Đang nạp danh sách 96 Phường/Xã... --</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>4. Chọn Trường học</label>
-        <select id="sel-truong">
-          <option value="">-- Vui lòng chọn Phường/Xã ở trên trước --</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- THÔNG TIN TÀI KHOẢN -->
-    <div class="form-group">
-      <label>Số điện thoại (Tên đăng nhập CSDL)</label>
-      <input type="text" id="inp-phone" placeholder="Nhập số điện thoại của Thầy/Cô...">
-    </div>
-
-    <div class="form-group">
-      <label>Mật khẩu đăng nhập CSDL</label>
-      <input type="password" id="inp-pass" placeholder="Nhập mật khẩu CSDL của Thầy/Cô...">
-    </div>
-
-    <button type="button" class="btn-create" onclick="generateBookmarks()">
-      ⚡ BẤM ĐỂ TẠO DẤU TRANG CỦA TÔI
-    </button>
-
-    <!-- KHU VỰC DẤU TRANG KÉO THẢ -->
-    <div id="result-area" class="result-section" style="display: none;">
-      <div class="step-box">
-        <strong>📌 HƯỚNG DẪN 2 BƯỚC ĐỂ SỬ DỤNG TRÊN CHROME / CỐC CỐC:</strong><br>
-        1. Bấm tổ hợp phím <span class="kbd">Ctrl + Shift + B</span> trên bàn phím để mở <strong>Thanh Dấu Trang (Bookmarks Bar)</strong>.<br>
-        2. Dùng chuột trái <strong>KÉO 2 NÚT MÀU DƯỚI ĐÂY THẢ LÊN THANH DẤU TRANG</strong> của trình duyệt!
-      </div>
-
-      <div>
-        <a id="btn-bm-login" class="bookmark-drag-btn btn-bm-login" href="#">
-          ⭐ [🔑 Đăng Nhập CSDL - Thầy/Cô]
-        </a>
-        <div class="drag-hint">👆 Giữ chuột trái vào nút này và kéo thả lên thanh Dấu trang phía trên</div>
-      </div>
-
-      <div>
-        <a id="btn-bm-done" class="bookmark-drag-btn btn-bm-done" href="#">
-          ⭐ [✅ Hoàn Thành Lịch Báo Giảng (0.5s)]
-        </a>
-        <div class="drag-hint">👆 Giữ chuột trái vào nút này và kéo thả lên thanh Dấu trang phía trên</div>
-      </div>
-
-      <div style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid #38bdf8; padding: 10px 14px; border-radius: 6px; font-size: 12px; color: #cbd5e1; line-height: 1.5;">
-        🔒 <strong>Bảo mật 100%:</strong> Toàn bộ thông tin tài khoản chỉ lưu trực tiếp trên trình duyệt của Thầy/Cô, tuyệt đối không gửi ra bất kỳ máy chủ nào. Khi đổi mật khẩu, Thầy/Cô chỉ cần mở lại file này và tạo lại dấu trang mới!
-      </div>
-    </div>
-  </div>
-
-  <!-- CỬA SỔ MODAL THÔNG BÁO HƯỚNG DẪN KHI LƯU THÀNH CÔNG -->
-  <div id="modal-success" class="modal-overlay">
-    <div class="modal-box">
-      <h3>🎉 CÀI ĐẶT THÀNH CÔNG CHO <span id="modal-teacher-name" style="color: #38bdf8;"></span> !</h3>
-      <p style="font-size: 13px; color: #cbd5e1; margin: 4px 0 12px;">Trường: <strong id="modal-school-name" style="color: #10b981;"></strong></p>
-
-      <div style="font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase;">📁 ĐƯỜNG DẪN THƯ MỤC TIỆN ÍCH TRÊN Ổ CỨNG:</div>
-      <div class="path-copy-box">
-        <span id="modal-path-text" class="path-text">...\\BAN_CHIA_SE_DONG_NGHIEP\\chrome_extension</span>
-        <button class="btn-copy" onclick="copyExtPath()">📋 Sao chép</button>
-      </div>
-
-      <div class="modal-steps">
-        <strong>🚀 3 BƯỚC THÊM VÀO GOOGLE CHROME:</strong><br>
-        1. Mở tab mới trên Chrome, gõ vào thanh địa chỉ: <code style="color: #38bdf8; font-weight: bold;">chrome://extensions</code> và ấn Enter.<br>
-        2. Bật công tắc <strong>"Chế độ dành cho nhà phát triển"</strong> (ở góc trên cùng bên phải).<br>
-        3. Bấm nút <strong>"Tải tiện ích đã giải nén"</strong> (ở góc trên cùng bên trái) ➔ Chọn đúng thư mục <code>chrome_extension</code> theo đường dẫn ở trên!<br>
-        4. Mở <strong>truong.dongnai.edu.vn</strong> ➔ Mọi thông tin tự điền xong trong 0.05 giây, Thầy/Cô chỉ việc gõ CAPTCHA rồi ấn <strong>Enter</strong>!
-      </div>
-
-      <div style="font-size: 12px; font-weight: bold; color: #f59e0b; margin-bottom: 8px;">
-        ★ HOẶC DÙNG DẤU TRANG 1-CLICK (Không cần cài Extension):
-      </div>
-      <p style="font-size: 12px; color: #94a3b8; margin: 0 0 14px;">
-        Thầy/Cô hãy kéo 2 nút màu xanh vừa tạo ở màn hình chính thả lên thanh Dấu trang (Ctrl + Shift + B) của trình duyệt là dùng được ngay!
+    <div class="step-box">
+      <div class="step-title"><span class="badge-step">Bước 1</span> Mở Quản Lý Tiện Ích Chrome & Sao Chép Thư Mục</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        • Nhấp đúp vào file: <strong><code>CAI_DAT_TIEN_ICH_CHROME.bat</code></strong> trong thư mục vừa giải nén.<br>
+        • Chương trình sẽ <strong>tự động sao chép đường dẫn thư mục</strong> vào bộ nhớ tạm (Clipboard), đồng thời tự mở sẵn trang <span class="kbd">chrome://extensions</span> trên trình duyệt Chrome và mở cửa sổ thư mục <code>chrome_extension</code>.
       </p>
+    </div>
 
-      <button class="btn-modal-close" onclick="closeModal()">ĐÃ HIỂU, ĐÓNG CỬA SỔ</button>
+    <div class="step-box">
+      <div class="step-title"><span class="badge-step">Bước 2</span> Nạp Thư Mục Tiện Ích Vào Chrome</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        1. Tại trang Quản lý tiện ích Chrome, bật công tắc <strong>"Chế độ dành cho nhà phát triển" (Developer mode)</strong> ở góc trên cùng bên phải màn hình.<br>
+        2. Bấm nút <strong>"Tải tiện ích đã giải nén" (Load unpacked)</strong> ở góc trên cùng bên trái.<br>
+        3. Dán đường dẫn thư mục (ấn <span class="kbd">Ctrl + V</span>) hoặc chọn đúng thư mục <code>chrome_extension</code> ➔ Bấm <strong>Select Folder</strong> là xong!
+      </p>
+    </div>
+
+    <div class="step-box">
+      <div class="step-title"><span class="badge-step">Bước 3</span> Chọn Trường & Lưu Thông Tin Của Thầy/Cô</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        1. Bấm vào biểu tượng <strong>Tiện ích (hình mảnh ghép 🧩)</strong> ở góc trên bên phải thanh công cụ Chrome, chọn ghim biểu tượng <strong>🤖 Trợ Lý CSDL</strong>.<br>
+        2. Bấm vào biểu tượng Trợ lý:<br>
+        &nbsp;&nbsp;&nbsp;• <strong>Nếu là giáo viên THCS Đăk Ơ:</strong> Chọn Tên Thầy/Cô trong danh sách 60 giáo viên.<br>
+        &nbsp;&nbsp;&nbsp;• <strong>Nếu ở Trường khác / Xã khác:</strong> Bấm sang tab <em>"Trường khác / Xã khác"</em> ➔ Nhập Họ tên, chọn Cấp học (Mầm non, Tiểu học, THCS, THPT, GDTX), chọn Xã/Phường và Trường của mình.<br>
+        3. Nhập <strong>Số điện thoại</strong> và <strong>Mật khẩu CSDL</strong> ➔ Bấm <strong>💾 LƯU CẤU HÌNH CỦA TÔI</strong>!
+      </p>
+    </div>
+
+    <h2>⚡ TRẢI NGHIỆM SỬ DỤNG HÀNG NGÀY</h2>
+
+    <div class="step-box">
+      <div class="step-title">🔑 Đăng nhập CSDL tự động 100%</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        Mở trang <code>https://truong.dongnai.edu.vn</code> ➔ Robot tự động điền đầy đủ mọi thông tin trong tích tắc ➔ Con trỏ chuột đã nằm sẵn trong ô CAPTCHA, Thầy/Cô <strong>gõ mã CAPTCHA rồi ấn phím ENTER</strong> là vào ngay!
+      </p>
+    </div>
+
+    <div class="step-box">
+      <div class="step-title">✅ Hoàn thành Lịch báo giảng tuần trong 0.5 giây</div>
+      <p style="margin: 0; font-size: 13px; color: #cbd5e1;">
+        Khi vào mục <strong>3.6.2 Khai báo lịch báo giảng</strong> ➔ Ở góc dưới bên phải màn hình sẽ xuất hiện nút màu xanh: <strong>"✅ BẤM ĐỂ HOÀN THÀNH"</strong>. Chỉ cần bấm 1 click là Robot tự chọn Hoàn thành cho 15-18 tiết và tự động bấm nút <strong>Ghi</strong> lưu xong xuôi!
+      </p>
+    </div>
+
+    <div class="note-box">
+      🔒 <strong>BẢO MẬT TUYỆT ĐỐI 100%:</strong><br>
+      • Toàn bộ tài khoản và mật khẩu chỉ lưu cục bộ trên máy tính của Thầy/Cô (`chrome.storage.sync`), không gửi qua bất kỳ máy chủ nào.<br>
+      • Robot <strong>không can thiệp giải mã CAPTCHA</strong> (Thầy/Cô vẫn tự tay gõ CAPTCHA) nhằm đảm bảo tuân thủ 100% quy định an toàn thông tin của ngành Giáo dục.
+    </div>
+
+    <div class="footer">
+      <div>© 2026 <strong>Thầy Nông Văn Hùng</strong> (Trường THCS Đăk Ơ, Huyện Bù Gia Mập, Tỉnh Đồng Nai) & Cộng đồng AI Giáo dục Đồng Nai</div>
+      <div style="font-size: 11px; margin-top: 4px; color: #64748b;">Sáng kiến phi lợi nhuận hỗ trợ giáo viên toàn tỉnh tối ưu hóa thời gian & chuyển đổi số hiệu quả.</div>
+      <div class="footer-links">
+        <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="footer-link-btn">
+          💬 Tham Gia Nhóm Zalo AI
+        </a>
+        <a href="https://github.com/hungcnfree/csdl-dongnai-extension" target="_blank" class="footer-link-btn">
+          🚀 Cập Nhật Mã Nguồn (GitHub)
+        </a>
+      </div>
     </div>
   </div>
-
-  <!-- CHÂN TRANG BẢN QUYỀN & CỘNG ĐỒNG -->
-  <div class="footer">
-    <div>© 2026 <strong>Thầy Nông Văn Hùng</strong> (THCS Đăk Ơ, Huyện Bù Gia Mập, Đồng Nai) & Cộng đồng AI Giáo dục Đồng Nai</div>
-    <div style="font-size: 11px; margin-top: 4px;">Sáng kiến phi lợi nhuận hỗ trợ chuyển đổi số & tự động hóa nghiệp vụ CSDL cho giáo viên toàn tỉnh.</div>
-    <div class="footer-links">
-      <a href="https://zalo.me/g/csdl-dongnai-ai" target="_blank" class="footer-btn">
-        💬 Tham Gia Nhóm Zalo AI
-      </a>
-      <a href="https://github.com/hungdak-o/tro-ly-csdl-dong-nai" target="_blank" class="footer-btn">
-        🚀 Cập Nhật Bản Mới (GitHub)
-      </a>
-    </div>
-  </div>
-
-  <!-- Nạp dữ liệu 96 xã và 2.178 trường toàn tỉnh -->
-  <script src="dongnai_data.js"></script>
-
-  <script>
-    let currentMode = 'dako';
-
-    function setMode(mode) {
-      currentMode = mode;
-      const tabDako = document.getElementById('tab-dako');
-      const tabProvince = document.getElementById('tab-province');
-      const panelDako = document.getElementById('panel-dako');
-      const panelProvince = document.getElementById('panel-province');
-
-      if (mode === 'dako') {
-        tabDako.classList.add('active');
-        tabProvince.classList.remove('active');
-        panelDako.style.display = 'block';
-        panelProvince.style.display = 'none';
-      } else {
-        tabProvince.classList.add('active');
-        tabDako.classList.remove('active');
-        panelDako.style.display = 'none';
-        panelProvince.style.display = 'block';
-        initWards();
-        onCapOrWardChange();
-      }
-    }
-
-    function initWards() {
-      const selXa = document.getElementById('sel-xa');
-      if (!selXa || selXa.options.length > 5) return;
-      if (window.DONGNAI_WARDS) {
-        selXa.innerHTML = '<option value="">-- Chọn Phường / Xã (96 Xã/Phường) --</option>';
-        window.DONGNAI_WARDS.forEach(w => {
-          const opt = document.createElement('option');
-          opt.value = w.name;
-          opt.textContent = w.name;
-          selXa.appendChild(opt);
-        });
-      }
-    }
-
-    function onCapOrWardChange() {
-      const capCode = document.getElementById('sel-cap').value;
-      const ward = document.getElementById('sel-xa').value;
-      const selTruong = document.getElementById('sel-truong');
-
-      if (!ward) {
-        selTruong.innerHTML = '<option value="">-- Vui lòng chọn Phường/Xã trước --</option>';
-        return;
-      }
-
-      selTruong.innerHTML = '<option value="">-- Chọn trường học --</option>';
-
-      if (window.DONGNAI_SCHOOLS && window.DONGNAI_SCHOOLS[capCode] && window.DONGNAI_SCHOOLS[capCode][ward]) {
-        const list = window.DONGNAI_SCHOOLS[capCode][ward];
-        if (list.length === 0) {
-          selTruong.innerHTML = '<option value="">-- Không có trường nào ở cấp này tại xã đã chọn --</option>';
-        } else {
-          list.forEach(s => {
-            const opt = document.createElement('option');
-            opt.value = s.raw || s.name;
-            opt.textContent = s.name + (s.code ? ` (${s.code})` : '');
-            selTruong.appendChild(opt);
-          });
-        }
-      } else {
-        selTruong.innerHTML = '<option value="">-- Không có trường nào ở cấp này tại xã đã chọn --</option>';
-      }
-    }
-
-    // Tự động phát hiện đường dẫn hiện tại để hướng dẫn người dùng
-    window.addEventListener('DOMContentLoaded', () => {
-      initWards();
-      try {
-        let p = window.location.pathname.replace(/^\/([a-zA-Z]:)/, '$1').replace(/\/[^\/]*$/, '');
-        p = decodeURIComponent(p).replace(/\//g, '\\') + '\\chrome_extension';
-        document.getElementById('modal-path-text').innerText = p;
-      } catch (e) {}
-    });
-
-    function copyExtPath() {
-      const p = document.getElementById('modal-path-text').innerText;
-      navigator.clipboard.writeText(p).then(() => {
-        alert('📋 Đã sao chép đường dẫn: ' + p);
-      }).catch(() => {
-        prompt('Sao chép đường dẫn thủ công:', p);
-      });
-    }
-
-    function closeModal() {
-      document.getElementById('modal-success').style.display = 'none';
-    }
-
-    function generateBookmarks() {
-      let name = '';
-      let capHoc = 'Trung học cơ sở';
-      let phuongXa = 'Xã Đăk Ơ';
-      let truong = 'Trường THCS Đăk Ơ';
-
-      if (currentMode === 'dako') {
-        name = document.getElementById('sel-teacher').value;
-        if (!name) {
-          alert('⚠️ Thầy/Cô vui lòng chọn Tên của mình trong danh sách trước nhé!');
-          document.getElementById('sel-teacher').focus();
-          return;
-        }
-      } else {
-        name = document.getElementById('inp-custom-name').value.trim();
-        if (!name) {
-          alert('⚠️ Thầy/Cô vui lòng nhập Họ và tên!');
-          document.getElementById('inp-custom-name').focus();
-          return;
-        }
-        const selCap = document.getElementById('sel-cap');
-        capHoc = selCap.options[selCap.selectedIndex]?.getAttribute('data-name') || selCap.options[selCap.selectedIndex]?.text || 'Trung học cơ sở';
-        phuongXa = document.getElementById('sel-xa').value;
-        if (!phuongXa) {
-          alert('⚠️ Thầy/Cô vui lòng chọn Phường / Xã!');
-          document.getElementById('sel-xa').focus();
-          return;
-        }
-        truong = document.getElementById('sel-truong').value;
-        if (!truong) {
-          alert('⚠️ Thầy/Cô vui lòng chọn Trường học!');
-          document.getElementById('sel-truong').focus();
-          return;
-        }
-      }
-
-      const user = document.getElementById('inp-phone').value.trim();
-      const pass = document.getElementById('inp-pass').value.trim();
-
-      if (!user) {
-        alert('⚠️ Thầy/Cô vui lòng nhập Số điện thoại đăng nhập CSDL!');
-        document.getElementById('inp-phone').focus();
-        return;
-      }
-      if (!pass) {
-        alert('⚠️ Thầy/Cô vui lòng nhập Mật khẩu CSDL!');
-        document.getElementById('inp-pass').focus();
-        return;
-      }
-
-      const cfg = {
-        name: name,
-        user: user,
-        pass: pass,
-        cap: capHoc,
-        xa: phuongXa,
-        truong: truong
-      };
-
-      // Mã Bookmarklet Đăng Nhập Đa Trường Chuẩn Hóa
-      const bmLoginCode = `javascript:(async function(){
-        var cfg = ${JSON.stringify(cfg)};
-        var u = document.getElementById('ContentPlaceHolder1_ctl00_tbU');
-        var p = document.getElementById('ContentPlaceHolder1_ctl00_tbP');
-        if (u) { u.value = cfg.user; u.dispatchEvent(new Event('input', {bubbles:true})); u.dispatchEvent(new Event('change', {bubbles:true})); }
-        if (p) { p.value = cfg.pass; p.dispatchEvent(new Event('input', {bubbles:true})); p.dispatchEvent(new Event('change', {bubbles:true})); }
-
-        var waitAjax = function() {
-          return new Promise(function(resolve) {
-            if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
-              var prm = Sys.WebForms.PageRequestManager.getInstance();
-              var done = function() { setTimeout(resolve, 300); };
-              var handler = function() { prm.remove_endRequest(handler); done(); };
-              prm.add_endRequest(handler);
-              setTimeout(done, 1500);
-            } else { setTimeout(resolve, 600); }
-          });
-        };
-
-        var findItem = function(combo, text) {
-          if (!combo || !text) return null;
-          var t = text.trim().toLowerCase();
-          var item = combo.findItemByText ? combo.findItemByText(text) : null;
-          if (item) return item;
-          var items = combo.get_items ? combo.get_items() : (combo.getItems ? combo.getItems() : null);
-          if (items) {
-            var count = items.get_count ? items.get_count() : items.length;
-            for (var i = 0; i < count; i++) {
-              var it = items.getItem ? items.getItem(i) : items[i];
-              var s = (it && it.get_text ? it.get_text() : '').trim().toLowerCase();
-              if (s === t) return it;
-            }
-            for (var j = 0; j < count; j++) {
-              var it2 = items.getItem ? items.getItem(j) : items[j];
-              var s2 = (it2 && it2.get_text ? it2.get_text() : '').toLowerCase();
-              if (s2.indexOf(t) !== -1 || t.indexOf(s2) !== -1) return it2;
-            }
-          }
-          return null;
-        };
-
-        var cbCapHoc = typeof $find === 'function' ? $find('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc') : null;
-        var curCap = cbCapHoc ? cbCapHoc.get_text() : (document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input') ? document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input').value : '');
-        if (!curCap || curCap.trim().toLowerCase() !== (cfg.cap||'').trim().toLowerCase()) {
-          var itCap = findItem(cbCapHoc, cfg.cap);
-          if (itCap) {
-            itCap.select();
-            if (typeof __doPostBack === 'function') {
-              __doPostBack('ctl00$ContentPlaceHolder1$ctl00$cbCapHoc', '');
-              await waitAjax();
-            }
-          }
-        }
-
-        var rcbPhongGD = typeof $find === 'function' ? $find('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD') : null;
-        var curXa = rcbPhongGD ? rcbPhongGD.get_text() : (document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input') ? document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input').value : '');
-        if (!curXa || curXa.trim().toLowerCase() !== (cfg.xa||'').trim().toLowerCase()) {
-          var itXa = findItem(rcbPhongGD, cfg.xa);
-          if (itXa) {
-            itXa.select();
-            if (typeof __doPostBack === 'function') {
-              __doPostBack('ctl00$ContentPlaceHolder1$ctl00$rcbPhongGD', '');
-              await waitAjax();
-            }
-          }
-        }
-
-        var cbTruong = typeof $find === 'function' ? $find('ctl00_ContentPlaceHolder1_ctl00_cbTruong') : null;
-        if (cbTruong) {
-          var itTruong = findItem(cbTruong, cfg.truong);
-          if (itTruong) itTruong.select();
-        }
-
-        var cap = document.getElementById('ContentPlaceHolder1_ctl00_tbCapcha');
-        if (cap) {
-          cap.focus();
-          cap.style.border = '2px solid #10b981';
-          cap.style.backgroundColor = '#f0fdf4';
-          cap.style.fontWeight = 'bold';
-          cap.onkeydown = function(e) {
-            if (e.key === 'Enter') {
-              var btn = document.getElementById('ContentPlaceHolder1_ctl00_btOK');
-              if (btn) btn.click();
-            }
-          };
-        }
-      })();`.replace(/\s+/g, ' ');
-
-      // Mã Bookmarklet Hoàn Thành Lịch Báo Giảng
-      const bmDoneCode = `javascript:(function(){
-        var rows = document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00 > tbody > tr');
-        var count = 0;
-        for (var i = 0; i < rows.length; i++) {
-          if (rows[i].innerText.trim().length > 15) {
-            var inp = rows[i].querySelector('input[id*="rcbTrangThaiGV_Input"]');
-            if (inp) {
-              var cId = inp.id.replace('_Input', '');
-              if (typeof $find === 'function') {
-                var cb = $find(cId);
-                if (cb) {
-                  var it = cb.findItemByText('Hoàn thành');
-                  if (it) { it.select(); count++; }
-                }
-              } else { inp.value = 'Hoàn thành'; count++; }
-            }
-          }
-        }
-        setTimeout(function(){
-          var btns = Array.from(document.querySelectorAll('button, input[type="submit"], input[type="button"]')).filter(function(b){ return (b.innerText||b.value||'').trim()==='Ghi'; });
-          if (btns.length > 0) { btns[0].click(); }
-          alert('🎉 Robot đã chọn Hoàn thành cho ' + count + ' tiết và bấm GHI lưu thành công!');
-        }, 350);
-      })();`.replace(/\s+/g, ' ');
-
-      const btnLogin = document.getElementById('btn-bm-login');
-      const btnDone = document.getElementById('btn-bm-done');
-
-      btnLogin.href = bmLoginCode;
-      btnLogin.innerText = `⭐ [🔑 Đăng Nhập CSDL - ${name}]`;
-      btnDone.href = bmDoneCode;
-
-      document.getElementById('result-area').style.display = 'block';
-
-      // Hiện Modal thông báo thành công
-      document.getElementById('modal-teacher-name').innerText = name;
-      document.getElementById('modal-school-name').innerText = truong;
-      document.getElementById('modal-success').style.display = 'flex';
-    }
-  </script>
 </body>
 </html>
