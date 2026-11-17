@@ -15,7 +15,9 @@ Kính gửi Quý Thầy/Cô đồng nghiệp,
 4. Bảo mật 100%: Mọi thông tin chỉ lưu cục bộ trên trình duyệt máy tính của Thầy/Cô, tuyệt đối không gửi ra ngoài.
 
 🌐 Trang web hướng dẫn trực tuyến: https://hungcnfree.github.io/lbg-dongnai/
-📦 Link tải trực tiếp gói cài đặt (ZIP ~180KB): https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip
+📦 Link tải 2 phiên bản (Tùy chọn phù hợp với Thầy/Cô):
+   🏫 1. Bản Nội Bộ THCS Đăk Ơ (ZIP ~58KB): https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip
+   🌐 2. Bản Toàn Tỉnh Đồng Nai (ZIP ~180KB): https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip
 
 👉 3 BƯỚC CÀI ĐẶT SIÊU NHANH:
 1. Thầy/Cô tải file ZIP về, giải nén ra thư mục máy tính.

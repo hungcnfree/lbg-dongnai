@@ -1,4 +1,4 @@
-// page_bridge.js - Telerik RadComboBox Client Engine (World: MAIN)
+// page_bridge.js - Telerik RadComboBox Client Engine v5.2 (Main World)
 // Tác quyền: Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
@@ -7,20 +7,20 @@
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  // Helper gửi sự kiện cập nhật tiến trình về cho content.js (Isolated World)
+  // Gửi sự kiện tiến trình về content.js
   function sendProgress(step, message, isDone = false, isError = false) {
     window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_PROGRESS', {
       detail: { step, message, isDone, isError }
     }));
   }
 
-  // Helper chờ ASP.NET AJAX PostBack (PageRequestManager)
+  // Chờ ASP.NET AJAX PostBack hoàn thành
   function waitForPostBack(timeoutMs = 6000) {
     return new Promise((resolve) => {
       try {
         var prm = window.Sys && window.Sys.WebForms ? window.Sys.WebForms.PageRequestManager.getInstance() : null;
         if (!prm) {
-          setTimeout(resolve, 2000);
+          setTimeout(resolve, 1500);
           return;
         }
         var finished = false;
@@ -28,7 +28,6 @@
           if (!finished) {
             finished = true;
             prm.remove_endRequest(onEnd);
-            // Chờ 500ms để Telerik khởi tạo lại các đối tượng RadComboBox trong DOM
             setTimeout(resolve, 500);
           }
         };
@@ -41,19 +40,17 @@
           }
         }, timeoutMs);
       } catch (e) {
-        setTimeout(resolve, 2000);
+        setTimeout(resolve, 1500);
       }
     });
   }
 
-  // Helper tìm item trong RadComboBox
+  // Helper tìm item trong RadComboBox thông thường (Cấp học, Xã)
   function findComboItem(combo, targetText) {
     if (!combo) return null;
-    // 1. Khớp chính xác
     var item = combo.findItemByText(targetText);
     if (item) return item;
 
-    // 2. Khớp không phân biệt hoa thường hoặc chuỗi con
     var items = combo.get_items();
     var cleanTarget = targetText.trim().toLowerCase();
     for (var i = 0; i < items.get_count(); i++) {
@@ -63,18 +60,66 @@
         return it;
       }
     }
+    return null;
+  }
 
-    // 3. Khớp bỏ qua tiền tố (Trường, THCS, THPT, Mầm non...)
-    var stripped = cleanTarget.replace(/trường|thcs|thpt|tiểu học|mầm non/gi, '').trim();
-    if (stripped.length >= 3) {
-      for (var j = 0; j < items.get_count(); j++) {
-        var it2 = items.getItem(j);
-        var it2Text = (it2.get_text() || '').trim().toLowerCase();
-        if (it2Text.includes(stripped)) {
-          return it2;
+  // Helper tìm item Trường học: TUYỆT ĐỐI KHÔNG CHỌN NHẦM CẤP (Ví dụ: THCS không bao giờ chọn Mầm non)
+  function findSchoolComboItem(combo, targetSchoolName, targetCapHoc) {
+    if (!combo) return null;
+    var items = combo.get_items();
+    var count = items.get_count();
+    if (count === 0) return null;
+
+    var cleanTarget = (targetSchoolName || '').trim().toLowerCase();
+    var cleanCap = (targetCapHoc || '').trim().toLowerCase();
+
+    // 1. Trường hợp đặc biệt: THCS Đăk Ơ -> Ưu tiên khớp mã trường 70691515 hoặc chứa cả 'thcs' và 'đăk ơ'
+    if (cleanTarget.includes('thcs đăk ơ') || cleanTarget.includes('70691515') || (cleanCap.includes('trung học cơ sở') && cleanTarget.includes('đăk ơ'))) {
+      for (var i = 0; i < count; i++) {
+        var it = items.getItem(i);
+        var val = (it.get_value() || '').trim();
+        var txt = (it.get_text() || '').trim().toLowerCase();
+        if (val === '70691515') return it;
+        if (txt.includes('thcs') && (txt.includes('đăk ơ') || txt.includes('đắk ơ')) && !txt.includes('mầm non') && !txt.includes('tiểu học')) {
+          return it;
         }
       }
     }
+
+    // 2. Tìm theo tên đầy đủ chính xác
+    for (var j = 0; j < count; j++) {
+      var it2 = items.getItem(j);
+      var txt2 = (it2.get_text() || '').trim().toLowerCase();
+      if (txt2 === cleanTarget || txt2.startsWith(cleanTarget)) {
+        return it2;
+      }
+    }
+
+    // 3. Khớp chuỗi con nhưng BẮT BUỘC lọc theo đúng cấp học (chống chọn nhầm cấp Mầm non/Tiểu học)
+    for (var k = 0; k < count; k++) {
+      var it3 = items.getItem(k);
+      var txt3 = (it3.get_text() || '').trim().toLowerCase();
+
+      // Kiểm tra tính tương thích cấp học
+      if (cleanCap.includes('trung học cơ sở')) {
+        if (txt3.includes('mầm non') || txt3.includes('mẫu giáo') || (txt3.includes('tiểu học') && !txt3.includes('thcs'))) {
+          continue; // Từ chối trường mầm non / tiểu học
+        }
+      } else if (cleanCap.includes('tiểu học')) {
+        if (txt3.includes('mầm non') || txt3.includes('mẫu giáo') || txt3.includes('thcs') || txt3.includes('thpt')) {
+          continue;
+        }
+      } else if (cleanCap.includes('mầm non')) {
+        if (txt3.includes('tiểu học') || txt3.includes('thcs') || txt3.includes('thpt')) {
+          continue;
+        }
+      }
+
+      if (txt3.includes(cleanTarget) || cleanTarget.includes(txt3)) {
+        return it3;
+      }
+    }
+
     return null;
   }
 
@@ -93,13 +138,12 @@
     return null;
   }
 
-  // Thực thi quy trình chọn phân cấp chuẩn Telerik RadComboBox API
+  // Thực thi quy trình tự động chọn phân cấp chuẩn Telerik RadComboBox
   async function executeTelerikFlow(cfg) {
-    console.log('[CSDL Page Bridge] Bắt đầu quy trình chọn Telerik với config:', cfg);
+    console.log('[CSDL Page Bridge] Bắt đầu tự động chọn Telerik:', cfg);
 
     try {
-      // 1. Chờ Sys.Application và RadComboBox Cấp học sẵn sàng
-      sendProgress('init', '⏳ Robot đang kết nối điều khiển CSDL Đồng Nai...', false);
+      sendProgress('init', '⏳ Robot đang kết nối điều khiển CSDL...', false);
       const comboCap = await waitForTelerikCombo('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc', 8000);
       if (!comboCap) {
         sendProgress('error', '⚠️ Không tìm thấy điều khiển Telerik cbCapHoc trên trang.', false, true);
@@ -117,8 +161,8 @@
         sendProgress('capHoc', `⏳ Đang chọn Cấp học: <strong>${targetCap}</strong>...`, false);
         const itemCap = findComboItem(comboCap, targetCap);
         if (itemCap) {
-          console.log('[CSDL Page Bridge] Chọn Cấp học qua $find().select():', itemCap.get_text());
-          itemCap.select(); // Telerik kích hoạt ASP.NET PostBack tải danh sách xã/trường
+          console.log('[CSDL Page Bridge] Gọi itemCap.select() cho:', itemCap.get_text());
+          itemCap.select();
           await waitForPostBack(6000);
         } else {
           console.warn('[CSDL Page Bridge] Không tìm thấy item Cấp học:', targetCap);
@@ -140,8 +184,9 @@
           sendProgress('phuongXa', `⏳ Đang chọn Phường/Xã: <strong>${targetXa}</strong>...`, false);
           const itemXa = findComboItem(comboXa, targetXa);
           if (itemXa) {
-            console.log('[CSDL Page Bridge] Chọn Phường/Xã qua $find().select():', itemXa.get_text());
-            itemXa.select(); // Telerik kích hoạt ASP.NET PostBack nạp danh sách trường tương ứng
+            console.log('[CSDL Page Bridge] Gọi itemXa.select() cho:', itemXa.get_text());
+            itemXa.select();
+            // CHỜ MÁY CHỦ NẠP DANH SÁCH TRƯỜNG PHÙ HỢP CỦA XÃ ĐÓ
             await waitForPostBack(6000);
           } else {
             console.warn('[CSDL Page Bridge] Không tìm thấy item Phường/Xã:', targetXa);
@@ -154,25 +199,32 @@
       // =====================================================================
       // BƯỚC 3: CHỌN TRƯỜNG HỌC (Ví dụ: Trường THCS Đăk Ơ)
       // =====================================================================
-      const comboTruong = await waitForTelerikCombo('ctl00_ContentPlaceHolder1_ctl00_cbTruong', 6000);
       const targetTruong = cfg.truong || 'Trường THCS Đăk Ơ';
-      if (comboTruong) {
-        const curTruong = (comboTruong.get_text() || '').trim();
-        console.log('[CSDL Page Bridge] Trường hiện tại:', curTruong, 'Mục tiêu:', targetTruong);
+      let comboTruong = null;
+      let itemTruong = null;
 
-        if (!curTruong.toLowerCase().includes(targetTruong.toLowerCase()) && !targetTruong.toLowerCase().includes(curTruong.toLowerCase())) {
-          sendProgress('truong', `⏳ Đang chọn Trường: <strong>${targetTruong}</strong>...`, false);
-          const itemTruong = findComboItem(comboTruong, targetTruong);
-          if (itemTruong) {
-            console.log('[CSDL Page Bridge] Chọn Trường qua $find().select():', itemTruong.get_text());
-            itemTruong.select();
-            await sleep(400);
-          } else {
-            console.warn('[CSDL Page Bridge] Không tìm thấy trường trong dropdown:', targetTruong);
-          }
+      // Thử tìm trường trong vòng tối đa 7 giây, đảm bảo danh sách trường đã được reload đúng cấp
+      for (let attempt = 0; attempt < 28; attempt++) {
+        comboTruong = window.$find('ctl00_ContentPlaceHolder1_ctl00_cbTruong');
+        if (comboTruong && comboTruong.get_items().get_count() > 0) {
+          itemTruong = findSchoolComboItem(comboTruong, targetTruong, targetCap);
+          if (itemTruong) break; // Đã tìm thấy đúng trường khớp cấp học!
+        }
+        await sleep(250);
+      }
+
+      if (comboTruong && itemTruong) {
+        const curTruong = (comboTruong.get_text() || '').trim();
+        if (!curTruong.toLowerCase().includes(itemTruong.get_text().toLowerCase())) {
+          sendProgress('truong', `⏳ Đang chọn Trường: <strong>${itemTruong.get_text()}</strong>...`, false);
+          console.log('[CSDL Page Bridge] Gọi itemTruong.select() cho:', itemTruong.get_text());
+          itemTruong.select();
+          await sleep(400);
         } else {
           console.log('[CSDL Page Bridge] Trường học đã đúng sẵn:', curTruong);
         }
+      } else {
+        console.warn('[CSDL Page Bridge] Không tìm thấy trường phù hợp trong dropdown:', targetTruong);
       }
 
       // =====================================================================
@@ -207,10 +259,10 @@
         };
       }
 
-      // Báo cáo hoàn tất
+      // Đọc giá trị thực tế cuối cùng trên màn hình để báo cáo trung thực
       const finalCap = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbCapHoc_Input')?.value || targetCap;
       const finalXa = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_rcbPhongGD_Input')?.value || targetXa;
-      const finalTruong = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input')?.value || targetTruong;
+      const finalTruong = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTruong_Input')?.value || (itemTruong ? itemTruong.get_text() : targetTruong);
 
       sendProgress('done', `🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN XONG!</strong><br><span style="color:#38bdf8;">${finalCap} | ${finalXa} | ${finalTruong}</span>`, true);
     } catch (err) {
@@ -259,7 +311,7 @@
     }
   }
 
-  // Lắng nghe sự kiện từ content.js (Isolated World)
+  // Lắng nghe sự kiện từ content.js
   window.addEventListener('CSDL_RUN_BRIDGE_FLOW', (e) => {
     if (e.detail) {
       executeTelerikFlow(e.detail);
