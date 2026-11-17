@@ -2,7 +2,40 @@
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot v5.3.4] Đang khởi động tiện ích...');
+  // NẾU ĐANG CHẠY BÊN TRONG IFRAME "NHẬP TỪ EXCEL" (KhaiBaoLichBaoGiangTuExcel)
+  if (window.location.href.toLowerCase().includes('khaibaolichbaogiangtuexcel')) {
+    console.log('[CSDL Robot] Sẵn sàng nhận lệnh nạp file bên trong popup Nhập từ Excel!');
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'CSDL_AUTO_IMPORT_EXCEL') {
+        try {
+          const { arrayBuffer, fileName } = event.data;
+          const fileObj = new File([arrayBuffer], fileName, {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          });
+          const fileInput = document.querySelector('input[type="file"]');
+          if (fileInput) {
+            const dt = new DataTransfer();
+            dt.items.add(fileObj);
+            fileInput.files = dt.files;
+            fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+            setTimeout(() => {
+              const btnImport = document.querySelector('input[type="submit"], input[value*="Nhập"], input[value*="Ghi"], button');
+              if (btnImport) {
+                btnImport.click();
+                console.log('[CSDL Robot] Đã tự động bấm nút Nhập dữ liệu trong iframe!');
+              }
+            }, 350);
+          }
+        } catch (err) {
+          console.warn('[CSDL Robot] Lỗi nạp trong iframe:', err);
+        }
+      }
+    });
+    return; // Dừng, không khởi tạo thanh công cụ cha trong iframe
+  }
+
+  console.log('[CSDL Robot v5.3.4] Đang khởi động tiện ích trên trang chính...');
 
   function injectBridgeScript() {
     if (document.getElementById('csdl-bridge-script')) return;
@@ -203,7 +236,7 @@
     if (old) old.remove();
   }
 
-  // HỘP THOẠI 1: LẦN ĐẦU TIÊN SỬ DỤNG (HỖ TRỢ FILE EXCEL / CSV & DÁN TEXT TRỰC TIẾP)
+  // HỘP THOẠI 1: THIẾT LẬP THỜI KHÓA BIỂU
   function showFirstTimeTkbModal() {
     removeExistingModal();
 
@@ -255,7 +288,7 @@
               📋 HOẶC DÁN TRỰC TIẾP VĂN BẢN THỜI KHÓA BIỂU
             </button>
 
-            <!-- KHU VỰC DÁN VĂN BẢN (ẨN/HIỆN) -->
+            <!-- KHU VỰC DÁN VĂN BẢN -->
             <div id="box-paste-tkb-area" style="display: none; flex-direction: column; gap: 8px; margin-top: 4px;">
               <textarea id="textarea-paste-tkb" rows="6" placeholder="Dán nội dung bảng thời khóa biểu (hoặc CSV) vào đây..." style="
                 width: 100%; padding: 10px; border: 2px solid #0F172A; border-radius: 10px;
@@ -268,7 +301,7 @@
               ">🚀 NẠP DỮ LIỆU ĐÃ DÁN</button>
             </div>
 
-            <!-- CHỌN GIÁO VIÊN TRONG TRƯỜNG HỢP FILE CHỨA NHIỀU GIÁO VIÊN -->
+            <!-- CHỌN GIÁO VIÊN NẾU FILE CHỨA NHIỀU GIÁO VIÊN -->
             <div id="box-teacher-picker" style="display: none; background: #ECFDF5; border: 2px solid #0F172A; border-radius: 12px; padding: 12px; box-shadow: 2px 2px 0px #0F172A;">
               <div style="font-weight: 800; font-size: 12.5px; color: #065F46; margin-bottom: 6px;">
                 🎉 ĐÃ TÌM THẤY TKB TOÀN TRƯỜNG! Vui lòng chọn Thầy/Cô:
@@ -303,19 +336,14 @@
 
       document.getElementById('btn-modal-close-x').onclick = removeExistingModal;
 
-      // Toggle khu vực dán văn bản
       const btnToggle = document.getElementById('btn-dialog-toggle-paste');
       const boxPaste = document.getElementById('box-paste-tkb-area');
       btnToggle.onclick = () => {
         boxPaste.style.display = boxPaste.style.display === 'none' ? 'flex' : 'none';
       };
 
-      // Xử lý nạp kết quả
-      let lastParsedMulti = null;
-
       function handleParsedResult(parsedCfg) {
         if (parsedCfg.allTeachers && Object.keys(parsedCfg.allTeachers).length > 1) {
-          lastParsedMulti = parsedCfg.allTeachers;
           const boxPicker = document.getElementById('box-teacher-picker');
           const selTeacher = document.getElementById('select-multi-teacher');
           const previewSummary = document.getElementById('preview-teacher-lessons-summary');
@@ -362,7 +390,6 @@
         }
       }
 
-      // Xử lý upload file
       const fileInput = document.getElementById('input-hidden-tkb-upload');
       document.getElementById('btn-dialog-upload-file').onclick = () => fileInput.click();
 
@@ -380,7 +407,6 @@
         });
       };
 
-      // Xử lý dán text
       document.getElementById('btn-dialog-parse-pasted').onclick = () => {
         const textVal = document.getElementById('textarea-paste-tkb').value.trim();
         if (!textVal) {
@@ -398,7 +424,6 @@
         });
       };
 
-      // Dùng mẫu mặc định Thầy Hùng
       document.getElementById('btn-dialog-use-default').onclick = () => {
         if (typeof window.LbgExcelEngine === 'undefined') {
           alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
@@ -513,12 +538,10 @@
 
     document.getElementById('btn-modal-close-x2').onclick = removeExistingModal;
 
-    // NÚT 1: TKB KHÔNG ĐỔI
     document.getElementById('btn-confirm-no-change').onclick = () => {
       executeGenerateAndOpenCsdl(curWeek, tkbConfig);
     };
 
-    // NÚT 2: SOI TUẦN CŨ
     document.getElementById('btn-confirm-inspect-prev').onclick = () => {
       removeExistingModal();
       injectBridgeScript();
@@ -528,54 +551,71 @@
       }));
     };
 
-    // NÚT 3: TKB CÓ ĐỔI
     document.getElementById('btn-confirm-has-change').onclick = () => {
       showFirstTimeTkbModal();
     };
   }
 
-  // TỰ ĐỘNG BƠM FILE VÀO IFRAME POPUP CSDL "NHẬP TỪ EXCEL"
+  // TỰ ĐỘNG BƠM FILE VÀO POPUP CSDL "NHẬP TỪ EXCEL" (2 KÊNH: DOM TRỰC TIẾP & POSTMESSAGE)
   function autoInjectExcelToCsdlPopup(excelBlob, fileName) {
     let attempts = 0;
-    const maxAttempts = 25; // 12.5 giây
+    const maxAttempts = 30; // 15 giây
 
-    const timer = setInterval(() => {
-      attempts++;
-      const iframe = document.querySelector('iframe[src*="KhaiBaoLichBaoGiangTuExcel"], iframe[name*="KhaiBaoLichBaoGiangTuExcel"], iframe[id*="KhaiBaoLichBaoGiangTuExcel"]');
-      if (iframe) {
-        try {
-          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-          if (iframeDoc) {
-            const fileInput = iframeDoc.querySelector('input[type="file"]');
-            if (fileInput) {
-              clearInterval(timer);
-              const fileObj = new File([excelBlob], fileName, {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-              });
-              const dt = new DataTransfer();
-              dt.items.add(fileObj);
-              fileInput.files = dt.files;
-              fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+    const reader = new FileReader();
+    reader.onload = function () {
+      const arrayBuffer = reader.result;
 
-              setTimeout(() => {
-                const btnImport = iframeDoc.querySelector('input[type="submit"], input[value*="Nhập"], input[value*="Ghi"], button');
-                if (btnImport) {
-                  btnImport.click();
-                  console.log('[CSDL Robot] Đã tự động nạp file vào popup CSDL!');
-                }
-              }, 400);
-              return;
-            }
+      const timer = setInterval(() => {
+        attempts++;
+        const iframe = document.querySelector('iframe[src*="KhaiBaoLichBaoGiangTuExcel"], iframe[name*="KhaiBaoLichBaoGiangTuExcel"], iframe[id*="KhaiBaoLichBaoGiangTuExcel"]');
+        if (iframe) {
+          // Kênh 1: Gửi qua postMessage vào frame con
+          if (iframe.contentWindow) {
+            try {
+              iframe.contentWindow.postMessage({
+                type: 'CSDL_AUTO_IMPORT_EXCEL',
+                arrayBuffer: arrayBuffer,
+                fileName: fileName
+              }, '*');
+            } catch (e) {}
           }
-        } catch (e) {
-          console.warn('[CSDL Robot] Đang chờ popup sẵn sàng...', e);
-        }
-      }
 
-      if (attempts >= maxAttempts) {
-        clearInterval(timer);
-      }
-    }, 500);
+          // Kênh 2: Thao tác DOM trực tiếp qua contentDocument
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (iframeDoc) {
+              const fileInput = iframeDoc.querySelector('input[type="file"]');
+              if (fileInput && (!fileInput.files || fileInput.files.length === 0)) {
+                const fileObj = new File([excelBlob], fileName, {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+                const dt = new DataTransfer();
+                dt.items.add(fileObj);
+                fileInput.files = dt.files;
+                fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+                setTimeout(() => {
+                  const btnImport = iframeDoc.querySelector('input[type="submit"], input[value*="Nhập"], input[value*="Ghi"], button');
+                  if (btnImport) {
+                    btnImport.click();
+                    clearInterval(timer);
+                    console.log('[CSDL Robot] Đã tự động nạp file vào popup CSDL qua DOM!');
+                  }
+                }, 350);
+                return;
+              }
+            }
+          } catch (e) {
+            console.warn('[CSDL Robot] Đang chờ iframe sẵn sàng...', e);
+          }
+        }
+
+        if (attempts >= maxAttempts) {
+          clearInterval(timer);
+        }
+      }, 500);
+    };
+    reader.readAsArrayBuffer(excelBlob);
   }
 
   // Thực thi sinh file Excel và mở CSDL
@@ -612,7 +652,7 @@
 
       removeExistingModal();
 
-      alert(`🎉 ĐÃ SINH XONG FILE EXCEL LỊCH BÁO GIẢNG TUẦN ${targetWeek}!\n(File đã tải về máy: ${fileName})\n\nCửa sổ 'Nhập từ Excel' trên CSDL đã được mở sẵn.\n👉 Thầy/Cô chỉ cần chọn file vừa tải về rồi bấm 'Nhập dữ liệu' là 100% hoàn thành!`);
+      alert(`🎉 ĐÃ SINH XONG FILE EXCEL LỊCH BÁO GIẢNG TUẦN ${targetWeek}!\n(File đã tải về máy: ${fileName})\n\nCửa sổ 'Nhập từ Excel' trên CSDL đã được mở sẵn.\n👉 Tiện ích đang tự động nạp file vào hệ thống CSDL giúp Thầy/Cô!`);
     } catch (err) {
       alert('⚠️ Lỗi khi sinh file Excel: ' + (err.message || err));
     }
