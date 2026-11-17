@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trợ Lý CSDL - THCS Đăk Ơ v5.2</title>
+  <style>
+    body {
+      width: 380px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    .header {
+      background: #1e293b;
+      padding: 12px 16px;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header h3 {
+      margin: 0;
+      color: #38bdf8;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ver-tag {
+      font-size: 10px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .content {
+      padding: 12px 16px;
+    }
+    .auto-badge {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-left: 3px solid #10b981;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .form-group {
+      margin-bottom: 11px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 11px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f8fafc;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+    button.btn-save {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 13px;
+      margin-top: 6px;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    }
+    button.btn-save:hover {
+      background: #0284c7;
+      transform: translateY(-1px);
+    }
+    .quick-actions {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #334155;
+    }
+    .quick-btn {
+      width: 100%;
+      padding: 9px 11px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 11.5px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .btn-login {
+      background: #334155;
+      color: #38bdf8;
+    }
+    .btn-login:hover {
+      background: #475569;
+    }
+    .btn-done {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .btn-done:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+    .btn-ext {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+    }
+    .btn-ext:hover {
+      background: #334155;
+      color: #f8fafc;
+    }
+    .tip-box {
+      margin-top: 12px;
+      padding: 9px 11px;
+      background: rgba(56, 189, 248, 0.08);
+      border-left: 3px solid #38bdf8;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    .footer {
+      background: #090d16;
+      padding: 10px 16px;
+      border-top: 1px solid #1e293b;
+      text-align: center;
+      font-size: 11px;
+      color: #64748b;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .footer-link {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .footer-link:hover {
+      text-decoration: underline;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      padding: 20px;
+    }
+    .modal-box {
+      background: #1e293b;
+      border: 1px solid #10b981;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+    }
+    .modal-box h4 {
+      margin: 0 0 10px 0;
+      color: #10b981;
+      font-size: 16px;
+    }
+    .btn-modal-close {
+      margin-top: 14px;
+      width: 100%;
+      padding: 8px;
+      background: #10b981;
+      color: #0f172a;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h3>🏫 THCS Đăk Ơ - Trợ Lý CSDL</h3>
+    <span class="ver-tag">BẢN NỘI BỘ v5.2.1</span>
+  </div>
+
+  <div class="content">
+    <div class="auto-badge">
+      ✅ <strong>Cố định 100%:</strong> THCS | Xã Đăk Ơ | Trường THCS Đăk Ơ.<br>
+      Thầy/Cô chỉ cần chọn tên mình và lưu mật khẩu 1 lần duy nhất:
+    </div>
+
+    <div class="form-group">
+      <label>1. Chọn Tên Thầy/Cô (Danh sách 60 GV)</label>
+      <select id="cfg-teacher-select">
+        <option value="">-- Chọn tên trong danh sách 60 GV --</option>
+        <option value="Bùi Văn Chính">Bùi Văn Chính</option>
+        <option value="Bùi Văn Đãi">Bùi Văn Đãi</option>
+        <option value="Bùi Văn Giang">Bùi Văn Giang</option>
+        <option value="Bùi Thị Hiền">Bùi Thị Hiền</option>
+        <option value="Bùi Thị Hưởng">Bùi Thị Hưởng</option>
+        <option value="Bùi Văn Tuyên">Bùi Văn Tuyên</option>
+        <option value="Cao thị Tuyết Phương">Cao thị Tuyết Phương</option>
+        <option value="Dương Thanh Thừa">Dương Thanh Thừa</option>
+        <option value="Đặng Thị Oanh">Đặng Thị Oanh</option>
+        <option value="Đặng Thị Uyên">Đặng Thị Uyên</option>
+        <option value="Hà Văn Lập">Hà Văn Lập</option>
+        <option value="Hoàng Thị Nguyệt">Hoàng Thị Nguyệt</option>
+        <option value="Hoàng Thị Thúy">Hoàng Thị Thúy</option>
+        <option value="Hoàng Văn Huy">Hoàng Văn Huy</option>
+        <option value="Hồ Đình triệu">Hồ Đình triệu</option>
+        <option value="Hồ Thị Quỳnh">Hồ Thị Quỳnh</option>
+        <option value="Hỏa Thị Chính">Hỏa Thị Chính</option>
+        <option value="Lê Thị Hằng">Lê Thị Hằng</option>
+        <option value="Lê Thị Hồng Lan">Lê Thị Hồng Lan</option>
+        <option value="Lê Hữu Thọ">Lê Hữu Thọ</option>
+        <option value="Lê Nguyễn Cẩm Hương">Lê Nguyễn Cẩm Hương</option>
+        <option value="Lê Thị Ngọc Tú">Lê Thị Ngọc Tú</option>
+        <option value="Lê Thị Sông Hồng">Lê Thị Sông Hồng</option>
+        <option value="Lê Thị Trinh">Lê Thị Trinh</option>
+        <option value="Lương Thị Thu">Lương Thị Thu</option>
+        <option value="Nguyễn Chí Công">Nguyễn Chí Công</option>
+        <option value="Nguyễn Thị Đan">Nguyễn Thị Đan</option>
+        <option value="Nguyễn Thị Lan Anh">Nguyễn Thị Lan Anh</option>
+        <option value="Nguyễn Thị Lương">Nguyễn Thị Lương</option>
+        <option value="Nguyễn Thị Nga">Nguyễn Thị Nga</option>
+        <option value="Nguyễn Thị Oanh">Nguyễn Thị Oanh</option>
+        <option value="Nguyễn Thanh Hồng">Nguyễn Thanh Hồng</option>
+        <option value="Nguyễn Thị Thu Hằng">Nguyễn Thị Thu Hằng</option>
+        <option value="Nguyễn Trung Ấn">Nguyễn Trung Ấn</option>
+        <option value="Nguyễn Văn Linh">Nguyễn Văn Linh</option>
+        <option value="Nguyễn Văn Thụ">Nguyễn Văn Thụ</option>
+        <option value="Nguyễn Thị Vân">Nguyễn Thị Vân</option>
+        <option value="Nông Văn Hùng">Nông Văn Hùng</option>
+        <option value="Phạm Kim Chi">Phạm Kim Chi</option>
+        <option value="Phạm Tới">Phạm Tới</option>
+        <option value="Tô Hồng Đình Khiết">Tô Hồng Đình Khiết</option>
+        <option value="Trần Đình Hồ">Trần Đình Hồ</option>
+        <option value="Trần Thu Hà">Trần Thu Hà</option>
+        <option value="Trần Thị Hồng Hạnh">Trần Thị Hồng Hạnh</option>
+        <option value="Trần Thị Huệ">Trần Thị Huệ</option>
+        <option value="Trần Ngọc Thìn">Trần Ngọc Thìn</option>
+        <option value="Trần Thị Thoan">Trần Thị Thoan</option>
+        <option value="Trần Văn Hòa">Trần Văn Hòa</option>
+        <option value="Triệu Thị Nhập">Triệu Thị Nhập</option>
+        <option value="Trịnh Thị Hương">Trịnh Thị Hương</option>
+        <option value="Trịnh Thị Toàn">Trịnh Thị Toàn</option>
+        <option value="Trương Thị Như Thủy">Trương Thị Như Thủy</option>
+        <option value="Trương Thị Nhung">Trương Thị Nhung</option>
+        <option value="Võ Huy Cường">Võ Huy Cường</option>
+        <option value="Võ Thị Hoa Nữ">Võ Thị Hoa Nữ</option>
+        <option value="Vũ Thị Chiều">Vũ Thị Chiều</option>
+        <option value="Vũ Thị Hằng">Vũ Thị Hằng</option>
+        <option value="Vũ Văn Hiệp">Vũ Văn Hiệp</option>
+        <option value="Vũ Thị Huyền">Vũ Thị Huyền</option>
+        <option value="Vũ Thị Tuyến">Vũ Thị Tuyến</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>2. Số điện thoại (Tên đăng nhập CSDL)</label>
+      <input type="text" id="cfg-username" placeholder="Ví dụ: 0976579151" />
+    </div>
+
+    <div class="form-group">
+      <label>3. Mật khẩu đăng nhập CSDL</label>
+      <input type="password" id="cfg-password" placeholder="Nhập mật khẩu CSDL" />
+    </div>
+
+    <button id="btn-save" class="btn-save">💾 LƯU CẤU HÌNH CỦA TÔI</button>
+
+    <div class="quick-actions">
+      <label style="margin-bottom: 6px;">⚡ Thao tác nhanh:</label>
+      <button id="btn-fill-account" class="quick-btn btn-login">🔑 Tự Động Điền Đăng Nhập</button>
+      <button id="btn-confirm-done" class="quick-btn btn-done">✅ Xác Nhận Hoàn Thành Tuần (0.5s)</button>
+      <button id="btn-open-extensions" class="quick-btn btn-ext">⚙️ Quản Lý Tiện Ích (chrome://extensions)</button>
+    </div>
+
+    <div class="tip-box">
+      ⚡ <strong>Tự động 100%:</strong> Mở <code>truong.dongnai.edu.vn</code> ➔ Robot tự chọn <strong>Trung học cơ sở | Xã Đăk Ơ | Trường THCS Đăk Ơ</strong> và điền tài khoản. Thầy/Cô chỉ cần gõ <strong>8 ký tự CAPTCHA</strong> rồi ấn <strong>Enter</strong>!
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>© 2026 <strong>Thầy Nông Văn Hùng</strong> & Cộng đồng AI Giáo dục Đồng Nai</div>
+    <div class="footer-links">
+      <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="footer-link">💬 Nhóm Zalo AI</a>
+      <span>•</span>
+      <a href="https://github.com/hungcnfree/lbg-dongnai" target="_blank" class="footer-link">🚀 Bản mới (GitHub)</a>
+    </div>
+  </div>
+
+  <div id="modal-success" class="modal-overlay">
+    <div class="modal-box">
+      <h4>🎉 ĐÃ LƯU THÀNH CÔNG!</h4>
+      <div style="font-size: 11px; color: #cbd5e1; line-height: 1.5;">
+        Chào Thầy/Cô: <strong id="modal-teacher-name" style="color: #38bdf8;"></strong>!<br>
+        Trường: <strong style="color: #10b981;">THCS Đăk Ơ (70691515)</strong>.<br><br>
+        Từ bây giờ, mỗi khi mở trang CSDL, Robot sẽ tự động chọn đúng <strong>Trường THCS Đăk Ơ</strong> và điền sẵn tài khoản. Thầy/Cô chỉ việc gõ 8 ký tự CAPTCHA rồi ấn <strong>Enter</strong>!
+      </div>
+      <button id="btn-close-modal" class="btn-modal-close">ĐÃ HIỂU, ĐÓNG CỬA SỔ</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

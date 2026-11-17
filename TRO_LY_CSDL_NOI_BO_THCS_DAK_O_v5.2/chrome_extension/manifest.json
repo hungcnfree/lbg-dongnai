@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Trợ Lý CSDL - THCS Đăk Ơ",
+  "version": "5.2.1",
+  "description": "Tiện ích tự động điền đăng nhập và hoàn thành lịch báo giảng 1-click dành riêng cho giáo viên trường THCS Đăk Ơ",
+  "author": "Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://truong.dongnai.edu.vn/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Trợ Lý CSDL THCS Đăk Ơ"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://truong.dongnai.edu.vn/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "page_bridge.js"
+      ],
+      "matches": [
+        "*://truong.dongnai.edu.vn/*"
+      ]
+    }
+  ]
+}
