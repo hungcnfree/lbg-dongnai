@@ -1,21 +1,35 @@
-// content.js - Trợ Lý CSDL Đồng Nai v5.2 (Isolated World Bridge & UI Banner)
+// content.js - Trợ Lý CSDL Toàn Tỉnh Đồng Nai v5.2.1 (Isolated World Bridge & UI Banner)
 // Tác quyền: Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
-  console.log('[CSDL Robot v5.2] Đang khởi động...');
+  console.log('[CSDL Robot Toàn Tỉnh v5.2.1] Đang khởi động...');
 
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  // Tiêm page_bridge.js vào DOM (Main World) ở chế độ Sloppy Mode thông thường
+  function injectBridgeScript() {
+    if (document.getElementById('csdl-bridge-script')) return;
+    try {
+      const s = document.createElement('script');
+      s.id = 'csdl-bridge-script';
+      s.src = chrome.runtime.getURL('page_bridge.js');
+      (document.head || document.documentElement).appendChild(s);
+      console.log('[CSDL Robot v5.2.1] Đã tiêm page_bridge.js vào Main World');
+    } catch (e) {
+      console.error('[CSDL Robot] Không thể tiêm page_bridge:', e);
+    }
+  }
+
+  injectBridgeScript();
 
   // Cấu hình mặc định nếu Thầy/Cô chưa lưu
   function getDefaultConfig() {
     return {
-      mode: 'dako',
-      name: 'Giáo viên',
-      username: '',
-      password: '',
       capHoc: 'Trung học cơ sở',
+      capCode: '03',
       phuongXa: 'Xã Đăk Ơ',
-      truong: 'Trường THCS Đăk Ơ'
+      truong: 'Trường THCS Đăk Ơ (70691515) - Xã Đăk Ơ',
+      schoolCode: '70691515',
+      username: '',
+      password: ''
     };
   }
 
@@ -46,24 +60,7 @@
     }
   }
 
-  // Đảm bảo page_bridge.js được nạp vào Main World
-  function ensureBridgeInjected() {
-    if (document.getElementById('csdl-bridge-script')) return;
-    try {
-      const script = document.createElement('script');
-      script.id = 'csdl-bridge-script';
-      script.src = chrome.runtime.getURL('page_bridge.js');
-      (document.head || document.documentElement).appendChild(script);
-      console.log('[CSDL Robot v5.2] Đã tiêm page_bridge.js vào Main World qua script tag');
-    } catch (e) {
-      console.log('[CSDL Robot v5.2] Dùng content_scripts world: MAIN mặc định');
-    }
-  }
-
-  // =========================================================================
-  // BANNER THÔNG BÁO TIẾN TRÌNH TRỰC QUAN TRÊN TRANG ĐĂNG NHẬP
-  // =========================================================================
-
+  // Cập nhật banner thông báo tiến trình trên màn hình đăng nhập
   function updateRobotBanner(htmlContent, isSuccess = false, isError = false) {
     let banner = document.getElementById('csdl-robot-banner');
     const uInp = document.getElementById('ContentPlaceHolder1_ctl00_tbU') || document.querySelector('input[id*="tbU"]');
@@ -110,7 +107,7 @@
       updateRobotBanner(`
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong style="color: #10b981; font-size: 14px;">🎉 ROBOT ĐÃ TỰ ĐIỀN XONG MỌI THỨ!</strong>
-          <span style="font-size: 11px; background: rgba(16,185,129,0.2); color: #10b981; padding: 3px 8px; border-radius: 12px; font-weight: bold;">v5.2</span>
+          <span style="font-size: 11px; background: rgba(16,185,129,0.2); color: #10b981; padding: 3px 8px; border-radius: 12px; font-weight: bold;">v5.2.1</span>
         </div>
         <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 6px;">
           ${detail.message}
@@ -135,9 +132,8 @@
 
   // Kích hoạt luồng tự động chọn
   function triggerAutoLogin(cfg) {
-    ensureBridgeInjected();
-    updateRobotBanner(`🤖 <strong>ROBOT CSDL v5.2:</strong> Đang kết nối điều khiển chọn Cấp - Xã - Trường...`);
-    // Gửi yêu cầu qua CustomEvent cho page_bridge.js (chạy trong Main World)
+    injectBridgeScript();
+    updateRobotBanner(`🤖 <strong>ROBOT CSDL v5.2.1:</strong> Đang kết nối điều khiển chọn Cấp - Xã - Trường...`);
     window.dispatchEvent(new CustomEvent('CSDL_RUN_BRIDGE_FLOW', { detail: cfg }));
   }
 
@@ -189,28 +185,34 @@
 
     document.body.appendChild(bar);
     document.getElementById('btn-quick-confirm-done').onclick = () => {
+      injectBridgeScript();
       window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
     };
   }
 
-  // =========================================================================
-  // KHỞI ĐỘNG KHI TRANG TẢI
-  // =========================================================================
+  // Khởi động khi trang tải
+  function initOnPageLoad() {
+    const currentPath = window.location.pathname.toLowerCase();
 
-  const currentPath = window.location.pathname.toLowerCase();
+    if (currentPath.includes('login.aspx') || document.getElementById('ContentPlaceHolder1_ctl00_tbU') || document.querySelector('input[id*="tbU"]')) {
+      setTimeout(() => {
+        getTeacherConfig((cfg) => {
+          triggerAutoLogin(cfg);
+        });
+      }, 500);
+    }
 
-  if (currentPath.includes('login.aspx') || document.getElementById('ContentPlaceHolder1_ctl00_tbU') || document.querySelector('input[id*="tbU"]')) {
-    setTimeout(() => {
-      getTeacherConfig((cfg) => {
-        triggerAutoLogin(cfg);
-      });
-    }, 400);
+    if (currentPath.includes('khaibaolichbaogiang') || currentPath.includes('lichbaogiang')) {
+      setTimeout(() => {
+        injectDoneShortcutButton();
+      }, 500);
+    }
   }
 
-  if (currentPath.includes('khaibaolichbaogiang') || currentPath.includes('lichbaogiang')) {
-    setTimeout(() => {
-      injectDoneShortcutButton();
-    }, 500);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOnPageLoad);
+  } else {
+    initOnPageLoad();
   }
 
   // Lắng nghe từ Popup
@@ -220,6 +222,7 @@
         triggerAutoLogin(req.data);
         sendResponse({ status: 'OK' });
       } else if (req.action === 'CONFIRM_DONE') {
+        injectBridgeScript();
         window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
         sendResponse({ status: 'OK' });
       }

@@ -3,7 +3,7 @@ chcp 65001 >nul
 title CÀI ĐẶT TIỆN ÍCH CHROME - CSDL TOÀN TỈNH ĐỒNG NAI
 cls
 echo ====================================================================
-echo   🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI v5.2 - TOÀN TỈNH ĐỒNG NAI
+echo   🤖 TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI v5.2.1 - TOÀN TỈNH ĐỒNG NAI
 echo   Tác quyền: Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
 echo ====================================================================
 echo.

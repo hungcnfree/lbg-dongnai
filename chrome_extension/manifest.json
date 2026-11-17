@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Trợ Lý CSDL Giáo Dục Toàn Tỉnh Đồng Nai",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "Tự động điền 100% Cấp học, Xã/Phường, Trường và Đăng nhập CSDL Đồng Nai qua Telerik Client Engine",
   "author": "Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai",
   "permissions": [
@@ -13,7 +13,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Trợ Lý CSDL Đồng Nai v5.2"
+    "default_title": "Trợ Lý CSDL Đồng Nai v5.2.1"
   },
   "content_scripts": [
     {
@@ -21,19 +21,9 @@
         "*://truong.dongnai.edu.vn/*"
       ],
       "js": [
-        "page_bridge.js"
-      ],
-      "run_at": "document_idle",
-      "world": "MAIN"
-    },
-    {
-      "matches": [
-        "*://truong.dongnai.edu.vn/*"
-      ],
-      "js": [
         "content.js"
       ],
-      "run_at": "document_idle"
+      "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [

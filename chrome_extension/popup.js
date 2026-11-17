@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const opt = document.createElement('option');
           opt.value = s.raw || s.name;
           opt.textContent = s.name + (s.code ? ` (${s.code})` : '');
+          opt.setAttribute('data-code', s.code || '');
           truongSelect.appendChild(opt);
         });
       }
@@ -230,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentConfig.capCode = capCodeVal;
     currentConfig.phuongXa = wardText;
     currentConfig.truong = schoolText;
+    currentConfig.schoolCode = isDako ? '70691515' : (truongSelect.options[truongSelect.selectedIndex]?.getAttribute('data-code') || '');
 
     if (typeof chrome !== 'undefined' && chrome.storage) {
       const savePayload = { csdl_teacher_config: currentConfig };
