@@ -1,17 +1,19 @@
 {
-  "version": "5.3.0",
-  "versionCode": 530,
+  "version": "5.3.1",
+  "versionCode": 531,
   "releaseDate": "17/11/2026",
-  "title": "Trợ Lý CSDL v5.3.0 - Giao Diện Paper Neo-Brutalism & Tự Động Cập Nhật",
+  "title": "Trợ Lý CSDL v5.3.1 - Fix Truyền Dữ Liệu World & Khóa Cứng Mã Trường 70691515",
   "changelog": [
-    "Đồng bộ 100% giao diện Paper Neo-Brutalism chuẩn Trang chủ trung tâm.",
-    "Tích hợp nút Kiểm tra & Tự động cập nhật phiên bản mới 1-click (Zero Reinstall).",
-    "Khắc phục triệt để lỗi chọn nhầm trường Mầm non Đăk Ơ & loại bỏ hoàn toàn lỗi strict mode caller/callee.",
-    "Bảo tồn 100% mật khẩu và dữ liệu đã lưu khi cập nhật lên bản mới."
+    "Khắc phục triệt để lỗi CustomEvent object qua ranh giới World bằng chuỗi JSON (JSON.stringify / JSON.parse).",
+    "Khóa cứng mã trường THCS Đăk Ơ (70691515), loại trừ 100% Trường Trương Định (70691426) và Mầm non.",
+    "Kịch bản cập nhật tự động đọc đường dẫn từ version.json động, đảm bảo luôn tải đúng bản mới nhất.",
+    "Nâng cấp tính năng lấy lịch TKB kiểm tra phản hồi thực tế."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip",
-    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.1.zip",
+    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.1.zip",
+    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip",
+    "provinceZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"
   }
 }

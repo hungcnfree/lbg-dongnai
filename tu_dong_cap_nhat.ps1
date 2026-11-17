@@ -1,24 +1,32 @@
 # -*- coding: utf-8 -*-
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$zipUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip"
-$tempZip = Join-Path $env:TEMP "csdl_province_update.zip"
-$tempExtract = Join-Path $env:TEMP "csdl_province_extract"
+$versionUrl = "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json?t=" + [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+$tempZip = Join-Path $env:TEMP "csdl_dako_update.zip"
+$tempExtract = Join-Path $env:TEMP "csdl_dako_extract"
 $destDir = Join-Path $PSScriptRoot "chrome_extension"
 
 Clear-Host
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "   TRỢ LÝ TỰ ĐỘNG CSDL - PHIÊN BẢN TOÀN TỈNH ĐỒNG NAI" -ForegroundColor Yellow
+Write-Host "   TRỢ LÝ TỰ ĐỘNG CSDL - BẢN NỘI BỘ TRƯỜNG TOÀN TỈNH ĐỒNG NAI" -ForegroundColor Yellow
 Write-Host "   Tác quyền: (c) 2026 Thầy Nông Văn Hùng và Cộng đồng AI" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "[*] Đang tải gói cập nhật mới nhất từ GitHub..." -ForegroundColor White
+Write-Host "[*] Đang kiểm tra thông tin phiên bản mới nhất từ GitHub..." -ForegroundColor White
+
 try {
+    $vData = Invoke-RestMethod -Uri $versionUrl -UseBasicParsing
+    $latestVer = $vData.version
+    $zipUrl = $vData.downloadUrls.provinceZip
+    if (-not $zipUrl) {
+        $zipUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v" + $latestVer + ".zip"
+    }
+    Write-Host "[*] Phát hiện phiên bản mới: v$latestVer" -ForegroundColor Green
+    Write-Host "[*] Đang tải gói tiện ích: $zipUrl" -ForegroundColor Cyan
     Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing
 } catch {
-    Write-Host "[!] Lỗi khi tải gói cập nhật: $_" -ForegroundColor Red
-    Write-Host "Vui lòng kiểm tra kết nối Internet." -ForegroundColor Yellow
-    Read-Host "Nhấn Enter để thoát"
-    exit
+    Write-Host "[!] Đang thử tải gói cập nhật dự phòng..." -ForegroundColor Yellow
+    $fallbackUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip"
+    Invoke-WebRequest -Uri $fallbackUrl -OutFile $tempZip -UseBasicParsing
 }
 
 if (Test-Path $tempExtract) { Remove-Item $tempExtract -Recurse -Force }

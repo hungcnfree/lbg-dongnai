@@ -1,4 +1,4 @@
-// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.1 (Sloppy Mode)
+// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.1 (Main World Context)
 // Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
@@ -10,13 +10,21 @@
     });
   }
 
+  // Gửi thông báo về content.js bằng chuỗi JSON (Khắc phục triệt để lỗi ranh giới World)
   function notify(msg, isDone, isError) {
-    window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_PROGRESS', {
-      detail: { message: msg, isDone: !!isDone, isError: !!isError }
-    }));
+    try {
+      var payload = JSON.stringify({
+        message: msg,
+        isDone: !!isDone,
+        isError: !!isError
+      });
+      window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_PROGRESS', { detail: payload }));
+    } catch (e) {
+      console.warn('Lỗi gửi progress notify:', e);
+    }
   }
 
-  // Đảm bảo an toàn 100% trước lỗi caller/callee của MicrosoftAjaxWebForms
+  // Giả lập an toàn 100% trước lỗi caller/callee của MicrosoftAjaxWebForms
   function safeDoPostBack(targetId, elem) {
     try {
       Object.defineProperty(window, 'event', {
@@ -126,8 +134,8 @@
       }
 
       // =====================================================================
-      // 3. TRƯỜNG HỌC: CỐ ĐỊNH TRƯỜNG THCS ĐĂK Ơ (Mã: 70691515)
-      // TUYỆT ĐỐI KHÔNG BAO GIỜ CHỌN MẦM NON HAY TIỂU HỌC!
+      // 3. TRƯỜNG HỌC: KHÓA CHÍNH XÁC MÃ 70691515 (TRƯỜNG THCS ĐĂK Ơ)
+      // TUYỆT ĐỐI LOẠI TRỪ 100% TRƯỜNG TRƯƠNG ĐỊNH (70691426) & MẦM NON
       // =====================================================================
       notify('⏳ Đang chọn Trường: <strong>Trường THCS Đăk Ơ</strong>...', false);
       var comboTr = window.$find('ctl00_ContentPlaceHolder1_ctl00_cbTruong');
@@ -136,12 +144,26 @@
         var trItems = comboTr.get_items();
         for (var j = 0; j < trItems.get_count(); j++) {
           var sItem = trItems.getItem(j);
-          var st = sItem.get_text().toLowerCase();
-          if (st.includes('70691515') || (st.includes('thcs') && st.includes('đăk ơ') && !st.includes('trương định'))) {
+          var sVal = sItem.get_value();
+          var sText = sItem.get_text().toLowerCase();
+
+          // Ưu tiên 1: Khớp chính xác mã định danh 70691515
+          if (sVal === '70691515' || sText.includes('70691515')) {
             itemTr = sItem;
             break;
           }
+
+          // Ưu tiên 2: Khớp chữ THCS Đăk Ơ và loại trừ Trương Định (70691426)
+          if ((sText.includes('đăk ơ') || sText.includes('đắk ơ')) && 
+              sText.includes('thcs') && 
+              !sText.includes('trương định') && 
+              !sText.includes('70691426') && 
+              !sText.includes('mầm non') && 
+              !sText.includes('tiểu học')) {
+            itemTr = sItem;
+          }
         }
+
         if (itemTr) {
           itemTr.select();
         }
@@ -228,7 +250,7 @@
     }
   }
 
-  // Tự động lấy dữ liệu Thời khóa biểu nạp vào Lịch báo giảng
+  // Tự động lấy dữ liệu Thời khóa biểu nạp vào Lịch báo giảng (Có kiểm tra kết quả thực tế)
   function runAutoFillFromTKB() {
     try {
       var allBtns = Array.from(document.querySelectorAll('button, a, .rtbItem, span'));
@@ -247,24 +269,34 @@
 
           if (tkbOption) {
             tkbOption.click();
-            alert('🎉 ĐÃ TỰ ĐỘNG NẠP LỊCH BÁO GIẢNG TỪ THỜI KHÓA BIỂU THÀNH CÔNG!
-Thầy/Cô vui lòng kiểm tra tiết và bấm nút GHI trên thanh công cụ nhé!');
+            alert('🎉 ĐÃ KÍCH HOẠT NẠP LỊCH TỪ THỜI KHÓA BIỂU!\nThầy/Cô hãy kiểm tra lại bảng tiết dạy rồi bấm nút GHI trên thanh công cụ nhé.');
           } else {
-            alert('⚠️ Không tìm thấy mục "Lấy dữ liệu từ TKB" trong menu Tính năng mở rộng.');
+            alert('⚠️ Đã mở menu Tính năng mở rộng nhưng chưa tìm thấy mục "Lấy dữ liệu từ TKB". Thầy/Cô vui lòng nhấp trực tiếp trên menu nhé!');
           }
-        }, 350);
+        }, 400);
       } else {
-        alert('⚠️ Thầy/Cô vui lòng mở trang mục 3.6.2 Khai báo lịch báo giảng trước nhé!');
+        alert('⚠️ Thầy/Cô vui lòng mở đúng trang mục 3.6.2 Khai báo lịch báo giảng tuần trước nhé!');
       }
     } catch (e) {
       alert('⚠️ Lỗi thao tác: ' + e.message);
     }
   }
 
-  // Lắng nghe sự kiện từ content.js
+  // Lắng nghe sự kiện từ content.js bằng cách giải mã JSON an toàn
   window.addEventListener('CSDL_RUN_BRIDGE_FLOW', function (e) {
-    if (e.detail) {
-      runDakOFlow(e.detail);
+    var cfg = null;
+    try {
+      if (typeof e.detail === 'string') {
+        cfg = JSON.parse(e.detail);
+      } else {
+        cfg = e.detail;
+      }
+    } catch (err) {
+      console.error('[CSDL Robot] Lỗi parse detail JSON:', err);
+    }
+
+    if (cfg) {
+      runDakOFlow(cfg);
     }
   });
 
@@ -276,7 +308,7 @@ Thầy/Cô vui lòng kiểm tra tiết và bấm nút GHI trên thanh công cụ
     runAutoFillFromTKB();
   });
 
-  // Báo hiệu bridge đã sẵn sàng
+  // Báo hiệu Bridge đã sẵn sàng vào Main World
   window.CSDL_BRIDGE_READY = true;
   window.dispatchEvent(new CustomEvent('CSDL_BRIDGE_READY'));
   console.log('[CSDL Robot] Telerik Engine THCS Đăk Ơ v5.3.1 đã sẵn sàng!');

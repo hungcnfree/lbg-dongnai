@@ -1,4 +1,4 @@
-// content.js - Trợ Lý CSDL Bản Nội Bộ Toàn Tỉnh v5.3.1
+// content.js - Trợ Lý CSDL Bản Nội Bộ Toàn Tỉnh v5.3.1 (Isolated World)
 // Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
@@ -81,9 +81,21 @@
     }
   }
 
+  // Lắng nghe sự kiện tiến trình từ page_bridge.js (giải mã chuỗi JSON an toàn)
   window.addEventListener('CSDL_BRIDGE_PROGRESS', (e) => {
-    const detail = e.detail;
+    let detail = null;
+    try {
+      if (typeof e.detail === 'string') {
+        detail = JSON.parse(e.detail);
+      } else {
+        detail = e.detail;
+      }
+    } catch (err) {
+      console.error('[CSDL Robot] Lỗi giải mã tiến trình:', err);
+    }
+
     if (!detail) return;
+
     if (detail.isDone) {
       updateRobotBanner(`
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -111,7 +123,7 @@
     }
   });
 
-  // Tiêm script với callback onload
+  // Tiêm page_bridge.js vào Main World với callback onload
   function injectBridgeScript(callback) {
     let s = document.getElementById('csdl-bridge-script');
     if (!s) {
@@ -129,11 +141,13 @@
     }
   }
 
+  // Gửi lệnh qua ranh giới World bằng chuỗi JSON (Khắc phục triệt để lỗi null object)
   function triggerAutoLogin(cfg) {
-    updateRobotBanner(`🤖 <strong>ROBOT CSDL v5.3.1:</strong> Đang tự động kết nối chọn Cấp - Xã - Trường Toàn Tỉnh...`);
+    updateRobotBanner(`🤖 <strong>ROBOT CSDL v5.3.1:</strong> Đang kết nối điều khiển chọn Cấp - Xã - Trường Toàn Tỉnh...`);
     injectBridgeScript(() => {
       setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('CSDL_RUN_BRIDGE_FLOW', { detail: cfg }));
+        const payload = JSON.stringify(cfg);
+        window.dispatchEvent(new CustomEvent('CSDL_RUN_BRIDGE_FLOW', { detail: payload }));
       }, 100);
     });
   }
@@ -241,6 +255,7 @@
     const url = window.location.href.toLowerCase();
     if (url.includes('login.aspx') || document.getElementById('ContentPlaceHolder1_ctl00_tbU') || document.querySelector('input[id*="tbU"]')) {
       getTeacherConfig((cfg) => {
+        if (!cfg) cfg = getDefaultConfig();
         setTimeout(() => {
           triggerAutoLogin(cfg);
         }, 400);
