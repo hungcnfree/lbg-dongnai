@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hướng Dẫn 3 Bước Tự Động Điền Lịch Báo Giảng Bằng Antigravity AI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .poster {
+      width: 1080px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 28px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+      overflow: hidden;
+      color: #1e293b;
+      position: relative;
+    }
+    /* Top Banner */
+    .header {
+      background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0284c7 100%);
+      padding: 44px 48px 36px;
+      color: #ffffff;
+      position: relative;
+    }
+    .header::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 16px;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+    }
+    .badge-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(10px);
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .title {
+      font-size: 38px;
+      font-weight: 900;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .subtitle {
+      font-size: 19px;
+      font-weight: 400;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+    .highlight-yellow {
+      background: #fef08a;
+      color: #854d0e;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    /* Core Philosophy Banner */
+    .philosophy {
+      background: #ecfdf5;
+      border-left: 6px solid #10b981;
+      margin: 32px 48px 12px;
+      padding: 20px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .philosophy-icon {
+      font-size: 40px;
+      line-height: 1;
+    }
+    .philosophy-text h4 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #065f46;
+      margin-bottom: 4px;
+    }
+    .philosophy-text p {
+      font-size: 15px;
+      color: #047857;
+      line-height: 1.4;
+    }
+
+    /* Grid 3 Steps */
+    .steps-container {
+      padding: 24px 48px 36px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .step-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .step-number {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0d9488, #059669);
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 14px rgba(13, 148, 136, 0.3);
+    }
+    .step-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .step-desc {
+      font-size: 14.5px;
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    /* File items inside step 1 */
+    .file-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .file-box:last-child { margin-bottom: 0; }
+    .file-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+    .file-info strong {
+      display: block;
+      font-size: 13.5px;
+      color: #1e293b;
+    }
+    .file-info span {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* Prompt box inside step 2 */
+    .prompt-box {
+      background: #1e293b;
+      color: #f8fafc;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      position: relative;
+    }
+    .prompt-tag {
+      display: inline-block;
+      background: #38bdf8;
+      color: #0f172a;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    /* Result box inside step 3 */
+    .result-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #166534;
+      font-size: 13.5px;
+    }
+    .result-box ul {
+      margin-left: 18px;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* Feature Highlights */
+    .features-section {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding: 28px 48px;
+    }
+    .features-header {
+      font-size: 16px;
+      font-weight: 800;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .feat-card {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+    .feat-icon {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+    .feat-card h5 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+    .feat-card p {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.35;
+    }
+
+    /* Footer */
+    .footer {
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      color: #64748b;
+    }
+    .footer strong {
+      color: #0f172a;
+    }
+    .footer-links {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-link {
+      color: #0d9488;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster">
+    <!-- Header -->
+    <div class="header">
+      <div class="badge-top">⚡ Antigravity AI Skill • v5.4.0</div>
+      <h1 class="title">TỰ ĐỘNG ĐIỀN LỊCH BÁO GIẢNG<br>CHỈ VỚI 2 TỆP ĐẦU VÀO</h1>
+      <p class="subtitle">
+        Thầy cô không cần gõ tay từng tiết, không sợ nhầm số tiết PPCT. <span class="highlight-yellow">Robot AI Antigravity làm trọn gói từ A đến Z trong 3 giây!</span>
+      </p>
+    </div>
+
+    <!-- Philosophy Banner -->
+    <div class="philosophy">
+      <div class="philosophy-icon">🎯</div>
+      <div class="philosophy-text">
+        <h4>QUY TẮC TỐI GIẢN 2 FILES — DÙNG CHO MỌI GIÁO VIÊN TOÀN TRƯỜNG</h4>
+        <p>Giáo viên chỉ cần cung cấp đúng 2 file: <strong>1 File Mẫu Lịch tuần</strong> và <strong>1 File Thời khóa biểu toàn trường</strong>. Toàn bộ việc bóc tách tiết dạy, tăng lũy kế phân phối chương trình và tạo file Excel được tự động hóa 100%.</p>
+      </div>
+    </div>
+
+    <!-- 3 Steps Grid -->
+    <div class="steps-container">
+      
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3 class="step-title">CHUẨN BỊ 2 FILES ĐẦU VÀO</h3>
+        <p class="step-desc">Chuẩn bị sẵn 2 file có sẵn trong công việc hàng tuần của thầy cô:</p>
+        
+        <div class="file-box">
+          <div class="file-icon">📊</div>
+          <div class="file-info">
+            <strong>1. File Mẫu Tuần (.xlsx)</strong>
+            <span>Tải từ CSDL hoặc dùng file lịch tuần trước của chính thầy/cô</span>
+          </div>
+        </div>
+
+        <div class="file-box">
+          <div class="file-icon">🏫</div>
+          <div class="file-info">
+            <strong>2. File TKB Toàn Trường</strong>
+            <span>Tệp .csv hoặc .xlsx TKB chung do nhà trường/BGH xuất ra</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3 class="step-title">KÉO THẢ VÀO ANTIGRAVITY & RA LỆNH</h3>
+        <p class="step-desc">Kéo thả cả 2 tệp vào khung chat trợ lý Antigravity và nhắn 1 câu duy nhất:</p>
+        
+        <div class="prompt-box">
+          <div class="prompt-tag">Lệnh điều khiển</div>
+          "Điền lịch báo giảng tuần 12 cho thầy/cô [Tên GV]"<br><br>
+          <span style="color: #94a3b8; font-size: 11.5px;">(Hoặc chỉ cần nói: "Lập lịch tuần tiếp theo từ 2 file này")</span>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3 class="step-title">NHẬN FILE EXCEL HOÀN TẤT TRONG 3S</h3>
+        <p class="step-desc">Antigravity phân tích và trả về ngay file Excel chuẩn chỉ từng ô:</p>
+        
+        <div class="result-box">
+          <strong>✅ Đã hoàn thành 100%:</strong>
+          <ul>
+            <li>Tự khớp lịch 15-19 tiết/tuần</li>
+            <li>Tự tăng lũy kế số tiết PPCT</li>
+            <li>Chuẩn 54 ô CSDL (5 Sáng, 4 Chiều)</li>
+            <li>1-click nhập thẳng vào CSDL!</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 4 Features -->
+    <div class="features-section">
+      <div class="features-header">
+        <span>✨</span> 4 ĐIỂM ƯU VIỆT VƯỢT TRỘI CỦA SKILL ANTIGRAVITY
+      </div>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🧠</div>
+          <h5>Tự Nhận Diện GV</h5>
+          <p>Tự động đọc họ tên và mã định danh giáo viên từ tiêu đề hoặc tên tệp.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📈</div>
+          <h5>Lũy Kế PPCT Chuẩn</h5>
+          <p>Tự động quét số tiết tuần cũ làm mốc để cộng dồn chính xác từng lớp.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🛡️</div>
+          <h5>Chuẩn 100% CSDL</h5>
+          <p>Giữ nguyên cấu trúc biểu mẫu chuẩn Sở/CSDL, tải lên không bị báo lỗi.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">⏱️</div>
+          <h5>Tiết Kiệm 99% Thời Gian</h5>
+          <p>Xong lịch cả tuần chỉ trong 3 giây, mở sẵn thư mục cho thầy cô.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>
+        Tác quyền: <strong>© 2026 Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai</strong>
+      </div>
+      <div class="footer-links">
+        <span class="footer-link">Cổng thông tin: hungcnfree.github.io</span>
+        <span>•</span>
+        <span class="footer-link">Kho mã nguồn: lbg-dongnai</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

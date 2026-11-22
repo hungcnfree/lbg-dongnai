@@ -1,6 +1,8 @@
 # 🤖 Trợ Lý Tự Động CSDL & Lịch Báo Giảng (v5.4.0)
 
-> **Tiện ích mở rộng Google Chrome (Manifest V3) tự động hóa nghiệp vụ Lịch báo giảng và đăng nhập CSDL Giáo dục.**  
+> **Hệ sinh thái tự động hóa nghiệp vụ Lịch báo giảng và CSDL Giáo dục gồm:**  
+> 1. **Kỹ năng Antigravity AI**: Tự động điền phôi Lịch báo giảng tuần chỉ với 2 tệp đầu vào trong 3 giây.  
+> 2. **Tiện ích mở rộng Google Chrome (Manifest V3)**: Tự động đăng nhập CSDL và 1-click nạp lịch/hoàn thành tuần.  
 > Tác quyền: **© 2026 Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai**.
 
 🌐 **Trang web hướng dẫn trực tuyến (GitHub Pages):**  
@@ -14,7 +16,26 @@
 
 ---
 
-## 🌟 TÍNH NĂNG VƯỢT TRỘI v5.4.0
+## ⚡ KỸ NĂNG ANTIGRAVITY AI: TỰ ĐỘNG ĐIỀN LỊCH TUẦN (2-FILE RULE)
+
+> **Dành cho Thầy/Cô sử dụng Antigravity AI:** Không cần cài đặt extension nếu chỉ muốn tạo file Excel lịch báo giảng tuần. Thầy/Cô chỉ cần cung cấp đúng **2 tệp duy nhất**:
+> 1. **File Mẫu Tuần (`.xlsx`)**: Tải từ CSDL hoặc file lịch tuần trước của mình.
+> 2. **File TKB Toàn Trường (`.csv` hoặc `.xlsx`)**: File thời khóa biểu chung do BGH/nhà trường xuất ra.
+
+### 🖼️ Hướng Dẫn 3 Bước Bằng Ảnh Infographic:
+
+![Hướng Dẫn 3 Bước Tự Động Điền Lịch Báo Giảng](infographic_huong_dan_lbg.png)
+
+### 3 Bước Thao Tác Siêu Nhanh:
+1. Kéo thả 2 file vào khung chat Antigravity AI.
+2. Gõ lệnh: `"Điền lịch báo giảng tuần 12 cho tôi"` (hoặc `"Tạo lịch tuần tiếp theo từ 2 file này"`).
+3. Nhận ngay file `LichBaoGiang_Tuan[X]_[TenGV].xlsx` hoàn tất 100% (tự nhận diện GV, tự tính lũy kế số tiết PPCT, khớp đúng 54 ô CSDL)!
+
+📁 **Mã nguồn kỹ năng Antigravity:** Thư mục [`skills/tu-dong-dien-lich-bao-giang/`](skills/tu-dong-dien-lich-bao-giang/)
+
+---
+
+## 🌟 TÍNH NĂNG VƯỢT TRỘI v5.4.0 (TIỆN ÍCH CHROME)
 
 1. **Tự động điền 1-Click Lịch Báo Giảng:**
    - Hệ thống tự nhận biết tuần hiện tại (như Tuần 11, 12, 13...).
@@ -45,8 +66,15 @@ lbg-dongnai/
 ├── tu_dong_cap_nhat.ps1              # PowerShell tự động tải và giải nén bản mới
 ├── HUONG_DAN_DONG_NGHIEP.html        # Trang hướng dẫn cài đặt trực quan cho giáo viên
 ├── index.html                        # Bản build deploy trực tiếp lên GitHub Pages
+├── infographic_huong_dan_lbg.png     # Ảnh Infographic hướng dẫn 3 bước điền lịch tuần
+├── infographic_huong_dan_lbg.html    # Bản web tương tác của Infographic
 ├── version.json                      # Cấu hình kiểm tra cập nhật tự động
 ├── TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip # Gói tiện ích cài đặt v5.4.0
+├── skills/                           # Kỹ năng dành cho Antigravity AI Assistant
+│   └── tu-dong-dien-lich-bao-giang/  # Kỹ năng tự động điền lịch tuần từ 2 files
+│       ├── SKILL.md                  # Hướng dẫn chi tiết cho Agent
+│       ├── scripts/dien_lich_bao_giang.py # Bộ xử lý tự động tính lũy kế & sinh Excel
+│       └── README.md                 # Hướng dẫn giáo viên cài đặt và sử dụng
 └── chrome_extension/                 # Thư mục Tiện ích mở rộng Google Chrome (Manifest V3)
     ├── manifest.json
     ├── popup.html
