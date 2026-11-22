@@ -1,4 +1,4 @@
-// popup.js - Trợ Lý CSDL Toàn Tỉnh Đồng Nai v5.3.0
+// popup.js - Trợ Lý CSDL Bản Nội Bộ THCS Đăk Ơ v5.3.0
 // Paper Neo-Brutalism UI & Tự động cập nhật 1-click
 
 const CURRENT_VERSION = '5.3.4';
@@ -12,21 +12,11 @@ let currentConfig = {
   capHoc: 'Trung học cơ sở',
   capCode: '03',
   phuongXa: 'Xã Đăk Ơ',
-  truong: 'Trường THCS Đăk Ơ'
+  truong: 'Trường THCS Đăk Ơ (70691515) - Xã Đăk Ơ'
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  const tabDako = document.getElementById('tab-dako');
-  const tabProvince = document.getElementById('tab-province');
-  const panelDako = document.getElementById('panel-dako');
-  const panelProvince = document.getElementById('panel-province');
-
   const teacherSelect = document.getElementById('cfg-teacher-select');
-  const customNameInput = document.getElementById('cfg-custom-name');
-  const capHocSelect = document.getElementById('cfg-caphoc');
-  const phuongXaSelect = document.getElementById('cfg-phuongxa');
-  const truongSelect = document.getElementById('cfg-truong');
-
   const userInput = document.getElementById('cfg-username');
   const passInput = document.getElementById('cfg-password');
   const btnTogglePass = document.getElementById('btn-toggle-pass');
@@ -44,103 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Nạp 96 xã phường
-  initWardsDropdown();
-
-  // Chuyển đổi tab
-  tabDako.addEventListener('click', () => switchMode('dako'));
-  tabProvince.addEventListener('click', () => switchMode('province'));
-
-  function switchMode(m) {
-    currentConfig.mode = m;
-    if (m === 'dako') {
-      tabDako.classList.add('active');
-      tabProvince.classList.remove('active');
-      panelDako.style.display = 'block';
-      panelProvince.style.display = 'none';
-      currentConfig.capHoc = 'Trung học cơ sở';
-      currentConfig.capCode = '03';
-      currentConfig.phuongXa = 'Xã Đăk Ơ';
-      currentConfig.truong = 'Trường THCS Đăk Ơ';
-    } else {
-      tabProvince.classList.add('active');
-      tabDako.classList.remove('active');
-      panelDako.style.display = 'none';
-      panelProvince.style.display = 'block';
-      updateSchoolsDropdown();
-    }
-  }
-
-  function initWardsDropdown() {
-    if (!window.DONGNAI_WARDS || !phuongXaSelect) return;
-    phuongXaSelect.innerHTML = '<option value="">-- Chọn Phường / Xã (96 Xã/Phường) --</option>';
-    window.DONGNAI_WARDS.forEach(w => {
-      const opt = document.createElement('option');
-      opt.value = w.name;
-      opt.textContent = w.name;
-      phuongXaSelect.appendChild(opt);
-    });
-  }
-
-  function updateSchoolsDropdown() {
-    const selectedCapCode = capHocSelect.value || '03';
-    const selectedWard = phuongXaSelect.value;
-
-    if (!selectedWard) {
-      truongSelect.innerHTML = '<option value="">-- Vui lòng chọn Phường/Xã trước --</option>';
-      return;
-    }
-
-    truongSelect.innerHTML = '<option value="">-- Chọn trường học --</option>';
-
-    if (window.DONGNAI_SCHOOLS && window.DONGNAI_SCHOOLS[selectedCapCode] && window.DONGNAI_SCHOOLS[selectedCapCode][selectedWard]) {
-      const schools = window.DONGNAI_SCHOOLS[selectedCapCode][selectedWard];
-      if (schools.length === 0) {
-        truongSelect.innerHTML = '<option value="">-- Không có trường nào ở cấp này tại xã đã chọn --</option>';
-      } else {
-        schools.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s.raw || s.name;
-          opt.textContent = s.name + (s.code ? ` (${s.code})` : '');
-          opt.setAttribute('data-code', s.code || '');
-          truongSelect.appendChild(opt);
-        });
-      }
-    } else {
-      truongSelect.innerHTML = '<option value="">-- Không có dữ liệu trường cho cấp/xã này --</option>';
-    }
-  }
-
-  capHocSelect.addEventListener('change', updateSchoolsDropdown);
-  phuongXaSelect.addEventListener('change', updateSchoolsDropdown);
-
-  // Tải cấu hình
+  // Tải cấu hình đã lưu
   function loadSavedConfig() {
     if (typeof chrome === 'undefined' || !chrome.storage) return;
 
     const applyConfig = (saved) => {
       if (!saved) return;
       currentConfig = Object.assign(currentConfig, saved);
-      userInput.value = currentConfig.username || '';
-      passInput.value = currentConfig.password || '';
+      currentConfig.capHoc = 'Trung học cơ sở';
+      currentConfig.capCode = '03';
+      currentConfig.phuongXa = 'Xã Đăk Ơ';
+      currentConfig.truong = 'Trường THCS Đăk Ơ (70691515) - Xã Đăk Ơ';
 
-      if (currentConfig.mode === 'province') {
-        switchMode('province');
-        if (customNameInput) customNameInput.value = currentConfig.name || '';
-        if (capHocSelect) capHocSelect.value = currentConfig.capCode || '03';
-        if (phuongXaSelect && currentConfig.phuongXa) {
-          phuongXaSelect.value = currentConfig.phuongXa;
-          updateSchoolsDropdown();
-          if (truongSelect && currentConfig.truong) {
-            truongSelect.value = currentConfig.truong;
-          }
-        }
-      } else {
-        switchMode('dako');
-        if (teacherSelect && currentConfig.name) {
-          teacherSelect.value = currentConfig.name;
-        }
-      }
+      if (currentConfig.name) teacherSelect.value = currentConfig.name;
+      if (currentConfig.username) userInput.value = currentConfig.username;
+      if (currentConfig.password) passInput.value = currentConfig.password;
       updateQuickBtnText();
     };
 
@@ -167,8 +75,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadSavedConfig();
 
+  // Khi chọn tên giáo viên
+  teacherSelect.addEventListener('change', () => {
+    currentConfig.name = teacherSelect.value;
+    if (!userInput.value) {
+      userInput.placeholder = `SĐT đăng nhập của ${teacherSelect.value}...`;
+      userInput.focus();
+    }
+    updateQuickBtnText();
+  });
+
   // Nút Lưu cấu hình
   document.getElementById('btn-save').addEventListener('click', () => {
+    const teacherName = teacherSelect.value;
+    if (!teacherName) {
+      alert('⚠️ Thầy/Cô vui lòng chọn Tên của mình trong danh sách 60 giáo viên nhé!');
+      teacherSelect.focus();
+      return;
+    }
+
     const phone = userInput.value.trim();
     const pass = passInput.value.trim();
 
@@ -177,74 +102,41 @@ document.addEventListener('DOMContentLoaded', () => {
       userInput.focus();
       return;
     }
+
     if (!pass) {
       alert('⚠️ Thầy/Cô vui lòng nhập Mật khẩu CSDL!');
       passInput.focus();
       return;
     }
 
-    if (currentConfig.mode === 'dako') {
-      const tName = teacherSelect.value;
-      if (!tName) {
-        alert('⚠️ Thầy/Cô vui lòng chọn Tên trong danh sách 60 giáo viên!');
-        teacherSelect.focus();
-        return;
-      }
-      currentConfig.name = tName;
-      currentConfig.capHoc = 'Trung học cơ sở';
-      currentConfig.capCode = '03';
-      currentConfig.phuongXa = 'Xã Đăk Ơ';
-      currentConfig.truong = 'Trường THCS Đăk Ơ (70691515) - Xã Đăk Ơ';
-    } else {
-      const cName = customNameInput.value.trim();
-      const capOpt = capHocSelect.options[capHocSelect.selectedIndex];
-      const capName = capOpt ? capOpt.getAttribute('data-name') || capOpt.text : 'Trung học cơ sở';
-      const capCode = capHocSelect.value;
-      const ward = phuongXaSelect.value;
-      const schoolOpt = truongSelect.options[truongSelect.selectedIndex];
-      const schoolVal = truongSelect.value;
-
-      if (!ward) {
-        alert('⚠️ Thầy/Cô vui lòng chọn Phường / Xã!');
-        phuongXaSelect.focus();
-        return;
-      }
-      if (!schoolVal) {
-        alert('⚠️ Thầy/Cô vui lòng chọn Trường học!');
-        truongSelect.focus();
-        return;
-      }
-
-      currentConfig.name = cName || 'Thầy/Cô Giáo';
-      currentConfig.capHoc = capName;
-      currentConfig.capCode = capCode;
-      currentConfig.phuongXa = ward;
-      currentConfig.truong = schoolVal;
-    }
-
+    currentConfig.name = teacherName;
     currentConfig.username = phone;
     currentConfig.password = pass;
+    currentConfig.capHoc = 'Trung học cơ sở';
+    currentConfig.capCode = '03';
+    currentConfig.phuongXa = 'Xã Đăk Ơ';
+    currentConfig.truong = 'Trường THCS Đăk Ơ (70691515) - Xã Đăk Ơ';
 
     if (typeof chrome !== 'undefined' && chrome.storage) {
       const savePayload = { csdl_teacher_config: currentConfig };
       if (chrome.storage.local) chrome.storage.local.set(savePayload);
       if (chrome.storage.sync) {
         chrome.storage.sync.set(savePayload, () => {
-          showSuccessModal(currentConfig.name, currentConfig.truong);
+          showSuccessModal(currentConfig.name);
           updateQuickBtnText();
           sendActionToTab('CONFIG_SAVED', currentConfig);
         });
       } else {
-        showSuccessModal(currentConfig.name, currentConfig.truong);
+        showSuccessModal(currentConfig.name);
         updateQuickBtnText();
         sendActionToTab('CONFIG_SAVED', currentConfig);
       }
     } else {
-      showSuccessModal(currentConfig.name, currentConfig.truong);
+      showSuccessModal(currentConfig.name);
     }
   });
 
-  // Nút Thao tác nhanh
+  // Nút Mở trang chrome://extensions
   document.getElementById('btn-open-extensions').addEventListener('click', () => {
     if (typeof chrome !== 'undefined' && chrome.tabs && chrome.tabs.create) {
       chrome.tabs.create({ url: 'chrome://extensions' });
@@ -253,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Nút Điền đăng nhập
   document.getElementById('btn-fill-account').addEventListener('click', () => {
     if (!currentConfig.username) {
       alert('⚠️ Thầy/Cô hãy nhập thông tin và bấm Lưu trước nhé!');
@@ -261,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sendActionToTab('CONFIG_SAVED', currentConfig);
   });
 
+  // Nút Tự động điền lịch từ TKB
   const btnAutoTkb = document.getElementById('btn-auto-fill-tkb');
   if (btnAutoTkb) {
     btnAutoTkb.addEventListener('click', () => {
@@ -268,10 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Nút Xác nhận hoàn thành
   document.getElementById('btn-confirm-done').addEventListener('click', () => {
     sendActionToTab('CONFIRM_DONE');
   });
 
+  // Đóng modal success
   document.getElementById('btn-close-modal').addEventListener('click', () => {
     document.getElementById('modal-success').style.display = 'none';
   });
@@ -292,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-update').style.display = 'none';
   });
 
+  // Tự động kiểm tra âm thầm khi mở popup
   checkForUpdates(false);
 });
 
@@ -306,9 +203,8 @@ function updateQuickBtnText() {
   }
 }
 
-function showSuccessModal(teacherName, schoolName) {
+function showSuccessModal(teacherName) {
   document.getElementById('modal-teacher-name').innerText = teacherName;
-  document.getElementById('modal-school-name').innerText = schoolName;
   document.getElementById('modal-success').style.display = 'flex';
 }
 
@@ -340,7 +236,7 @@ function showUpdateModal(info, hasNew) {
     `;
     if (dlBtn) {
       dlBtn.style.display = 'flex';
-      dlBtn.href = info.downloadUrls?.provinceZip || 'https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip';
+      dlBtn.href = info.downloadUrls?.dakoZip || 'https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip';
     }
   } else {
     title.innerHTML = '✅ BẢN MỚI NHẤT';
@@ -421,12 +317,12 @@ function updateTkbStatusUI() {
       badge.innerText = 'Đã lưu ' + (cfg.totalLessons || cfg.lessons.length) + ' tiết';
       badge.style.background = '#D1FAE5';
       badge.style.color = '#065F46';
-      summary.innerHTML = 'GV: <strong>' + (cfg.teacherName || 'Nông Văn Hùng') + '</strong> • Mốc: Tuần ' + (cfg.baseWeek || 11);
+      summary.innerHTML = 'GV: <strong>' + (cfg.teacherName || 'Chưa chọn') + '</strong> • Mốc: Tuần ' + (cfg.baseWeek || 11);
     } else {
       badge.innerText = 'Chưa có TKB';
       badge.style.background = '#FEF3C7';
       badge.style.color = '#854D0E';
-      summary.innerText = 'Chưa có dữ liệu TKB. Vui lòng bấm Nạp Excel hoặc Mẫu Thầy Hùng.';
+      summary.innerText = 'Chưa có dữ liệu TKB. Vui lòng bấm Nạp Excel hoặc TKB Theo Tên GV.';
     }
   });
 }
@@ -447,9 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
         return;
       }
-      window.LbgExcelEngine.parseTkbExcel(file, currentConfig.name || 'Nông Văn Hùng').then((parsedCfg) => {
-        chrome.storage.local.set({ csdl_tkb_config: parsedCfg }, () => {
-          alert('🎉 Đã nạp thành công ' + parsedCfg.totalLessons + ' tiết dạy!');
+      const activeName = (currentConfig && currentConfig.name) || (document.getElementById('cfg-name') ? document.getElementById('cfg-name').value : '');
+      window.LbgExcelEngine.parseTkbExcel(file, activeName).then((parsedCfg) => {
+        chrome.storage.local.set({ csdl_tkb_config: parsedCfg, activeTeacher: parsedCfg.teacherName || activeName }, () => {
+          alert('🎉 Đã nạp thành công ' + parsedCfg.totalLessons + ' tiết dạy của ' + (parsedCfg.teacherName || '').toUpperCase() + '!');
           updateTkbStatusUI();
         });
       }).catch((err) => {
@@ -464,9 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
         return;
       }
-      const defaultCfg = window.LbgExcelEngine.getDefaultTkbConfig();
-      chrome.storage.local.set({ csdl_tkb_config: defaultCfg }, () => {
-        alert('🎉 Đã kích hoạt 15 tiết TKB chuẩn của Thầy Nông Văn Hùng!');
+      const activeName = (currentConfig && currentConfig.name) || (document.getElementById('cfg-name') ? document.getElementById('cfg-name').value : '');
+      const defaultCfg = window.LbgExcelEngine.getDefaultTkbConfig(activeName);
+      if (!defaultCfg || !defaultCfg.hasTkb) {
+        alert('⚠️ Chưa tìm thấy TKB mặc định của giáo viên "' + (activeName || 'này') + '". Vui lòng chọn giáo viên ở mục 1 hoặc nạp file Excel.');
+        return;
+      }
+      chrome.storage.local.set({ csdl_tkb_config: defaultCfg, activeTeacher: activeName }, () => {
+        alert('🎉 Đã kích hoạt ' + defaultCfg.totalLessons + ' tiết TKB của Thầy/Cô ' + activeName.toUpperCase() + '!');
         updateTkbStatusUI();
       });
     };

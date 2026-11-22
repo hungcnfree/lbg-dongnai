@@ -1,28 +1,27 @@
 ====================================================================
-MẪU TIN NHẮN GỬI ZALO CHO ĐỒNG NGHIỆP (TOÀN TỈNH ĐỒNG NAI)
+MẪU TIN NHẮN GỬI ZALO CHO ĐỒNG NGHIỆP TRƯỜNG THCS ĐĂK Ơ
 ====================================================================
 
 Kính gửi Quý Thầy/Cô đồng nghiệp,
 
-Để tiết kiệm thời gian mỗi lần đăng nhập CSDL và không phải click chuột thủ công từng tiết để xác nhận Lịch báo giảng hàng tuần, Thầy Hùng gửi tặng Quý Thầy/Cô tiện ích:
+Để tiết kiệm thời gian mỗi lần đăng nhập CSDL và không phải click chuột thủ công từng tiết để xác nhận Lịch báo giảng hàng tuần, xin gửi tặng Quý Thầy/Cô phiên bản tiện ích mới nhất:
 
-🤖 "TRỢ LÝ TỰ ĐỘNG CSDL ĐỒNG NAI (v5.2 - TELERIK ENGINE CHROME EXTENSION)"
+🤖 "TRỢ LÝ TỰ ĐỘNG CSDL & LỊCH BÁO GIẢNG (v5.4.0 - 1-CLICK TỰ ĐỘNG)"
 
-⚡ TÍNH NĂNG VƯỢT TRỘI:
-1. Đăng nhập tự động 100%: Mở trang web truong.dongnai.edu.vn là Robot tự động kết nối API Telerik điền đầy đủ Cấp học, Xã/Phường, Trường học, Số điện thoại và Mật khẩu. Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA ➔ Thầy/Cô chỉ cần nhìn mã CAPTCHA (8 ký tự), gõ vào rồi ấn phím ENTER là vào thẳng hệ thống!
-2. Hỗ trợ toàn tỉnh: Tích hợp sẵn danh mục chuẩn 96 Xã/Phường và 2.178 Trường học thuộc mọi cấp (Mầm non, Tiểu học, THCS, THPT, GDTX) trên toàn tỉnh Đồng Nai.
-3. Xác nhận Hoàn thành Lịch báo giảng tuần trong 0.5 giây: 1 click là tự động chuyển toàn bộ 15-18 tiết trong tuần sang "Hoàn thành" và bấm GHI lưu xong xuôi.
-4. Bảo mật 100%: Mọi thông tin chỉ lưu cục bộ trên trình duyệt máy tính của Thầy/Cô, tuyệt đối không gửi ra ngoài.
+⚡ TÍNH NĂNG VƯỢT TRỘI v5.4.0:
+1. Tự động điền Lịch Báo Giảng 1-Click: Tiện ích đã tích hợp sẵn Thời khóa biểu của toàn bộ 60 Thầy/Cô trong trường. Chỉ cần bấm 1 click là Robot tự nhận diện tuần hiện tại, tự tính số tiết PPCT và nạp thẳng vào hệ thống CSDL rồi bấm Ghi lưu!
+2. Tự động nhận diện giáo viên: Khi Thầy/Cô đăng nhập tài khoản của mình trên CSDL, tiện ích tự động nhận diện đúng tên và nạp đúng thời khóa biểu cá nhân. Có thể đổi giáo viên nhanh ngay trên thanh công cụ nổi.
+3. Hoàn thành tuần trong 0.5s: 1 click là tự động xác nhận Hoàn thành cho các tiết thực tế có dạy, để trống các tiết không dạy và bấm Ghi lưu.
+4. Đăng nhập tự động 100%: Mở trang web truong.dongnai.edu.vn là Robot tự động điền sẵn Cấp học, Xã, Trường, Số điện thoại và Mật khẩu. Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA ➔ Thầy/Cô chỉ cần gõ mã CAPTCHA (8 ký tự) rồi ấn ENTER là vào thẳng hệ thống!
+5. Bảo mật 100%: Mọi thông tin chỉ lưu cục bộ trên trình duyệt máy tính của Thầy/Cô, tuyệt đối không gửi ra ngoài.
 
 🌐 Trang web hướng dẫn trực tuyến: https://hungcnfree.github.io/lbg-dongnai/
-📦 Link tải 2 phiên bản (Tùy chọn phù hợp với Thầy/Cô):
-   🏫 1. Bản Nội Bộ THCS Đăk Ơ (ZIP ~58KB): https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip
-   🌐 2. Bản Toàn Tỉnh Đồng Nai (ZIP ~180KB): https://github.com/hungcnfree/lbg-dongnai/releases/download/v5.2/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip
+📦 Link tải bản tiện ích v5.4.0 (ZIP ~229KB): https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip
 
 👉 3 BƯỚC CÀI ĐẶT SIÊU NHANH:
 1. Thầy/Cô tải file ZIP về, giải nén ra thư mục máy tính.
 2. Nhấp đúp vào file [CAI_DAT_TIEN_ICH_CHROME.bat] (máy sẽ tự sao chép đường dẫn và mở sẵn trang chrome://extensions).
-3. Bật "Chế độ dành cho nhà phát triển" ở góc trên bên phải ➔ Bấm "Tải tiện ích đã giải nén" và dán hoặc chọn thư mục "chrome_extension". Bấm vào biểu tượng Tiện ích, chọn Tên/Trường và lưu mật khẩu 1 lần là xong!
+3. Bật "Chế độ dành cho nhà phát triển" ở góc trên bên phải ➔ Bấm "Tải tiện ích đã giải nén" và dán hoặc chọn thư mục "chrome_extension". Bấm vào biểu tượng Tiện ích, chọn Tên mình và lưu mật khẩu 1 lần là xong!
 
 💬 Nhóm Zalo AI chia sẻ & hỗ trợ: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
 🚀 Link GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/lbg-dongnai

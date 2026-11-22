@@ -1,4 +1,4 @@
-// content.js - Trợ Lý CSDL v5.3.4 (Bộ Giải Mã TKB Đa Năng & Nạp LBG CSDL Tự Động)
+// content.js - Trợ Lý CSDL v5.4.0 (Tự Động Điền LBG 1-Click Toàn Trường THCS Đăk Ơ)
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
@@ -35,7 +35,7 @@
     return; // Dừng, không khởi tạo thanh công cụ cha trong iframe
   }
 
-  console.log('[CSDL Robot v5.3.4] Đang khởi động tiện ích trên trang chính...');
+  console.log('[CSDL Robot v5.4.0] Đang khởi động tiện ích trên trang chính...');
 
   function injectBridgeScript() {
     if (document.getElementById('csdl-bridge-script')) return;
@@ -43,9 +43,10 @@
       const s = document.createElement('script');
       s.id = 'csdl-bridge-script';
       s.src = chrome.runtime.getURL('page_bridge.js');
+      s.onload = () => console.log('[CSDL Robot] Đã nạp page_bridge.js thành công.');
       (document.head || document.documentElement).appendChild(s);
     } catch (e) {
-      console.error('[CSDL Robot] Không thể tiêm page_bridge:', e);
+      console.warn('[CSDL Robot] Không thể nạp page_bridge.js:', e);
     }
   }
 
@@ -54,8 +55,8 @@
   function getDefaultConfig() {
     return {
       mode: 'dako',
-      name: 'Nông Văn Hùng',
-      username: '0976579151',
+      name: '',
+      username: '',
       password: '',
       capHoc: 'Trung học cơ sở',
       phuongXa: 'Xã Đăk Ơ',
@@ -133,7 +134,7 @@
       updateRobotBanner(`
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong style="color: #065F46; font-size: 13.5px;">🎉 ROBOT ĐÃ TỰ ĐIỀN XONG MỌI THỨ!</strong>
-          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.3.4</span>
+          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.4.0</span>
         </div>
         <div style="font-size: 12px; color: #0F172A; margin-bottom: 6px;">
           ${detail.message}
@@ -158,7 +159,7 @@
 
   function triggerAutoLogin(cfg) {
     injectBridgeScript();
-    updateRobotBanner(`🌻 <strong>TRỢ LÝ CSDL v5.3.4:</strong> Đang tự động chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
+    updateRobotBanner(`⚡ <strong>TRỢ LÝ CSDL v5.4.0:</strong> Đang tự động chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
     let tries = 0;
     const send = () => {
       const ready = document.documentElement.getAttribute('data-csdl-bridge') === 'ready';
@@ -177,30 +178,70 @@
   }
 
   // ===========================================================================
-  // QUẢN LÝ THỜI KHÓA BIỂU & NẠP LỊCH BÁO GIẢNG THÔNG MINH
+  // QUẢN LÝ THỜI KHÓA BIỂU & NHẬN DIỆN GIÁO VIÊN TOÀN TRƯỜNG
   // ===========================================================================
 
-  function getStoredTkb(callback) {
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get(['csdl_tkb_config'], (res) => {
-        if (res && res.csdl_tkb_config && res.csdl_tkb_config.hasTkb) {
-          callback(res.csdl_tkb_config);
-        } else {
-          callback(null);
+  function detectTeacherFromPage() {
+    const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
+    const teacherNames = Object.keys(schoolTkb);
+    if (teacherNames.length === 0) return '';
+
+    // 1. Kiểm tra các thẻ thông tin người dùng / header ASP.NET
+    const headerSelectors = [
+      '#ctl00_lblUserName', '#ctl00_lblFullName', '#ctl00_Header1_lblFullName',
+      '#ctl00_Header_lblFullName', '#ctl00_Header1_lblUser', '#ctl00_ucHeader_lblUser',
+      '.username', '.user-info', '.user-name', '.dropdown-toggle',
+      'span[id*="lblUser"]', 'span[id*="FullName"]', 'span[id*="TenGV"]', 'span[id*="NguoiDung"]'
+    ];
+    for (const sel of headerSelectors) {
+      const el = document.querySelector(sel);
+      if (el && el.innerText) {
+        const text = el.innerText.trim();
+        for (const tName of teacherNames) {
+          if (text.includes(tName)) return tName;
         }
+      }
+    }
+
+    // 2. Quét vùng header toàn trang
+    const headerArea = document.querySelector('header, #header, #ctl00_Header1, #ctl00_divHeader, .navbar, .header, #top-bar');
+    if (headerArea && headerArea.innerText) {
+      const hText = headerArea.innerText;
+      for (const tName of teacherNames) {
+        if (hText.includes(tName)) return tName;
+      }
+    }
+
+    return '';
+  }
+
+  function getActiveTeacher(callback) {
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.get(['activeTeacher', 'csdl_teacher_config'], (res) => {
+        let tName = res.activeTeacher || '';
+        if (!tName && res.csdl_teacher_config && res.csdl_teacher_config.name) {
+          tName = res.csdl_teacher_config.name;
+        }
+        if (!tName) {
+          tName = detectTeacherFromPage();
+          if (tName) {
+            chrome.storage.local.set({ activeTeacher: tName });
+          }
+        }
+        callback(tName);
       });
     } else {
-      callback(null);
+      callback(detectTeacherFromPage());
     }
   }
 
-  function saveStoredTkb(cfg, callback) {
+  function setActiveTeacher(tName, callback) {
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-      chrome.storage.local.set({ csdl_tkb_config: cfg }, () => {
-        if (callback) callback();
+      chrome.storage.local.set({ activeTeacher: tName }, () => {
+        if (callback) callback(tName);
       });
-    } else if (callback) {
-      callback();
+    } else {
+      if (callback) callback(tName);
     }
   }
 
@@ -220,11 +261,18 @@
       const tinhNangBtn = allBtns.find(el => (el.innerText || '').trim() === 'Tính năng mở rộng');
       if (tinhNangBtn) {
         tinhNangBtn.click();
-        setTimeout(() => {
+        let checks = 0;
+        const checkMenu = setInterval(() => {
+          checks++;
           const menuItems = Array.from(document.querySelectorAll('.rmText, .rtbText, a, span, li'));
           const excelOpt = menuItems.find(el => (el.innerText || '').trim().includes('Nhập từ Excel'));
-          if (excelOpt) excelOpt.click();
-        }, 350);
+          if (excelOpt) {
+            clearInterval(checkMenu);
+            excelOpt.click();
+          } else if (checks >= 10) {
+            clearInterval(checkMenu);
+          }
+        }, 150);
       }
     } catch (e) {
       console.warn('Lỗi mở popup Nhập từ Excel:', e);
@@ -236,339 +284,20 @@
     if (old) old.remove();
   }
 
-  // HỘP THOẠI 1: THIẾT LẬP THỜI KHÓA BIỂU
-  function showFirstTimeTkbModal() {
-    removeExistingModal();
-
-    getTeacherConfig((teacherCfg) => {
-      const prefTeacher = (teacherCfg && teacherCfg.name) ? teacherCfg.name : 'Nông Văn Hùng';
-
-      const overlay = document.createElement('div');
-      overlay.id = 'csdl-tkb-dialog-modal';
-      overlay.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
-        z-index: 9999999; display: flex; align-items: center; justify-content: center;
-        font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Segoe UI", Roboto, sans-serif;
-      `;
-
-      overlay.innerHTML = `
-        <div style="
-          background: #FFFDF5; width: 500px; max-width: 94vw; max-height: 90vh; overflow-y: auto;
-          border: 3px solid #0F172A; border-radius: 18px;
-          box-shadow: 6px 6px 0px #0F172A; padding: 22px; color: #0F172A;
-        ">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <img src="${chrome.runtime.getURL('icons/icon48.png')}" style="width: 28px; height: 28px;">
-              <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #0F172A; letter-spacing: -0.3px;">THIẾT LẬP THỜI KHÓA BIỂU</h3>
-            </div>
-            <button id="btn-modal-close-x" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #64748B;">✕</button>
-          </div>
-
-          <div style="font-size: 13px; line-height: 1.5; color: #334155; margin-bottom: 14px;">
-            Chào Thầy/Cô! Tiện ích hỗ trợ nạp tự động Thời khóa biểu (file riêng hoặc file toàn trường). Vui lòng chọn cách nạp:
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button id="btn-dialog-upload-file" style="
-              background: #2563EB; color: white; border: 2px solid #0F172A;
-              border-radius: 12px; padding: 12px 14px; font-size: 13px; font-weight: 800;
-              cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
-            ">
-              📁 TẢI LÊN FILE TKB (.XLSX, .XLS, .CSV)
-            </button>
-            <input type="file" id="input-hidden-tkb-upload" accept=".xlsx,.xls,.csv,.txt" style="display: none;">
-
-            <button id="btn-dialog-toggle-paste" style="
-              background: #F8FAFC; color: #0F172A; border: 2px dashed #0F172A;
-              border-radius: 12px; padding: 10px 14px; font-size: 12.5px; font-weight: 700;
-              cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
-            ">
-              📋 HOẶC DÁN TRỰC TIẾP VĂN BẢN THỜI KHÓA BIỂU
-            </button>
-
-            <!-- KHU VỰC DÁN VĂN BẢN -->
-            <div id="box-paste-tkb-area" style="display: none; flex-direction: column; gap: 8px; margin-top: 4px;">
-              <textarea id="textarea-paste-tkb" rows="6" placeholder="Dán nội dung bảng thời khóa biểu (hoặc CSV) vào đây..." style="
-                width: 100%; padding: 10px; border: 2px solid #0F172A; border-radius: 10px;
-                font-family: monospace; font-size: 11.5px; resize: vertical; box-sizing: border-box;
-              "></textarea>
-              <button id="btn-dialog-parse-pasted" style="
-                background: #F59E0B; color: #0F172A; border: 2px solid #0F172A;
-                border-radius: 10px; padding: 9px 12px; font-size: 12px; font-weight: 800;
-                cursor: pointer; box-shadow: 2px 2px 0px #0F172A;
-              ">🚀 NẠP DỮ LIỆU ĐÃ DÁN</button>
-            </div>
-
-            <!-- CHỌN GIÁO VIÊN NẾU FILE CHỨA NHIỀU GIÁO VIÊN -->
-            <div id="box-teacher-picker" style="display: none; background: #ECFDF5; border: 2px solid #0F172A; border-radius: 12px; padding: 12px; box-shadow: 2px 2px 0px #0F172A;">
-              <div style="font-weight: 800; font-size: 12.5px; color: #065F46; margin-bottom: 6px;">
-                🎉 ĐÃ TÌM THẤY TKB TOÀN TRƯỜNG! Vui lòng chọn Thầy/Cô:
-              </div>
-              <select id="select-multi-teacher" style="
-                width: 100%; padding: 8px 10px; border: 2px solid #0F172A; border-radius: 8px;
-                font-weight: 700; font-size: 13px; background: white; margin-bottom: 8px;
-              "></select>
-              <div id="preview-teacher-lessons-summary" style="font-size: 11.5px; color: #334155; margin-bottom: 8px;"></div>
-              <button id="btn-confirm-selected-teacher" style="
-                width: 100%; background: #10B981; color: white; border: 2px solid #0F172A;
-                border-radius: 10px; padding: 9px; font-weight: 800; font-size: 12.5px; cursor: pointer; box-shadow: 2px 2px 0px #0F172A;
-              ">✅ XÁC NHẬN NẠP VÀO BỘ NHỚ</button>
-            </div>
-
-            <button id="btn-dialog-use-default" style="
-              background: #10B981; color: white; border: 2px solid #0F172A;
-              border-radius: 12px; padding: 11px 14px; font-size: 12.5px; font-weight: 800;
-              cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
-            ">
-              ⚡ DÙNG MẪU CHUẨN THẦY NÔNG VĂN HÙNG (15 TIẾT)
-            </button>
-          </div>
-
-          <div style="margin-top: 14px; font-size: 11.5px; color: #64748B; background: #F1F5F9; border: 1.5px solid #CBD5E1; border-radius: 8px; padding: 8px 10px;">
-            💡 <strong>Ghi chú:</strong> Thầy/Cô chỉ cần nạp 1 lần. Những tuần tiếp theo hệ thống sẽ tự động cộng dồn lũy kế số tiết PPCT!
-          </div>
-        </div>
-      `;
-
-      document.body.appendChild(overlay);
-
-      document.getElementById('btn-modal-close-x').onclick = removeExistingModal;
-
-      const btnToggle = document.getElementById('btn-dialog-toggle-paste');
-      const boxPaste = document.getElementById('box-paste-tkb-area');
-      btnToggle.onclick = () => {
-        boxPaste.style.display = boxPaste.style.display === 'none' ? 'flex' : 'none';
-      };
-
-      function handleParsedResult(parsedCfg) {
-        if (parsedCfg.allTeachers && Object.keys(parsedCfg.allTeachers).length > 1) {
-          const boxPicker = document.getElementById('box-teacher-picker');
-          const selTeacher = document.getElementById('select-multi-teacher');
-          const previewSummary = document.getElementById('preview-teacher-lessons-summary');
-          boxPicker.style.display = 'block';
-
-          selTeacher.innerHTML = '';
-          const names = Object.keys(parsedCfg.allTeachers);
-          names.forEach(name => {
-            const opt = document.createElement('option');
-            opt.value = name;
-            opt.innerText = `${name} (${parsedCfg.allTeachers[name].totalLessons} tiết/tuần)`;
-            if (name.toLowerCase().includes(prefTeacher.toLowerCase()) || prefTeacher.toLowerCase().includes(name.toLowerCase())) {
-              opt.selected = true;
-            }
-            selTeacher.appendChild(opt);
-          });
-
-          function updatePreview() {
-            const curT = selTeacher.value;
-            const tData = parsedCfg.allTeachers[curT];
-            if (tData) {
-              const preview = tData.lessons.slice(0, 5).map(l => `Thứ ${l.thu} T${l.tiet}: ${l.mon} (${l.lop})`).join(' • ');
-              previewSummary.innerHTML = `<strong>${curT}:</strong> ${tData.totalLessons} tiết dạy/tuần.<br><span style="color:#2563EB;">${preview}...</span>`;
-            }
-          }
-          selTeacher.onchange = updatePreview;
-          updatePreview();
-
-          document.getElementById('btn-confirm-selected-teacher').onclick = () => {
-            const chosen = selTeacher.value;
-            const chosenData = parsedCfg.allTeachers[chosen];
-            saveStoredTkb(chosenData, () => {
-              alert(`🎉 ĐÃ NẠP THÀNH CÔNG ${chosenData.totalLessons} TIẾT DẠY CỦA ${chosen.toUpperCase()} VÀO BỘ NHỚ!`);
-              removeExistingModal();
-              showWeekFillModal(chosenData);
-            });
-          };
-        } else {
-          saveStoredTkb(parsedCfg, () => {
-            alert(`🎉 ĐÃ NẠP THÀNH CÔNG ${parsedCfg.totalLessons} TIẾT DẠY CỦA ${parsedCfg.teacherName.toUpperCase()} VÀO BỘ NHỚ!`);
-            removeExistingModal();
-            showWeekFillModal(parsedCfg);
-          });
-        }
-      }
-
-      const fileInput = document.getElementById('input-hidden-tkb-upload');
-      document.getElementById('btn-dialog-upload-file').onclick = () => fileInput.click();
-
-      fileInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        if (typeof window.LbgExcelEngine === 'undefined') {
-          alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
-          return;
-        }
-        window.LbgExcelEngine.parseTkbExcel(file, prefTeacher).then((parsedCfg) => {
-          handleParsedResult(parsedCfg);
-        }).catch((err) => {
-          alert('⚠️ Lỗi đọc file Thời khóa biểu: ' + (err.message || err));
-        });
-      };
-
-      document.getElementById('btn-dialog-parse-pasted').onclick = () => {
-        const textVal = document.getElementById('textarea-paste-tkb').value.trim();
-        if (!textVal) {
-          alert('⚠️ Vui lòng dán nội dung Thời khóa biểu vào ô văn bản!');
-          return;
-        }
-        if (typeof window.LbgExcelEngine === 'undefined') {
-          alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
-          return;
-        }
-        window.LbgExcelEngine.parseTkbExcel(textVal, prefTeacher).then((parsedCfg) => {
-          handleParsedResult(parsedCfg);
-        }).catch((err) => {
-          alert('⚠️ Lỗi phân tích văn bản: ' + (err.message || err));
-        });
-      };
-
-      document.getElementById('btn-dialog-use-default').onclick = () => {
-        if (typeof window.LbgExcelEngine === 'undefined') {
-          alert('Lỗi: Bộ máy Excel chưa sẵn sàng.');
-          return;
-        }
-        const defaultCfg = window.LbgExcelEngine.getDefaultTkbConfig();
-        saveStoredTkb(defaultCfg, () => {
-          alert('🎉 ĐÃ KÍCH HOẠT 15 TIẾT TKB CHUẨN CỦA THẦY NÔNG VĂN HÙNG!');
-          removeExistingModal();
-          showWeekFillModal(defaultCfg);
-        });
-      };
-    });
-  }
-
-  // HỘP THOẠI 2: NHỮNG LẦN SAU (HỆ THỐNG HYBRID 3 TÙY CHỌN THÔNG MINH)
-  function showWeekFillModal(tkbConfig) {
-    removeExistingModal();
-
-    const curWeek = getCurrentWeekNumber();
-    const prevWeek = Math.max(1, curWeek - 1);
-
-    const offset = curWeek - (tkbConfig.baseWeek || 11);
-    let previewHtml = '';
-    const uniqueSummary = {};
-    for (const item of (tkbConfig.lessons || [])) {
-      const key = item.mon + ' ' + item.lop;
-      const ppct = item.basePpct + offset * (item.step || 1);
-      if (!uniqueSummary[key]) {
-        uniqueSummary[key] = [ppct];
-      } else {
-        uniqueSummary[key].push(ppct);
-      }
-    }
-    const previewItems = [];
-    for (const [k, ppcts] of Object.entries(uniqueSummary)) {
-      previewItems.push(`<strong>${k}</strong>: Tiết ${ppcts.join(', ')}`);
-    }
-    previewHtml = previewItems.slice(0, 4).join(' &nbsp;|&nbsp; ');
-    if (previewItems.length > 4) previewHtml += ` ... (+${previewItems.length - 4} môn)`;
-
-    const overlay = document.createElement('div');
-    overlay.id = 'csdl-tkb-dialog-modal';
-    overlay.style.cssText = `
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
-      z-index: 9999999; display: flex; align-items: center; justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Segoe UI", Roboto, sans-serif;
-    `;
-
-    overlay.innerHTML = `
-      <div style="
-        background: #FFFDF5; width: 510px; max-width: 94vw;
-        border: 3px solid #0F172A; border-radius: 18px;
-        box-shadow: 6px 6px 0px #0F172A; padding: 22px; color: #0F172A;
-      ">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="${chrome.runtime.getURL('icons/icon48.png')}" style="width: 30px; height: 30px;">
-            <div>
-              <h3 style="margin: 0; font-size: 16.5px; font-weight: 800; color: #0F172A; line-height: 1.1;">NẠP LỊCH BÁO GIẢNG - TUẦN ${curWeek}</h3>
-              <div style="font-size: 11px; color: #64748B; font-weight: 600;">Giáo viên: ${tkbConfig.teacherName || 'Nông Văn Hùng'} • ${tkbConfig.totalLessons || tkbConfig.lessons.length} tiết dạy/tuần</div>
-            </div>
-          </div>
-          <button id="btn-modal-close-x2" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #64748B;">✕</button>
-        </div>
-
-        <div style="
-          background: #FEF3C7; border: 2px solid #0F172A; border-radius: 12px;
-          padding: 10px 12px; margin: 12px 0 8px 0; text-align: center; box-shadow: 2px 2px 0px #0F172A;
-        ">
-          <div style="font-weight: 800; font-size: 13.5px; color: #854D0E; margin-bottom: 3px;">
-            ❓ THỜI KHÓA BIỂU CỦA THẦY/CÔ TUẦN NÀY CÓ ĐỔI KHÔNG?
-          </div>
-          <div style="font-size: 11.5px; color: #475569;">
-            Dự kiến PPCT Tuần ${curWeek}: <span style="color: #2563EB;">${previewHtml}</span>
-          </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 14px;">
-          <!-- TÙY CHỌN 1: TKB KHÔNG ĐỔI -->
-          <button id="btn-confirm-no-change" style="
-            background: #10B981; color: white; border: 2px solid #0F172A;
-            border-radius: 12px; padding: 12px 14px; font-size: 13px; font-weight: 800;
-            cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
-          ">
-            ✅ TKB KHÔNG ĐỔI - TỰ ĐỘNG NẠP TUẦN ${curWeek} NGAY
-          </button>
-
-          <!-- TÙY CHỌN 2: KỸ NĂNG SOI TUẦN CŨ -->
-          <button id="btn-confirm-inspect-prev" style="
-            background: #F59E0B; color: #0F172A; border: 2px solid #0F172A;
-            border-radius: 12px; padding: 11px 14px; font-size: 12px; font-weight: 800;
-            cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
-          ">
-            🔍 SOI TUẦN CŨ (${prevWeek}) ĐỐI CHIẾU TIẾT THỰC TẾ TRÊN CSDL
-          </button>
-
-          <!-- TÙY CHỌN 3: TKB CÓ ĐỔI -->
-          <button id="btn-confirm-has-change" style="
-            background: #2563EB; color: white; border: 2px solid #0F172A;
-            border-radius: 12px; padding: 10px 14px; font-size: 12px; font-weight: 800;
-            cursor: pointer; box-shadow: 3px 3px 0px #0F172A; display: flex; align-items: center; justify-content: center; gap: 8px;
-          ">
-            🔄 TKB CÓ ĐỔI / ĐỔI GIÁO VIÊN - NẠP LẠI FILE MỚI
-          </button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(overlay);
-
-    document.getElementById('btn-modal-close-x2').onclick = removeExistingModal;
-
-    document.getElementById('btn-confirm-no-change').onclick = () => {
-      executeGenerateAndOpenCsdl(curWeek, tkbConfig);
-    };
-
-    document.getElementById('btn-confirm-inspect-prev').onclick = () => {
-      removeExistingModal();
-      injectBridgeScript();
-      updateRobotBanner(`🔍 <strong>ROBOT CSDL:</strong> Đang lùi về Tuần ${prevWeek} trên CSDL để soi tiết PPCT thực tế...`);
-      window.dispatchEvent(new CustomEvent('CSDL_RUN_INSPECT_PREV_WEEK', {
-        detail: JSON.stringify({ prevWeekNum: prevWeek, targetWeekNum: curWeek })
-      }));
-    };
-
-    document.getElementById('btn-confirm-has-change').onclick = () => {
-      showFirstTimeTkbModal();
-    };
-  }
-
   // TỰ ĐỘNG BƠM FILE VÀO POPUP CSDL "NHẬP TỪ EXCEL" (2 KÊNH: DOM TRỰC TIẾP & POSTMESSAGE)
-  function autoInjectExcelToCsdlPopup(excelBlob, fileName) {
+  function autoInjectExcelToCsdlPopup(excelBlob, fileName, weekNum, teacherName) {
     let attempts = 0;
-    const maxAttempts = 30; // 15 giây
+    const maxAttempts = 40; // 20 giây
 
     const reader = new FileReader();
     reader.onload = function () {
       const arrayBuffer = reader.result;
+      let injected = false;
 
       const timer = setInterval(() => {
         attempts++;
-        const iframe = document.querySelector('iframe[src*="KhaiBaoLichBaoGiangTuExcel"], iframe[name*="KhaiBaoLichBaoGiangTuExcel"], iframe[id*="KhaiBaoLichBaoGiangTuExcel"]');
-        if (iframe) {
+        const iframe = document.querySelector('iframe[src*="KhaiBaoLichBaoGiangTuExcel" i], iframe[name*="KhaiBaoLichBaoGiangTuExcel" i], iframe[id*="KhaiBaoLichBaoGiangTuExcel" i], .rwWindowContent iframe');
+        if (iframe && !injected) {
           // Kênh 1: Gửi qua postMessage vào frame con
           if (iframe.contentWindow) {
             try {
@@ -598,8 +327,25 @@
                   const btnImport = iframeDoc.querySelector('input[type="submit"], input[value*="Nhập"], input[value*="Ghi"], button');
                   if (btnImport) {
                     btnImport.click();
+                    injected = true;
                     clearInterval(timer);
                     console.log('[CSDL Robot] Đã tự động nạp file vào popup CSDL qua DOM!');
+
+                    // Tự động đóng popup và bấm Ghi trên thanh công cụ sau khi nạp xong
+                    setTimeout(() => {
+                      try {
+                        const closeBtn = document.querySelector('.rwCloseButton, a.rwCloseButton, a[title*="Close"], a[title*="Đóng"], .rwControlButtons a');
+                        if (closeBtn) closeBtn.click();
+                      } catch (e) {}
+
+                      setTimeout(() => {
+                        const btnSave = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadToolBar1_i0_btnGhi') ||
+                                        Array.from(document.querySelectorAll('button, input[type="submit"], input[type="button"], a, .rtbItem'))
+                                          .find(b => (b.innerText || b.value || '').trim() === 'Ghi');
+                        if (btnSave) btnSave.click();
+                        showToastNotification(`🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN XONG TIẾT DẠY TUẦN ${weekNum} CHO GV ${teacherName || ''} VÀ LƯU THÀNH CÔNG!</strong>`);
+                      }, 1000);
+                    }, 1800);
                   }
                 }, 350);
                 return;
@@ -618,81 +364,247 @@
     reader.readAsArrayBuffer(excelBlob);
   }
 
-  // Thực thi sinh file Excel và mở CSDL
-  function executeGenerateAndOpenCsdl(targetWeek, tkbConfig, customPpctOverrides = null) {
-    try {
-      if (typeof window.LbgExcelEngine === 'undefined') {
-        alert('Lỗi: Bộ máy LbgExcelEngine chưa sẵn sàng.');
+  // Thông báo Toast góc màn hình siêu mượt (không dùng alert chặn màn hình)
+  function showToastNotification(message, isError = false) {
+    let toast = document.getElementById('csdl-robot-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'csdl-robot-toast';
+      toast.style.cssText = `
+        position: fixed; top: 24px; right: 24px; z-index: 99999999;
+        padding: 12px 18px; border-radius: 12px; font-weight: 700; font-size: 13px;
+        box-shadow: 4px 4px 0px #0F172A; border: 2px solid #0F172A;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        transition: all 0.3s ease; pointer-events: none; max-width: 440px; line-height: 1.4;
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.style.background = isError ? '#FEE2E2' : '#D1FAE5';
+    toast.style.color = isError ? '#991B1B' : '#065F46';
+    toast.innerHTML = message;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+    }, 4500);
+  }
+
+  // HỘP THOẠI CHỌN GIÁO VIÊN TỐI GIẢN & TÌM KIẾM SIÊU NHANH (CHO TẤT CẢ 60 GIÁO VIÊN)
+  function showTeacherPickerModal(onSelected) {
+    removeExistingModal();
+    const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
+    const teachers = Object.keys(schoolTkb).sort((a, b) => a.localeCompare(b, 'vi'));
+
+    const overlay = document.createElement('div');
+    overlay.id = 'csdl-tkb-dialog-modal';
+    overlay.style.cssText = `
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+      z-index: 9999999; display: flex; align-items: center; justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Segoe UI", Roboto, sans-serif;
+    `;
+
+    overlay.innerHTML = `
+      <div style="
+        background: #FFFDF5; width: 440px; max-width: 92vw; max-height: 85vh;
+        border: 2px solid #0F172A; border-radius: 16px;
+        box-shadow: 6px 6px 0px #0F172A; padding: 20px; color: #0F172A; display: flex; flex-direction: column;
+      ">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="${chrome.runtime.getURL('icons/icon32.png')}" style="width: 24px; height: 24px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #0F172A;">CHỌN GIÁO VIÊN (THCS ĐĂK Ơ)</h3>
+          </div>
+          <button id="btn-modal-close-x" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #64748B;">✕</button>
+        </div>
+
+        <input id="input-search-teacher-filter" type="text" placeholder="🔍 Gõ tìm nhanh tên Thầy/Cô (ví dụ: Huyền, Hùng, Chiều...)" style="
+          width: 100%; padding: 9px 12px; border: 2px solid #0F172A; border-radius: 10px;
+          font-size: 13px; font-weight: 600; margin-bottom: 10px; box-sizing: border-box; background: #FFF; outline: none;
+        ">
+
+        <div id="list-teachers-container" style="
+          flex: 1; overflow-y: auto; max-height: 320px; border: 2px solid #CBD5E1; border-radius: 10px;
+          background: white; padding: 4px; display: flex; flex-direction: column; gap: 3px;
+        ">
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.getElementById('btn-modal-close-x').onclick = removeExistingModal;
+
+    const container = document.getElementById('list-teachers-container');
+    const filterInput = document.getElementById('input-search-teacher-filter');
+
+    function renderList(query) {
+      container.innerHTML = '';
+      const q = (query || '').toLowerCase().trim();
+      const filtered = teachers.filter(t => !q || t.toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="padding: 12px; text-align: center; color: #64748B; font-size: 12px;">Không tìm thấy giáo viên nào.</div>';
         return;
       }
 
-      let activeConfig = JSON.parse(JSON.stringify(tkbConfig));
-      if (customPpctOverrides) {
-        for (const item of activeConfig.lessons) {
-          const key = (item.mon || '').toLowerCase() + '___' + (item.lop || '').toLowerCase();
-          if (customPpctOverrides[key] && customPpctOverrides[key].maxPpct) {
-            item.basePpct = customPpctOverrides[key].maxPpct + 1;
-            item.step = customPpctOverrides[key].count || item.step || 1;
-          }
-        }
-        activeConfig.baseWeek = targetWeek;
-      }
-
-      const excelBlob = window.LbgExcelEngine.generateWeekExcelBlob(targetWeek, activeConfig, window.TEMPLATE_LBG_BASE64);
-      const fileName = `LichBaoGiang_Tuan${targetWeek}_${(activeConfig.teacherName || 'GiaoVien').replace(/\s+/g, '')}.xlsx`;
-
-      // 1. Tải file về máy làm bản lưu dự phòng
-      window.LbgExcelEngine.downloadBlob(excelBlob, fileName);
-
-      // 2. Kích hoạt mở popup 'Nhập từ Excel' trên trang CSDL
-      triggerCsdlOpenExcelImport();
-
-      // 3. Tự động bơm file vào popup nếu trình duyệt hỗ trợ
-      autoInjectExcelToCsdlPopup(excelBlob, fileName);
-
-      removeExistingModal();
-
-      alert(`🎉 ĐÃ SINH XONG FILE EXCEL LỊCH BÁO GIẢNG TUẦN ${targetWeek}!\n(File đã tải về máy: ${fileName})\n\nCửa sổ 'Nhập từ Excel' trên CSDL đã được mở sẵn.\n👉 Tiện ích đang tự động nạp file vào hệ thống CSDL giúp Thầy/Cô!`);
-    } catch (err) {
-      alert('⚠️ Lỗi khi sinh file Excel: ' + (err.message || err));
+      filtered.forEach(tName => {
+        const item = schoolTkb[tName];
+        const row = document.createElement('div');
+        row.style.cssText = `
+          padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex;
+          justify-content: space-between; align-items: center; transition: all 0.15s ease;
+        `;
+        row.innerHTML = `
+          <div style="font-weight: 700; font-size: 13px; color: #0F172A;">${tName}</div>
+          <div style="font-size: 11px; font-weight: 600; color: #2563EB; background: #EFF6FF; padding: 2px 8px; border-radius: 6px;">${item.totalLessons} tiết/tuần</div>
+        `;
+        row.onmouseenter = () => { row.style.background = '#F1F5F9'; };
+        row.onmouseleave = () => { row.style.background = 'transparent'; };
+        row.onclick = () => {
+          setActiveTeacher(tName, () => {
+            updateFloatingBarTeacherText(tName);
+            removeExistingModal();
+            showToastNotification(`👤 Đã chọn giáo viên: <strong>${tName}</strong> (${item.totalLessons} tiết/tuần)`);
+            if (onSelected) onSelected(tName);
+          });
+        };
+        container.appendChild(row);
+      });
     }
+
+    renderList('');
+    filterInput.focus();
+    filterInput.oninput = () => renderList(filterInput.value);
   }
 
-  // LẮNG NGHE KẾT QUẢ SOI TUẦN CŨ TỪ page_bridge.js
-  window.addEventListener('CSDL_INSPECT_RESULT', (e) => {
-    let res = e.detail;
-    if (typeof res === 'string') {
-      try { res = JSON.parse(res); } catch (err) { res = null; }
-    }
-    if (!res) return;
+  // 1-CLICK TỰ ĐỘNG ĐIỀN LỊCH BÁO GIẢNG (QUY TRÌNH SIÊU ĐƠN GIẢN HÓA)
+  function runOneClickFillLbg() {
+    getActiveTeacher((teacherName) => {
+      const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
 
-    if (res.success && res.inspected && Object.keys(res.inspected).length > 0) {
-      getStoredTkb((tkbConfig) => {
-        if (!tkbConfig) tkbConfig = window.LbgExcelEngine.getDefaultTkbConfig();
-        const found = Object.keys(res.inspected).length;
-        if (confirm(`🎉 ĐÃ SOI THÀNH CÔNG TUẦN ${res.prevWeekNum}!\nTìm thấy số tiết thực tế của ${found} môn/lớp.\n\nThầy/Cô có muốn sinh file và nạp ngay cho Tuần ${res.targetWeekNum} với số tiết thực tế này không?`)) {
-          executeGenerateAndOpenCsdl(res.targetWeekNum, tkbConfig, res.inspected);
-        } else {
-          showWeekFillModal(tkbConfig);
-        }
-      });
-    } else {
-      alert(`⚠️ Không tìm thấy dữ liệu trên CSDL ở Tuần ${res.prevWeekNum || 'cũ'} (có thể tuần trước chưa được lên lịch).\n\nHệ thống sẽ chuyển về nạp tự động theo Thời khóa biểu Excel chuẩn!`);
-      getStoredTkb((tkbConfig) => {
-        showWeekFillModal(tkbConfig || window.LbgExcelEngine.getDefaultTkbConfig());
-      });
-    }
-  });
-
-  function handleQuickTkbButtonClick() {
-    getStoredTkb((savedCfg) => {
-      if (!savedCfg || !savedCfg.hasTkb) {
-        showFirstTimeTkbModal();
-      } else {
-        showWeekFillModal(savedCfg);
+      if (!teacherName || !schoolTkb[teacherName]) {
+        showTeacherPickerModal((selectedName) => {
+          runOneClickFillLbgForTeacher(selectedName);
+        });
+        return;
       }
+
+      runOneClickFillLbgForTeacher(teacherName);
     });
   }
+
+  function runOneClickFillLbgForTeacher(teacherName) {
+    const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
+    const teacherTkb = schoolTkb[teacherName];
+
+    if (!teacherTkb || !teacherTkb.lessons || teacherTkb.lessons.length === 0) {
+      showToastNotification(`⚠️ Giáo viên "${teacherName}" chưa có dữ liệu tiết dạy nào trong Thời khóa biểu.`, true);
+      return;
+    }
+
+    const curWeek = getCurrentWeekNumber();
+    showToastNotification(`🚀 <strong>Đang tự động nạp Lịch Báo Giảng Tuần ${curWeek} cho GV ${teacherName} (${teacherTkb.lessons.length} tiết)...</strong>`);
+
+    try {
+      if (typeof window.LbgExcelEngine === 'undefined') {
+        throw new Error('Bộ máy Excel chưa sẵn sàng. Vui lòng F5 lại trang.');
+      }
+
+      // Sinh file Excel trong bộ nhớ (không tải về ổ cứng)
+      const excelBlob = window.LbgExcelEngine.generateWeekExcelBlob(curWeek, teacherTkb, window.TEMPLATE_LBG_BASE64);
+      const safeTeacherName = teacherName.replace(/\s+/g, '');
+      const fileName = `LichBaoGiang_Tuan${curWeek}_${safeTeacherName}.xlsx`;
+
+      // 1. Kích hoạt mở popup 'Nhập từ Excel' trên trang CSDL
+      triggerCsdlOpenExcelImport();
+
+      // 2. Tự động bơm file vào popup và tự động bấm Ghi sau khi nhập
+      autoInjectExcelToCsdlPopup(excelBlob, fileName, curWeek, teacherName);
+    } catch (err) {
+      showToastNotification('⚠️ Lỗi sinh file Excel: ' + (err.message || err), true);
+    }
+  }
+
+  // HỘP THOẠI NẠP FILE TKB MỚI (CHỈ DÙNG KHI NHÀ TRƯỜNG ĐỔI TOÀN BỘ FILE TKB)
+  function showUploadNewTkbModal() {
+    removeExistingModal();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'csdl-tkb-dialog-modal';
+    overlay.style.cssText = `
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+      z-index: 9999999; display: flex; align-items: center; justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Segoe UI", Roboto, sans-serif;
+    `;
+
+    overlay.innerHTML = `
+      <div style="
+        background: #FFFDF5; width: 460px; max-width: 92vw;
+        border: 2px solid #0F172A; border-radius: 16px;
+        box-shadow: 6px 6px 0px #0F172A; padding: 22px; color: #0F172A;
+      ">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="${chrome.runtime.getURL('icons/icon32.png')}" style="width: 26px; height: 26px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #0F172A;">NẠP FILE TKB MỚI CỦA TRƯỜNG</h3>
+          </div>
+          <button id="btn-modal-close-x" style="background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #64748B;">✕</button>
+        </div>
+
+        <div style="font-size: 13px; line-height: 1.5; color: #334155; margin-bottom: 14px;">
+          Tiện ích đã tích hợp sẵn TKB toàn trường (60 GV). Nếu nhà trường đổi TKB mới, Thầy/Cô có thể tải file Excel/CSV mới lên đây:
+        </div>
+
+        <button id="btn-upload-new-tkb-file" style="
+          width: 100%; background: #2563EB; color: white; border: 2px solid #0F172A;
+          border-radius: 10px; padding: 11px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 2px 2px 0px #0F172A;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+        ">📁 CHỌN FILE TKB MỚI (.XLSX, .CSV)</button>
+        <input type="file" id="input-new-tkb-file" accept=".xlsx,.xls,.csv,.txt" style="display: none;">
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.getElementById('btn-modal-close-x').onclick = removeExistingModal;
+
+    const fileInp = document.getElementById('input-new-tkb-file');
+    document.getElementById('btn-upload-new-tkb-file').onclick = () => fileInp.click();
+
+    fileInp.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      getActiveTeacher((curTeacher) => {
+        window.LbgExcelEngine.parseTkbExcel(file, curTeacher).then((parsedCfg) => {
+          if (parsedCfg.allTeachers) {
+            window.DEFAULT_SCHOOL_TKB = parsedCfg.allTeachers;
+          }
+          removeExistingModal();
+          showToastNotification(`🎉 Đã nạp thành công file Thời khóa biểu mới!`);
+          showTeacherPickerModal();
+        }).catch((err) => {
+          showToastNotification('⚠️ Lỗi đọc file TKB: ' + (err.message || err), true);
+        });
+      });
+    };
+  }
+
+  function updateFloatingBarTeacherText(tName) {
+    const btn = document.getElementById('csdl-btn-teacher-select');
+    if (!btn) return;
+    const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
+    const tData = schoolTkb[tName];
+    const lessonCount = tData ? tData.totalLessons : 0;
+    btn.innerHTML = `👤 ${tName || 'Chọn GV'} (${lessonCount}t) ▾`;
+    btn.title = `Giáo viên: ${tName || 'Chưa chọn'} (${lessonCount} tiết/tuần). Bấm để đổi giáo viên.`;
+  }
+
+  // ===========================================================================
+  // THANH CÔNG CỤ NỔI SIÊU GỌN - 1-CLICK TỰ ĐIỀN & HOÀN THÀNH
+  // ===========================================================================
 
   function injectDoneShortcutButton() {
     if (document.getElementById('csdl-quick-confirm-bar')) return;
@@ -723,20 +635,40 @@
           <span style="color: #2563EB;">THCS Đăk Ơ</span>
         </div>
       </div>
-      <button id="csdl-btn-quick-tkb" style="
-        background: #2563EB;
-        color: white;
+
+      <!-- NÚT CHỌN GIÁO VIÊN -->
+      <button id="csdl-btn-teacher-select" style="
+        background: #FFF;
+        color: #0F172A;
         border: 2px solid #0F172A;
         border-radius: 10px;
-        padding: 8px 12px;
+        padding: 7px 10px;
         font-weight: 800;
         font-size: 12px;
         cursor: pointer;
         box-shadow: 2px 2px 0px #0F172A;
         display: flex;
         align-items: center;
-        gap: 5px;
-      ">⚡ Nạp TKB & PPCT Tuần Này</button>
+        gap: 4px;
+      ">👤 Chọn GV ▾</button>
+
+      <!-- NÚT 1: 1-CLICK TỰ ĐỘNG ĐIỀN LỊCH BÁO GIẢNG (100% TỰ ĐỘNG) -->
+      <button id="csdl-btn-quick-tkb" style="
+        background: #2563EB;
+        color: white;
+        border: 2px solid #0F172A;
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-weight: 800;
+        font-size: 12.5px;
+        cursor: pointer;
+        box-shadow: 2px 2px 0px #0F172A;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      ">⚡ Tự Động Điền Lịch Báo Giảng</button>
+
+      <!-- NÚT 2: XÁC NHẬN HOÀN THÀNH (0.5S) -->
       <button id="csdl-btn-quick-confirm" style="
         background: #10B981;
         color: white;
@@ -751,17 +683,45 @@
         align-items: center;
         gap: 5px;
       ">✅ Hoàn Thành Tuần (0.5s)</button>
+
+      <!-- NÚT 3: TẢI FILE TKB MỚI (TÙY CHỌN PHỤ) -->
+      <button id="csdl-btn-more-tkb" title="Tải lên file Thời khóa biểu mới của nhà trường nếu có thay đổi" style="
+        background: #F8FAFC;
+        color: #64748B;
+        border: 1.5px solid #CBD5E1;
+        border-radius: 8px;
+        padding: 6px 8px;
+        font-weight: 700;
+        font-size: 11px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      ">📁 TKB mới</button>
     `;
 
     document.body.appendChild(bar);
+
+    // Cập nhật tên giáo viên đang chọn lên nút
+    getActiveTeacher((tName) => {
+      updateFloatingBarTeacherText(tName);
+    });
+
+    document.getElementById('csdl-btn-teacher-select').onclick = () => {
+      showTeacherPickerModal();
+    };
+
+    document.getElementById('csdl-btn-quick-tkb').onclick = () => {
+      runOneClickFillLbg();
+    };
 
     document.getElementById('csdl-btn-quick-confirm').onclick = () => {
       injectBridgeScript();
       window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
     };
 
-    document.getElementById('csdl-btn-quick-tkb').onclick = () => {
-      handleQuickTkbButtonClick();
+    document.getElementById('csdl-btn-more-tkb').onclick = () => {
+      showUploadNewTkbModal();
     };
   }
 
@@ -774,7 +734,7 @@
       window.dispatchEvent(new CustomEvent('CSDL_RUN_CONFIRM_DONE'));
       sendResponse({ success: true });
     } else if (request.action === 'AUTO_FILL_TKB') {
-      handleQuickTkbButtonClick();
+      runOneClickFillLbg();
       sendResponse({ success: true });
     }
   });
@@ -783,16 +743,12 @@
     const url = window.location.href.toLowerCase();
     if (url.includes('login.aspx') || document.getElementById('ContentPlaceHolder1_ctl00_tbU') || document.querySelector('input[id*="tbU"]')) {
       getTeacherConfig((cfg) => {
-        setTimeout(() => {
-          triggerAutoLogin(cfg);
-        }, 600);
+        triggerAutoLogin(cfg);
       });
     }
 
-    if (url.includes('3.6.2') || url.includes('lichbaogiang') || document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadGrid1')) {
-      setTimeout(() => {
-        injectDoneShortcutButton();
-      }, 1000);
+    if (url.includes('khaibaolichbaogiang.aspx') || document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadGrid1')) {
+      injectDoneShortcutButton();
     }
   }
 
@@ -801,4 +757,18 @@
   } else {
     checkAndInit();
   }
+
+  let lastUrl = location.href;
+  new MutationObserver(() => {
+    const url = location.href;
+    if (url !== lastUrl) {
+      lastUrl = url;
+      checkAndInit();
+    }
+    const isLbgPage = url.toLowerCase().includes('khaibaolichbaogiang.aspx') || document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadGrid1');
+    if (isLbgPage && !document.getElementById('csdl-quick-confirm-bar')) {
+      injectDoneShortcutButton();
+    }
+  }).observe(document, { subtree: true, childList: true });
+
 })();

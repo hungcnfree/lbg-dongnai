@@ -276,36 +276,103 @@
     }
   }
 
-  // Xác nhận hoàn thành tuần 0.5s
+  // Kiểm tra xem dòng trong bảng RadGrid có phải là tiết dạy thực tế không (có môn, lớp, ppct, kiểu, bài dạy)
+  function isRowActualLesson(row) {
+    if (!row) return false;
+
+    // 1. Kiểm tra qua các input / dropdown Telerik trong hàng
+    var monInp = row.querySelector('input[id*="rcbMonHoc_Input"], input[name*="MonHoc"]');
+    var lopInp = row.querySelector('input[id*="rcbLopHoc_Input"], input[name*="LopHoc"]');
+    var kieuInp = row.querySelector('input[id*="rcbKieuGiangDay_Input"], input[name*="KieuGiangDay"]');
+    var ppctInp = row.querySelector('input[id*="tbTietPPCT"], input[name*="TietPPCT"], input[id*="tbSoTietTheoPPCT"]');
+    var baiDayInp = row.querySelector('input[id*="tbTenBaiDay"], input[name*="TenBaiDay"], input[id*="tbBaiDay"], textarea[id*="BaiDay"]');
+
+    var mon = monInp ? (monInp.value || '').trim() : '';
+    var lop = lopInp ? (lopInp.value || '').trim() : '';
+    var kieu = kieuInp ? (kieuInp.value || '').trim() : '';
+    var ppct = ppctInp ? (ppctInp.value || '').trim() : '';
+    var baiDay = baiDayInp ? (baiDayInp.value || '').trim() : '';
+
+    if (/^--|^chọn/i.test(mon)) mon = '';
+    if (/^--|^chọn/i.test(lop)) lop = '';
+    if (/^--|^chọn/i.test(kieu)) kieu = '';
+
+    if (mon || lop || ppct || baiDay || (kieu && /lên lớp|dạy/i.test(kieu))) {
+      return true;
+    }
+
+    // 2. Kiểm tra text trong các ô td (nếu hiển thị dạng text/nhãn)
+    var tds = row.querySelectorAll('td');
+    if (tds.length >= 7) {
+      for (var colIdx = 4; colIdx <= Math.min(tds.length - 2, 8); colIdx++) {
+        var txt = (tds[colIdx].innerText || '').replace(/[\r\n\t]/g, '').trim();
+        if (txt && txt !== '&nbsp;' && !/^--|^chọn/i.test(txt)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  // Xác nhận hoàn thành tuần: CHỈ ĐIỀN VỚI NHỮNG TIẾT CÓ DẠY (BỎ QUA VÀ XÓA CÁC TIẾT TRỐNG)
   function runConfirmDone() {
     try {
       var rows = document.querySelectorAll('#ctl00_ContentPlaceHolder1_ctl00_RadGrid1_ctl00 > tbody > tr');
-      var count = 0;
+      var doneCount = 0;
+      var clearedCount = 0;
+
       for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
-        if (row.innerText.trim().length > 15) {
-          var input = row.querySelector('input[id*="rcbTrangThaiGV_Input"]');
-          if (input && typeof window.$find === 'function') {
-            var comboId = input.id.replace(/_Input$/, '');
-            var combo = window.$find(comboId);
-            if (combo) {
-              var itDone = combo.findItemByText('Hoàn thành');
-              if (itDone) {
-                itDone.select();
-                count++;
-              }
+        if (!row) continue;
+
+        var input = row.querySelector('input[id*="rcbTrangThaiGV_Input"]');
+        if (!input || typeof window.$find !== 'function') continue;
+
+        var comboId = input.id.replace(/_Input$/, '');
+        var combo = window.$find(comboId);
+        if (!combo) continue;
+
+        var hasLesson = isRowActualLesson(row);
+
+        if (hasLesson) {
+          // TIẾT CÓ DẠY: Chọn "Hoàn thành"
+          var itDone = combo.findItemByText('Hoàn thành');
+          if (itDone) {
+            itDone.select();
+            doneCount++;
+          }
+        } else {
+          // TIẾT TRỐNG (KHÔNG DẠY): Nếu đang bị chọn "Hoàn thành" thì xóa về trạng thái trống!
+          var curText = (combo.get_text() || input.value || '').trim();
+          if (curText === 'Hoàn thành') {
+            var itEmpty = combo.findItemByText('') || combo.findItemByValue('') || combo.findItemByText('-- Chọn --') || combo.findItemByText('--Chọn--');
+            if (itEmpty) {
+              itEmpty.select();
+            } else {
+              combo.clearSelection();
+              if (input) input.value = '';
             }
+            clearedCount++;
           }
         }
       }
 
       setTimeout(function () {
-        var btnSave = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadToolBar1_i0_btnGhi');
+        var btnSave = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadToolBar1_i0_btnGhi') ||
+                      Array.from(document.querySelectorAll('button, input[type="submit"], input[type="button"], a, .rtbItem'))
+                        .find(function (b) { return (b.innerText || b.value || '').trim() === 'Ghi'; });
+
+        var msg = '⚡ ĐÃ XÁC NHẬN "HOÀN THÀNH" CHO ' + doneCount + ' TIẾT CÓ LÊN LỚP!';
+        if (clearedCount > 0) {
+          msg += '\n(Đã tự động xóa nhãn "Hoàn thành" ở ' + clearedCount + ' tiết trống không dạy).';
+        }
+
         if (btnSave) {
           btnSave.click();
-          alert('⚡ ĐÃ HOÀN THÀNH ' + count + ' TIẾT DẠY VÀ BẤM GHI XONG TRONG 0.5 GIÂY!');
+          alert(msg + '\nVÀ BẤM GHI XONG TRONG 0.5 GIÂY!');
         } else {
-          alert('✅ Đã chọn Hoàn thành cho ' + count + ' tiết. Thầy/Cô vui lòng ấn nút GHI trên thanh công cụ nhé!');
+          alert(msg + '\nThầy/Cô vui lòng ấn nút GHI trên thanh công cụ nhé!');
         }
       }, 300);
     } catch (e) {
@@ -313,35 +380,62 @@
     }
   }
 
-  // Tự động lấy dữ liệu Thời khóa biểu nạp vào Lịch báo giảng
-  function runAutoFillFromTKB() {
+  // Tự động lấy dữ liệu Thời khóa biểu nạp vào Lịch báo giảng & Tự động bấm Ghi
+  async function runAutoFillFromTKB() {
     try {
+      notify('⏳ Đang kết nối Thời khóa biểu trên hệ thống CSDL...', false);
+
+      var origConfirm = window.confirm;
+      window.confirm = function () { return true; };
+
       var allBtns = Array.from(document.querySelectorAll('button, a, .rtbItem, span'));
       var tinhNangBtn = allBtns.find(function (el) {
         return (el.innerText || '').trim() === 'Tính năng mở rộng';
       });
 
-      if (tinhNangBtn) {
-        tinhNangBtn.click();
-        setTimeout(function () {
-          var menuItems = Array.from(document.querySelectorAll('.rmText, .rtbText, a, span, li'));
-          var tkbOption = menuItems.find(function (el) {
-            var t = (el.innerText || '').trim();
-            return t.includes('Lấy dữ liệu từ TKB') || t.includes('Tạo tự động LBG');
-          });
+      if (!tinhNangBtn) {
+        window.confirm = origConfirm;
+        notify('⚠️ Thầy/Cô vui lòng mở trang mục 3.6.2 Khai báo lịch báo giảng trước nhé!', false, true);
+        return;
+      }
 
-          if (tkbOption) {
-            tkbOption.click();
-            alert('🎉 ĐÃ TỰ ĐỘNG NẠP LỊCH BÁO GIẢNG TỪ THỜI KHÓA BIỂU THÀNH CÔNG!\nThầy/Cô vui lòng kiểm tra tiết và bấm nút GHI trên thanh công cụ nhé!');
-          } else {
-            alert('⚠️ Không tìm thấy mục "Lấy dữ liệu từ TKB" trong menu Tính năng mở rộng.');
-          }
-        }, 350);
+      tinhNangBtn.click();
+      await sleep(350);
+
+      var menuItems = Array.from(document.querySelectorAll('.rmText, .rtbText, a, span, li'));
+      var tkbOption = menuItems.find(function (el) {
+        var t = (el.innerText || '').trim();
+        return t.includes('Lấy dữ liệu từ TKB') || t.includes('Tạo tự động LBG') || t.includes('Lấy TKB');
+      });
+
+      if (!tkbOption) {
+        window.confirm = origConfirm;
+        notify('⚠️ Không tìm thấy mục "Lấy dữ liệu từ TKB" trong menu Tính năng mở rộng.', false, true);
+        window.dispatchEvent(new CustomEvent('CSDL_TRIGGER_EXCEL_FALLBACK'));
+        return;
+      }
+
+      notify('⏳ Đang lấy dữ liệu TKB (CSDL tự động điền Tiết theo PPCT)...', false);
+      tkbOption.click();
+
+      // Chờ CSDL xử lý AJAX đổ dữ liệu vào bảng
+      await waitForAjaxPostBack(1500, 8000);
+      await sleep(1000);
+      window.confirm = origConfirm;
+
+      // Tự động bấm nút Ghi trên thanh công cụ
+      var btnSave = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadToolBar1_i0_btnGhi') ||
+                    Array.from(document.querySelectorAll('button, input[type="submit"], input[type="button"], a, .rtbItem'))
+                      .find(function (b) { return (b.innerText || b.value || '').trim() === 'Ghi'; });
+
+      if (btnSave) {
+        btnSave.click();
+        notify('🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN TKB & TIẾT PPCT VÀ BẤM GHI THÀNH CÔNG!</strong>', true);
       } else {
-        alert('⚠️ Thầy/Cô vui lòng mở trang mục 3.6.2 Khai báo lịch báo giảng trước nhé!');
+        notify('🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN XONG TKB & TIẾT PPCT!</strong> Thầy/Cô vui lòng bấm nút GHI.', true);
       }
     } catch (e) {
-      alert('⚠️ Lỗi thao tác: ' + e.message);
+      notify('⚠️ Lỗi thao tác: ' + e.message, false, true);
     }
   }
 

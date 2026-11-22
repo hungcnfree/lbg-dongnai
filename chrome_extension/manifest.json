@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Trợ Lý CSDL Giáo Dục Toàn Tỉnh Đồng Nai",
-  "version": "5.3.4",
-  "description": "Tự động điền Cấp học, Xã/Phường, Trường, Đăng nhập CSDL và nạp Lịch báo giảng từ file Excel Thời khóa biểu",
+  "name": "Trợ Lý CSDL - THCS Đăk Ơ",
+  "version": "5.4.0",
+  "description": "Tiện ích tự động điền đăng nhập và hoàn thành lịch báo giảng 1-click (Đa định dạng TKB Siêu Thông Minh) dành riêng cho giáo viên trường THCS Đăk Ơ",
   "author": "Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai",
   "permissions": [
     "storage",
@@ -15,7 +15,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Trợ Lý CSDL Toàn Tỉnh v5.3.4",
+    "default_title": "Trợ Lý CSDL THCS Đăk Ơ v5.4.0",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
@@ -31,6 +31,7 @@
       "js": [
         "xlsx.mini.min.js",
         "template_lbg_base64.js",
+        "default_school_tkb.js",
         "lbg_excel_engine.js",
         "content.js"
       ],
@@ -42,6 +43,7 @@
     {
       "resources": [
         "page_bridge.js",
+        "default_school_tkb.js",
         "xlsx.mini.min.js",
         "template_lbg_base64.js",
         "lbg_excel_engine.js",

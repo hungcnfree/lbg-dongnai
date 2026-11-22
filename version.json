@@ -1,20 +1,19 @@
 {
-  "version": "5.3.4",
-  "versionCode": 534,
-  "releaseDate": "18/11/2026",
-  "title": "Trợ Lý CSDL v5.3.4 - Bộ Giải Mã Thời Khóa Biểu Toàn Trường & Tự Động Nạp CSDL",
+  "version": "5.4.0",
+  "versionCode": 540,
+  "releaseDate": "23/11/2026",
+  "title": "Trợ Lý CSDL v5.4.0 - Tự Động Điền Lịch Báo Giảng 1-Click Toàn Trường THCS Đăk Ơ",
   "changelog": [
-    "Hỗ trợ giải mã ma trận Thời khóa biểu thực tế của nhà trường (tệp toàn trường 58 giáo viên hoặc tệp riêng).",
-    "Tự động nhận diện giáo viên trong bảng TKB trường học và trích xuất chuẩn 100% tiết dạy.",
-    "Bổ sung tính năng Dán trực tiếp văn bản TKB (Paste Text) cực kỳ tiện lợi không cần lưu file.",
-    "Tự động bơm file vào cửa sổ popup 'Nhập từ Excel' của CSDL Đồng Nai bằng DataTransfer.",
-    "Tự động hoàn thành tuần và bấm Ghi trong 0.5s."
+    "Tự động điền 1-Click Lịch Báo Giảng toàn trường, không cần hỏi han hay thao tác thủ công.",
+    "Tích hợp sẵn Thời khóa biểu của tất cả 60 giáo viên trường THCS Đăk Ơ.",
+    "Tự động nhận diện giáo viên đang đăng nhập và nạp đúng thời khóa biểu cá nhân.",
+    "Bộ chọn giáo viên nhanh với thanh tìm kiếm trực quan trên thanh công cụ nổi.",
+    "Khắc phục triệt để lỗi bảng trắng trên tuần 13 và các tuần tiếp theo.",
+    "Xác nhận Hoàn thành tuần trong 0.5s chỉ đánh dấu các tiết có dạy, làm sạch tiết trống."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.4.zip",
-    "provinceZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.3.4.zip",
-    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.2.zip",
-    "provinceZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip",
+    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.4.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"
   }
 }

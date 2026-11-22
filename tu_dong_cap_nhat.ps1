@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $versionUrl = "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json?t=" + [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 $tempZip = Join-Path $env:TEMP "csdl_dako_update.zip"
@@ -18,14 +18,14 @@ try {
     $latestVer = $vData.version
     $zipUrl = $vData.downloadUrls.provinceZip
     if (-not $zipUrl) {
-        $zipUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v" + $latestVer + ".zip"
+        $zipUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v" + $latestVer + ".zip"
     }
     Write-Host "[*] Phát hiện phiên bản mới: v$latestVer" -ForegroundColor Green
     Write-Host "[*] Đang tải gói tiện ích: $zipUrl" -ForegroundColor Cyan
     Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing
 } catch {
     Write-Host "[!] Đang thử tải gói cập nhật dự phòng..." -ForegroundColor Yellow
-    $fallbackUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_TOAN_TINH_DONG_NAI_v5.2.zip"
+    $fallbackUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip"
     Invoke-WebRequest -Uri $fallbackUrl -OutFile $tempZip -UseBasicParsing
 }
 
