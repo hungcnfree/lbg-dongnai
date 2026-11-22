@@ -1,4 +1,4 @@
-# 🤖 Trợ Lý Tự Động CSDL & Lịch Báo Giảng (v5.4.0)
+# 🤖 Trợ Lý Tự Động CSDL & Lịch Báo Giảng (v5.4.1)
 
 > **Hệ sinh thái tự động hóa nghiệp vụ Lịch báo giảng và CSDL Giáo dục gồm:**  
 > 1. **Kỹ năng Antigravity AI**: Tự động điền phôi Lịch báo giảng tuần chỉ với 2 tệp đầu vào trong 3 giây.  
@@ -8,8 +8,8 @@
 🌐 **Trang web hướng dẫn trực tuyến (GitHub Pages):**  
 👉 **[https://hungcnfree.github.io/lbg-dongnai/](https://hungcnfree.github.io/lbg-dongnai/)**
 
-📦 **Tải trực tiếp gói tiện ích đã đóng gói (ZIP ~229KB):**  
-👉 **[Tải file TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip](https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip)**
+📦 **Tải trực tiếp gói tiện ích đã đóng gói (ZIP ~230KB):**  
+👉 **[Tải file TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip](https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip)**
 
 💬 **Nhóm Zalo AI chia sẻ & hỗ trợ giáo viên:**  
 👉 **[https://zalo.me/g/2vhbtmsqdr06gyfiuru8](https://zalo.me/g/2vhbtmsqdr06gyfiuru8)**
@@ -35,7 +35,7 @@
 
 ---
 
-## 🌟 TÍNH NĂNG VƯỢT TRỘI v5.4.0 (TIỆN ÍCH CHROME)
+## 🌟 TÍNH NĂNG VƯỢT TRỘI v5.4.1 (TIỆN ÍCH CHROME)
 
 1. **Tự động điền 1-Click Lịch Báo Giảng:**
    - Hệ thống tự nhận biết tuần hiện tại (như Tuần 11, 12, 13...).
@@ -69,7 +69,7 @@ lbg-dongnai/
 ├── infographic_huong_dan_lbg.png     # Ảnh Infographic hướng dẫn 3 bước điền lịch tuần
 ├── infographic_huong_dan_lbg.html    # Bản web tương tác của Infographic
 ├── version.json                      # Cấu hình kiểm tra cập nhật tự động
-├── TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip # Gói tiện ích cài đặt v5.4.0
+├── TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip # Gói tiện ích cài đặt v5.4.1
 ├── skills/                           # Kỹ năng dành cho Antigravity AI Assistant
 │   └── tu-dong-dien-lich-bao-giang/  # Kỹ năng tự động điền lịch tuần từ 2 files
 │       ├── SKILL.md                  # Hướng dẫn chi tiết cho Agent

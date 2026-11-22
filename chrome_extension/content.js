@@ -1,41 +1,36 @@
-// content.js - Trợ Lý CSDL v5.4.0 (Giao Diện Tối Giản 2 Nút & Di Chuyển Tự Do)
+// content.js - Trợ Lý CSDL v5.4.1 (Giao Diện Tối Giản 2 Nút & Di Chuyển Tự Do)
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
 (function () {
   // NẾU ĐANG CHẠY BÊN TRONG IFRAME "NHẬP TỪ EXCEL" (KhaiBaoLichBaoGiangTuExcel)
+  // v5.4.1: trang cha (cùng tên miền) thao tác trực tiếp vào iframe này. Listener dưới đây chỉ là
+  // đường dự phòng, khi trình duyệt không cho trang cha chạm vào iframe.
   if (window.location.href.toLowerCase().includes('khaibaolichbaogiangtuexcel')) {
-    console.log('[CSDL Robot] Sẵn sàng nhận lệnh nạp file bên trong popup Nhập từ Excel!');
+    console.log('[CSDL Robot] Sẵn sàng (dự phòng) bên trong cửa sổ Nhập từ Excel.');
     window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'CSDL_AUTO_IMPORT_EXCEL') {
-        try {
-          const { arrayBuffer, fileName } = event.data;
-          const fileObj = new File([arrayBuffer], fileName, {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          });
-          const fileInput = document.querySelector('input[type="file"]');
-          if (fileInput) {
-            const dt = new DataTransfer();
-            dt.items.add(fileObj);
-            fileInput.files = dt.files;
-            fileInput.dispatchEvent(new Event('change', { bubbles: true }));
-
-            setTimeout(() => {
-              const btnImport = document.querySelector('input[type="submit"], input[value*="Nhập"], input[value*="Ghi"], button');
-              if (btnImport) {
-                btnImport.click();
-                console.log('[CSDL Robot] Đã tự động bấm nút Nhập dữ liệu trong iframe!');
-              }
-            }, 350);
-          }
-        } catch (err) {
-          console.warn('[CSDL Robot] Lỗi nạp trong iframe:', err);
-        }
+      if (!event.data || event.data.type !== 'CSDL_AUTO_IMPORT_EXCEL') return;
+      try {
+        const { arrayBuffer, fileName } = event.data;
+        const fileInput = document.querySelector('input[type="file"]');
+        if (!fileInput) return;
+        const dt = new DataTransfer();
+        dt.items.add(new File([arrayBuffer], fileName, {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        }));
+        fileInput.files = dt.files;
+        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+        setTimeout(() => {
+          const btn = pickImportButton(document);
+          if (btn) btn.click();
+        }, 1500);
+      } catch (err) {
+        console.warn('[CSDL Robot] Lỗi nạp trong iframe:', err);
       }
     });
     return; // Dừng, không khởi tạo thanh công cụ cha trong iframe
   }
 
-  console.log('[CSDL Robot v5.4.0] Đang khởi động tiện ích trên trang chính...');
+  console.log('[CSDL Robot v5.4.1] Đang khởi động tiện ích trên trang chính...');
 
   function injectBridgeScript() {
     if (document.getElementById('csdl-bridge-script')) return;
@@ -51,6 +46,16 @@
   }
 
   injectBridgeScript();
+
+  // v5.4.1: Đồng bộ dữ liệu TKB mới nhất từ 1-Click Update nếu có
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get(['updated_school_tkb'], (res) => {
+      if (res && res.updated_school_tkb) {
+        window.DEFAULT_SCHOOL_TKB = res.updated_school_tkb;
+        console.log('[CSDL Robot v5.4.1] Đã nạp Thời khóa biểu cập nhật mới nhất từ bộ nhớ.');
+      }
+    });
+  }
 
   function getDefaultConfig() {
     return {
@@ -122,7 +127,7 @@
       updateRobotBanner(`
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong style="color: #065F46; font-size: 13.5px;">🎉 ROBOT ĐÃ TỰ ĐIỀN XONG MỌI THỨ!</strong>
-          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.4.0</span>
+          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.4.1</span>
         </div>
         <div style="font-size: 12px; color: #0F172A; margin-bottom: 6px;">
           ${detail.message}
@@ -147,7 +152,7 @@
 
   function triggerAutoLogin(cfg) {
     injectBridgeScript();
-    updateRobotBanner(`⚡ <strong>TRỢ LÝ CSDL v5.4.0:</strong> Đang tự động chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
+    updateRobotBanner(`⚡ <strong>TRỢ LÝ CSDL v5.4.1:</strong> Đang tự động chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
     let tries = 0;
     const send = () => {
       const ready = document.documentElement.getAttribute('data-csdl-bridge') === 'ready';
@@ -218,120 +223,257 @@
     }
   }
 
-  function getCurrentWeekNumber() {
-    let weekNum = 11;
-    const tuanInp = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_cbTuan_Input') || document.querySelector('input[id*="cbTuan"]');
-    if (tuanInp && tuanInp.value) {
-      const m = tuanInp.value.match(/Tuần\s*(\d+)/i);
-      if (m) weekNum = parseInt(m[1], 10);
-    }
-    return weekNum;
+  // ===========================================================================
+  // v5.4.1 — NẠP LỊCH BÁO GIẢNG QUA "NHẬP TỪ EXCEL": TỪNG BƯỚC, BÁO CÁO THẬT
+  // ===========================================================================
+
+  // Đặt true nếu muốn robot tự bấm "Ghi" sau khi nhập. Mặc định false: giáo viên xem bảng rồi tự bấm Ghi.
+  const AUTO_SAVE_AFTER_IMPORT = false;
+  let fillRunning = false;
+
+  function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+  function plain(s) { return (s || '').toString().normalize('NFC').replace(/\s+/g, ' ').trim(); }
+  function fold(s) {
+    return plain(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+  }
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  function triggerCsdlOpenExcelImport() {
+  // Phần tử có đang hiển thị không (đi ngược lên các thẻ cha, không phụ thuộc layout)
+  function isShown(el) {
     try {
-      const allBtns = Array.from(document.querySelectorAll('button, a, .rtbItem, span'));
-      const tinhNangBtn = allBtns.find(el => (el.innerText || '').trim() === 'Tính năng mở rộng');
-      if (tinhNangBtn) {
-        tinhNangBtn.click();
-        let checks = 0;
-        const checkMenu = setInterval(() => {
-          checks++;
-          const menuItems = Array.from(document.querySelectorAll('.rmText, .rtbText, a, span, li'));
-          const excelOpt = menuItems.find(el => (el.innerText || '').trim().includes('Nhập từ Excel'));
-          if (excelOpt) {
-            clearInterval(checkMenu);
-            excelOpt.click();
-          } else if (checks >= 15) {
-            clearInterval(checkMenu);
-          }
-        }, 120);
+      const win = el.ownerDocument.defaultView;
+      for (let a = el, d = 0; a && a.nodeType === 1 && d < 15; a = a.parentElement, d++) {
+        const cs = win.getComputedStyle(a);
+        if (cs.display === 'none' || cs.visibility === 'hidden') return false;
       }
+      return true;
     } catch (e) {
-      console.warn('Lỗi mở popup Nhập từ Excel:', e);
+      return true;
     }
   }
 
-  function autoInjectExcelToCsdlPopup(excelBlob, fileName, weekNum, teacherName) {
-    let attempts = 0;
-    const maxAttempts = 40; // 20 giây
-
-    const reader = new FileReader();
-    reader.onload = function () {
-      const arrayBuffer = reader.result;
-      let injected = false;
-
-      const timer = setInterval(() => {
-        attempts++;
-        const iframe = document.querySelector('iframe[src*="KhaiBaoLichBaoGiangTuExcel" i], iframe[name*="KhaiBaoLichBaoGiangTuExcel" i], iframe[id*="KhaiBaoLichBaoGiangTuExcel" i], .rwWindowContent iframe');
-        if (iframe && !injected) {
-          // Kênh 1: postMessage
-          if (iframe.contentWindow) {
-            try {
-              iframe.contentWindow.postMessage({
-                type: 'CSDL_AUTO_IMPORT_EXCEL',
-                arrayBuffer: arrayBuffer,
-                fileName: fileName
-              }, '*');
-            } catch (e) {}
-          }
-
-          // Kênh 2: DOM trực tiếp
-          try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            if (iframeDoc) {
-              const fileInput = iframeDoc.querySelector('input[type="file"]');
-              if (fileInput && (!fileInput.files || fileInput.files.length === 0)) {
-                const fileObj = new File([excelBlob], fileName, {
-                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                });
-                const dt = new DataTransfer();
-                dt.items.add(fileObj);
-                fileInput.files = dt.files;
-                fileInput.dispatchEvent(new Event('change', { bubbles: true }));
-
-                setTimeout(() => {
-                  const btnImport = iframeDoc.querySelector('input[type="submit"], input[value*="Nhập"], input[value*="Ghi"], button');
-                  if (btnImport) {
-                    btnImport.click();
-                    injected = true;
-                    clearInterval(timer);
-                    console.log('[CSDL Robot] Đã tự động nạp file vào popup CSDL qua DOM!');
-
-                    // Tự động đóng popup và bấm Ghi trên thanh công cụ sau khi nạp xong
-                    setTimeout(() => {
-                      try {
-                        const closeBtn = document.querySelector('.rwCloseButton, a.rwCloseButton, a[title*="Close"], a[title*="Đóng"], .rwControlButtons a');
-                        if (closeBtn) closeBtn.click();
-                      } catch (e) {}
-
-                      setTimeout(() => {
-                        const btnSave = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadToolBar1_i0_btnGhi') ||
-                                        Array.from(document.querySelectorAll('button, input[type="submit"], input[type="button"], a, .rtbItem'))
-                                          .find(b => (b.innerText || b.value || '').trim() === 'Ghi');
-                        if (btnSave) btnSave.click();
-                        showToastNotification(`🎉 <strong>ĐÃ TỰ ĐỘNG ĐIỀN XONG TIẾT DẠY TUẦN ${weekNum} CHO GV ${teacherName || ''} VÀ LƯU THÀNH CÔNG!</strong>`);
-                      }, 1000);
-                    }, 1800);
-                  }
-                }, 350);
-                return;
-              }
-            }
-          } catch (e) {
-            console.warn('[CSDL Robot] Đang chờ iframe sẵn sàng...', e);
-          }
-        }
-
-        if (attempts >= maxAttempts) {
-          clearInterval(timer);
-        }
-      }, 500);
+  // Tìm phần tử "sâu nhất" có chữ khớp, để không bấm nhầm thẻ cha chứa cả menu
+  function findClickableByText(targets, root) {
+    const doc = root || document;
+    const want = targets.map(fold);
+    const all = Array.from(doc.querySelectorAll('a, button, li, span, div, td, input[type="button"], input[type="submit"]'));
+    const hit = (el) => {
+      const t = fold(el.tagName === 'INPUT' ? el.value : el.textContent);
+      return want.some((w) => t === w || (t.startsWith(w) && t.length <= w.length + 3));
     };
-    reader.readAsArrayBuffer(excelBlob);
+    const matches = all.filter((el) => hit(el) && isShown(el));
+    const deepest = matches.filter((el) => !matches.some((o) => o !== el && el.contains(o)));
+    const el = deepest[0];
+    return el ? (el.closest('a, button, li') || el) : null;
   }
 
-  function showToastNotification(message, isError = false) {
+  // Chọn đúng nút "Nhập" trong cửa sổ Nhập từ Excel (không bấm nhầm "Tải file mẫu", "Đóng"...)
+  function pickImportButton(doc) {
+    const cands = Array.from(doc.querySelectorAll(
+      'input[type="submit"], input[type="button"], button, a[role="button"], a.btn, a.rbButton, a[id*="btn" i], a[id*="Button" i]'));
+    const labelOf = (el) => plain(el.value || el.innerText || el.textContent || el.title || '');
+    const bad = /mẫu|template|tải xuống|download|đóng|hủy|huỷ|close|cancel|thoát/i;
+    const list = cands.filter((el) => isShown(el)).map((el) => ({ el, t: labelOf(el) })).filter((x) => x.t && !bad.test(x.t));
+    const prefer = [/^nhập\b/i, /nhập|import|upload|tải lên|thực hiện|đồng ý|lưu|ghi\b/i];
+    for (const re of prefer) {
+      const m = list.find((x) => re.test(x.t));
+      if (m) return m.el;
+    }
+    return list.length === 1 ? list[0].el : null;
+  }
+
+  function findImportIframe() {
+    const frames = Array.from(document.querySelectorAll('iframe'));
+    for (const f of frames) {
+      let href = (f.getAttribute('src') || '') + ' ' + (f.name || '') + ' ' + (f.id || '');
+      try {
+        if (f.contentWindow && f.contentWindow.location && f.contentWindow.location.href) href += ' ' + f.contentWindow.location.href;
+      } catch (e) { /* khác nguồn gốc */ }
+      if (/KhaiBaoLichBaoGiangTuExcel/i.test(href)) return f;
+    }
+    return null;
+  }
+
+  // Đọc tuần đang chọn trên trang: "Tuần 11 (16/11/2026 - 21/11/2026)"
+  function readWeekFromPage() {
+    const re = /Tuần\s*(\d+)\s*\(\s*(\d{1,2}\/\d{1,2}\/\d{4})\s*-\s*(\d{1,2}\/\d{1,2}\/\d{4})\s*\)/i;
+    const inputs = Array.from(document.querySelectorAll('input'));
+    const pref = inputs.filter((i) => /tuan/i.test((i.id || '') + (i.name || '')));
+    for (const el of pref.concat(inputs)) {
+      const m = (el.value || '').match(re);
+      if (m) return { num: parseInt(m[1], 10), text: `Tuần ${parseInt(m[1], 10)} (${m[2]} - ${m[3]})` };
+    }
+    return null;
+  }
+
+  // Đọc đúng chữ "Họ tên (mã giáo viên)" mà trang đang hiển thị ở ô Giáo viên
+  function readTeacherLabelFromPage(name) {
+    const key = fold(name);
+    for (const el of document.querySelectorAll('input')) {
+      const v = plain(el.value);
+      if (v && v.length < 90 && fold(v).includes(key) && /\(\d{6,}\)/.test(v)) return v;
+    }
+    return '';
+  }
+
+  // Mở cửa sổ "Tính năng mở rộng -> Nhập từ Excel"
+  async function openExcelImportPopup() {
+    if (findImportIframe()) return { ok: true };
+    const opener = findClickableByText(['Tính năng mở rộng']);
+    if (!opener) return { ok: false, reason: 'Không thấy nút "Tính năng mở rộng" trên thanh công cụ.' };
+    opener.click();
+    for (let i = 0; i < 25; i++) {
+      await sleep(120);
+      const item = findClickableByText(['Nhập từ Excel', 'Nhập Excel']);
+      if (item) {
+        item.click();
+        return { ok: true };
+      }
+    }
+    return { ok: false, reason: 'Đã mở menu nhưng không thấy mục "Nhập từ Excel".' };
+  }
+
+  function newLines(base, cur) {
+    const seen = new Set((base || '').split(/\n+/).map(plain));
+    return (cur || '').split(/\n+/).map(plain).filter((l) => l && !seen.has(l)).join(' ');
+  }
+
+  function iframeText(f) {
+    try {
+      const b = f.contentDocument && f.contentDocument.body;
+      return b ? (b.innerText || b.textContent || '') : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  // Đưa file vào ô chọn file, bấm đúng nút Nhập, rồi đọc phản hồi THẬT của trang
+  async function importExcelIntoPopup(blob, fileName) {
+    let iframe = null, doc = null, fileInput = null, sawFrame = false;
+    for (let i = 0; i < 60; i++) {
+      await sleep(500);
+      iframe = findImportIframe();
+      if (!iframe) continue;
+      sawFrame = true;
+      try {
+        doc = iframe.contentDocument;
+      } catch (e) {
+        return { ok: false, status: 'cross', reason: 'Trình duyệt không cho thao tác vào cửa sổ Nhập từ Excel.' };
+      }
+      if (!doc || doc.readyState === 'loading') continue;
+      fileInput = doc.querySelector('input[type="file"]');
+      if (fileInput) break;
+    }
+    if (!fileInput) {
+      return { ok: false, status: 'nofile', reason: sawFrame ? 'Không thấy ô chọn file trong cửa sổ "Nhập từ Excel".' : 'Cửa sổ "Nhập từ Excel" không mở ra sau khi bấm menu.' };
+    }
+
+    const baseText = iframeText(iframe);
+    const file = new File([blob], fileName, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+    fileInput.dispatchEvent(new Event('input', { bubbles: true }));
+    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+    await sleep(1500); // chờ trang nhận file xong
+
+    const btn = pickImportButton(doc);
+    if (btn) btn.click();
+
+    let last = '';
+    for (let i = 0; i < 40; i++) {
+      await sleep(500);
+      const f = findImportIframe();
+      if (!f) return { ok: true, status: 'closed', text: last };
+      const msg = newLines(baseText, iframeText(f));
+      if (msg) last = msg;
+      if (/thành công|hoàn tất|đã nhập|nhập xong|success/i.test(msg)) return { ok: true, status: 'success', text: msg.slice(0, 200) };
+      if (i >= 2 && /lỗi|không hợp lệ|thất bại|sai định dạng|không đúng|error|failed/i.test(msg)) return { ok: false, status: 'error', text: msg.slice(0, 200) };
+    }
+    if (!btn) return { ok: false, status: 'nobutton', reason: 'Không xác định được nút "Nhập" trong cửa sổ.', text: last.slice(0, 200) };
+    return { ok: true, status: 'unknown', text: last.slice(0, 200) };
+  }
+
+  function offerManualImport(blob, fileName, why) {
+    window.LbgExcelEngine.downloadBlob(blob, fileName);
+    showToastNotification(
+      `⚠️ <strong>${escHtml(why)}</strong><br>Đã tải file <b>${escHtml(fileName)}</b> về máy. Thầy/Cô bấm <b>Tính năng mở rộng → Nhập từ Excel</b>, chọn file này rồi bấm Nhập.`,
+      true, 20000);
+  }
+
+  function clickSaveButton() {
+    const btn = document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadToolBar1_i0_btnGhi') ||
+      findClickableByText(['Ghi']);
+    if (btn) btn.click();
+    return !!btn;
+  }
+
+  async function runFillFlow(teacherName, teacherTkb) {
+    if (typeof window.LbgExcelEngine === 'undefined' || typeof XLSX === 'undefined') {
+      throw new Error('Bộ máy Excel chưa sẵn sàng. Vui lòng F5 lại trang.');
+    }
+    const week = readWeekFromPage();
+    if (!week) {
+      showToastNotification('⚠️ Không đọc được <b>Tuần</b> đang chọn trên trang. Thầy/Cô chọn tuần ở ô "Tuần" rồi bấm lại.', true, 9000);
+      return;
+    }
+    const teacherTitle = readTeacherLabelFromPage(teacherName);
+    showToastNotification(`🚀 <strong>Đang tạo lịch báo giảng ${escHtml(week.text)} cho ${escHtml(teacherName)}...</strong>`, false, 8000);
+
+    const gen = window.LbgExcelEngine.generateWeekExcel(week.num, teacherTkb, window.TEMPLATE_LBG_BASE64,
+      { teacherTitle: teacherTitle, weekText: week.text });
+    const info = gen.info;
+    const fileName = `LichBaoGiang_Tuan${week.num}_${teacherName.replace(/\s+/g, '')}.xlsx`;
+    if (info.written === 0) {
+      showToastNotification('⚠️ Thời khóa biểu của Thầy/Cô không có tiết nào để nạp.', true, 8000);
+      return;
+    }
+
+    showToastNotification(`📄 Đã tạo file (${info.written} tiết). Đang mở "Nhập từ Excel"...`, false, 8000);
+    const opened = await openExcelImportPopup();
+    if (!opened.ok) { offerManualImport(gen.blob, fileName, opened.reason); return; }
+
+    showToastNotification('📂 Đang đưa file vào cửa sổ Nhập từ Excel...', false, 8000);
+    const res = await importExcelIntoPopup(gen.blob, fileName);
+
+    if (res.status === 'cross') {
+      // Đường dự phòng: nhờ script trong iframe tự nạp
+      const f = findImportIframe();
+      if (f && f.contentWindow) {
+        const buf = await gen.blob.arrayBuffer();
+        f.contentWindow.postMessage({ type: 'CSDL_AUTO_IMPORT_EXCEL', arrayBuffer: buf, fileName: fileName }, '*');
+        showToastNotification('📨 Đã gửi file vào cửa sổ Nhập từ Excel. Thầy/Cô xem kết quả trong cửa sổ đó rồi kiểm tra bảng nhé.', false, 12000);
+        return;
+      }
+    }
+    if (!res.ok && res.status !== 'error') { offerManualImport(gen.blob, fileName, res.reason || 'Không nạp được file tự động.'); return; }
+    if (res.status === 'error') {
+      offerManualImport(gen.blob, fileName, 'Trang báo lỗi khi nhập: "' + (res.text || '') + '"');
+      return;
+    }
+
+    const notes = [];
+    if (info.ppctBlank) notes.push('Cột <b>Tiết theo PPCT</b> để trống (chưa có số liệu PPCT chính xác của Thầy/Cô).');
+    if (info.warnings.length) notes.push('Lưu ý: ' + info.warnings.map(escHtml).join('; ') + '.');
+    const siteMsg = res.text ? `<br>Trang phản hồi: “${escHtml(res.text)}”` : '';
+    const head = res.status === 'success' ? '✅ <strong>Trang báo nhập thành công</strong>'
+      : res.status === 'closed' ? '📨 <strong>Đã nhập file, cửa sổ nhập đã tự đóng</strong>'
+      : '📨 <strong>Đã bấm Nhập nhưng trang chưa báo kết quả rõ ràng</strong>';
+
+    if (AUTO_SAVE_AFTER_IMPORT && res.status !== 'unknown') {
+      await sleep(1200);
+      clickSaveButton();
+      showToastNotification(`${head} (${info.written} tiết, ${escHtml(week.text)}). Đã bấm Ghi.${siteMsg}`, false, 14000);
+      return;
+    }
+    showToastNotification(
+      `${head} (${info.written} tiết, ${escHtml(week.text)}).${siteMsg}<br>Thầy/Cô <b>kiểm tra bảng rồi bấm nút Ghi</b>.${notes.length ? '<br>' + notes.join('<br>') : ''}`,
+      false, 20000);
+  }
+
+  function showToastNotification(message, isError = false, holdMs = 4500) {
     let toast = document.getElementById('csdl-robot-toast');
     if (!toast) {
       toast = document.createElement('div');
@@ -355,11 +497,15 @@
     toast._timer = setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateY(-10px)';
-    }, 4500);
+    }, holdMs);
   }
 
-  // NÚT 1: TỰ ĐỘNG ĐIỀN LỊCH BÁO GIẢNG (1-CLICK HOÀN TOÀN)
+  // NÚT 1: TỰ ĐỘNG ĐIỀN LỊCH BÁO GIẢNG
   function runOneClickFillLbg() {
+    if (fillRunning) {
+      showToastNotification('⏳ Robot đang nạp lịch báo giảng, Thầy/Cô chờ chút nhé...', false, 3000);
+      return;
+    }
     getActiveTeacher((teacherName) => {
       if (!teacherName) {
         showToastNotification('⚠️ Vui lòng mở tiện ích trên góc Chrome và bấm chọn Tên Thầy/Cô trước nhé!', true);
@@ -375,27 +521,14 @@
         }
 
         if (!teacherTkb || !teacherTkb.lessons || teacherTkb.lessons.length === 0) {
-          showToastNotification(`⚠️ Giáo viên "${teacherName}" chưa có dữ liệu tiết dạy trong Thời khóa biểu.`, true);
+          showToastNotification(`⚠️ Giáo viên "${escHtml(teacherName)}" chưa có dữ liệu tiết dạy trong Thời khóa biểu.`, true);
           return;
         }
 
-        const curWeek = getCurrentWeekNumber();
-        showToastNotification(`🚀 <strong>Đang tự động nạp Lịch Báo Giảng Tuần ${curWeek} cho GV ${teacherName} (${teacherTkb.lessons.length} tiết)...</strong>`);
-
-        try {
-          if (typeof window.LbgExcelEngine === 'undefined') {
-            throw new Error('Bộ máy Excel chưa sẵn sàng. Vui lòng F5 lại trang.');
-          }
-
-          const excelBlob = window.LbgExcelEngine.generateWeekExcelBlob(curWeek, teacherTkb, window.TEMPLATE_LBG_BASE64);
-          const safeTeacherName = teacherName.replace(/\s+/g, '');
-          const fileName = `LichBaoGiang_Tuan${curWeek}_${safeTeacherName}.xlsx`;
-
-          triggerCsdlOpenExcelImport();
-          autoInjectExcelToCsdlPopup(excelBlob, fileName, curWeek, teacherName);
-        } catch (err) {
-          showToastNotification('⚠️ Lỗi sinh file: ' + (err.message || err), true);
-        }
+        fillRunning = true;
+        runFillFlow(teacherName, teacherTkb)
+          .catch((err) => showToastNotification('⚠️ Lỗi: ' + escHtml((err && err.message) || err), true, 12000))
+          .finally(() => { fillRunning = false; });
       });
     });
   }

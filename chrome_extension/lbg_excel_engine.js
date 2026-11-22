@@ -1,5 +1,5 @@
 // lbg_excel_engine.js - Quản lý, Phân Tích & Sinh Lịch Báo Giảng Excel Tự Động
-// Phiên bản: v5.4.0 (Bộ giải mã Thời khóa biểu Đa năng Siêu Thông Minh)
+// Phiên bản: v5.4.1 (Bộ giải mã Thời khóa biểu Đa năng Siêu Thông Minh)
 // Hỗ trợ: Ma trận Khối GV, Lưới Toàn Trường, Đa Sheet, Bảng CSDL / vnEdu / SMAS
 // Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
 
@@ -178,7 +178,8 @@
       if (/nông văn hùng/i.test(tName)) {
         var cn9Count = 0;
         var hdtnCount = 0;
-        tObj.lessons.forEach(function (item) {
+        // v5.4.1: duyệt theo thứ tự lịch dạy trong tuần (stt), không theo thứ tự trong mảng
+        tObj.lessons.slice().sort(function (a, b) { return a.stt - b.stt; }).forEach(function (item) {
           if (item.mon === 'Công nghệ' && item.lop === '8A5') item.basePpct = 11;
           if (item.mon === 'Công nghệ' && item.lop === '8A6') item.basePpct = 11;
           if (item.mon === 'Công nghệ' && item.lop === '8A7') item.basePpct = 11;
@@ -698,8 +699,51 @@
     };
   }
 
-  // 17. SINH FILE EXCEL BLOB CHO MỘT TUẦN HỌC CỤ THỂ
-  function generateWeekExcelBlob(weekNum, tkbConfig, templateBase64) {
+  // 17. SINH FILE EXCEL CHO MỘT TUẦN HỌC CỤ THỂ (v5.4.1)
+  function foldKey(s) {
+    return norm(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+
+  // Tên môn trong Thời khóa biểu -> tên môn ĐÚNG NHƯ danh mục của trang CSDL (sheet "MonHoc" trong file mẫu)
+  var SUBJECT_ALIAS = {
+    'toan hoc': 'toan',
+    'the duc': 'giao duc the chat',
+    'vat ly khtn': 'khtn vat ly',
+    'hoa hoc khtn': 'khtn hoa hoc',
+    'sinh hoc khtn': 'khtn sinh hoc',
+    'lich su lsvdl': 'lich su va dia ly su',
+    'dia ly lsvdl': 'lich su va dia ly dia',
+    'mi thuat nt': 'nghe thuat mt',
+    'am nhac nt': 'nghe thuat an'
+  };
+
+  // Đọc danh mục (cột B, từ dòng 2) của một sheet trong file mẫu
+  function readColumnList(wb, sheetName) {
+    var ws = wb.Sheets[sheetName];
+    if (!ws) return null;
+    var rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+    var out = [];
+    for (var i = 1; i < rows.length; i++) {
+      var v = rows[i][1];
+      if (v !== '' && v !== null && v !== undefined) out.push(String(v));
+    }
+    return out.length ? out : null;
+  }
+
+  // Trả về tên chuẩn trong danh mục (đúng từng ký tự, kể cả khoảng trắng thừa của trang)
+  function resolveName(raw, list, alias) {
+    if (!list) return { value: raw, ok: true };
+    var map = {};
+    list.forEach(function (n) { map[foldKey(n)] = n; });
+    var k = foldKey(raw);
+    if (map[k]) return { value: map[k], ok: true };
+    if (alias && alias[k] && map[alias[k]]) return { value: map[alias[k]], ok: true };
+    return { value: raw, ok: false };
+  }
+
+  // opts: { teacherTitle: 'Nông Văn Hùng (7023564959)', weekText: 'Tuần 11 (16/11/2026 - 21/11/2026)' }
+  // Trả về { blob, info } - info cho biết đã ghi bao nhiêu tiết và những cảnh báo thật.
+  function generateWeekExcel(weekNum, tkbConfig, templateBase64, opts) {
     if (typeof XLSX === 'undefined') {
       throw new Error('Thư viện XLSX chưa sẵn sàng.');
     }
@@ -708,44 +752,72 @@
     if (!base64Data) {
       throw new Error('Chưa có dữ liệu mẫu Excel TEMPLATE_LBG_BASE64.');
     }
+    opts = opts || {};
 
     var wb = XLSX.read(base64Data, { type: 'base64' });
     var sheetName = wb.SheetNames[0];
     var ws = wb.Sheets[sheetName];
+    var monList = readColumnList(wb, 'MonHoc');
+    var lopList = readColumnList(wb, 'LopHoc');
+    var kieuList = readColumnList(wb, 'KieuGiangDay');
 
     var cfg = tkbConfig || getDefaultTkbConfig();
     var offset = weekNum - (cfg.baseWeek || 11);
     var dates = getWeekDates(weekNum, cfg.baseWeek, cfg.refStartDate);
 
-    // Tiêu đề A1 & A2
-    var teacherTitle = cfg.teacherName || 'Giáo viên';
-    if (cfg.teacherCode) teacherTitle += ' (' + cfg.teacherCode + ')';
+    // Tiêu đề A1 & A2: ưu tiên đúng chữ mà trang đang hiển thị (đọc từ ô Giáo viên / ô Tuần)
+    var teacherTitle = opts.teacherTitle ||
+      ((cfg.teacherName || 'Giáo viên') + (cfg.teacherCode ? ' (' + cfg.teacherCode + ')' : ''));
+    var weekText = opts.weekText || ('Tuần ' + weekNum + ' (' + dates.start + ' - ' + dates.end + ')');
     ws['A1'] = { t: 's', v: 'Lịch báo giảng giáo viên: ' + teacherTitle };
-    ws['A2'] = { t: 's', v: 'Tuần học: Tuần ' + weekNum + ' (' + dates.start + ' - ' + dates.end + ')' };
+    ws['A2'] = { t: 's', v: 'Tuần học: ' + weekText };
 
-    // Xóa sạch dữ liệu cũ các cột E đến I từ dòng 4 đến 57
+    // Xóa sạch dữ liệu cũ các cột E đến I từ dòng 4 đến 57 (file mẫu đang chứa lịch của một tuần cũ)
     var colLetters = ['E', 'F', 'G', 'H', 'I'];
     for (var r = 4; r <= 57; r++) {
       for (var c = 0; c < colLetters.length; c++) {
-        var cellRef = colLetters[c] + r;
-        delete ws[cellRef];
+        delete ws[colLetters[c] + r];
       }
     }
 
-    // Ghi các tiết dạy với số tiết PPCT lũy kế
+    // Số tiết theo PPCT: CHỈ ghi khi đã có số liệu đã hiệu chỉnh thật (hiện có cho thầy Nông Văn Hùng).
+    // Các giáo viên khác: để trống thay vì tự bịa số, tránh ghi sai vào sổ chính thức.
+    var writePpct = cfg.ppctCalibrated === true || /nông văn hùng/i.test(norm(cfg.teacherName));
+    var info = { written: 0, ppctBlank: !writePpct, warnings: [], weekText: weekText, teacherTitle: teacherTitle };
+    var seen = {};
+    function warn(msg) { if (!seen[msg]) { seen[msg] = 1; info.warnings.push(msg); } }
+
     for (var i = 0; i < cfg.lessons.length; i++) {
       var item = cfg.lessons[i];
       var rowIdx = item.stt + 3;
-      var ppct = item.basePpct + offset * (item.step || 1);
+      if (rowIdx < 4 || rowIdx > 57) { warn('Tiết có STT ' + item.stt + ' nằm ngoài bảng mẫu'); continue; }
 
-      ws['E' + rowIdx] = { t: 's', v: item.kieu || 'Lên lớp' };
-      ws['F' + rowIdx] = { t: 's', v: item.mon };
-      ws['G' + rowIdx] = { t: 's', v: item.lop };
-      ws['H' + rowIdx] = { t: 'n', v: ppct };
+      var mon = resolveName(item.mon, monList, SUBJECT_ALIAS);
+      var lop = resolveName(item.lop, lopList, null);
+      var kieu = resolveName(item.kieu || 'Lên lớp', kieuList, null);
+      if (!mon.ok) warn('Môn "' + item.mon + '" không có trong danh mục môn của trang');
+      if (!lop.ok) warn('Lớp "' + item.lop + '" không có trong danh mục lớp của trang');
+      if (!kieu.ok) warn('Kiểu giảng dạy "' + item.kieu + '" không có trong danh mục của trang');
+
+      ws['E' + rowIdx] = { t: 's', v: kieu.value };
+      ws['F' + rowIdx] = { t: 's', v: mon.value };
+      ws['G' + rowIdx] = { t: 's', v: lop.value };
+      if (writePpct) {
+        var ppct = (item.basePpct || 1) + offset * (item.step || 1);
+        if (ppct >= 1) ws['H' + rowIdx] = { t: 'n', v: ppct };
+        else warn('Tuần ' + weekNum + ' nằm trước mốc PPCT đã hiệu chỉnh, bỏ trống số PPCT');
+      }
+      info.written++;
     }
 
     var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    return new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    var blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    return { blob: blob, info: info };
+  }
+
+  // Giữ tên cũ để tương thích: chỉ trả về blob
+  function generateWeekExcelBlob(weekNum, tkbConfig, templateBase64, opts) {
+    return generateWeekExcel(weekNum, tkbConfig, templateBase64, opts).blob;
   }
 
   // 18. TẢI FILE BLOB VỀ MÁY TÍNH
@@ -774,6 +846,7 @@
     parseWorkbookSheets: parseWorkbookSheets,
     parseTkbExcel: parseTkbExcel,
     getWeekDates: getWeekDates,
+    generateWeekExcel: generateWeekExcel,
     generateWeekExcelBlob: generateWeekExcelBlob,
     downloadBlob: downloadBlob
   };

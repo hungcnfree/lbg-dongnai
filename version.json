@@ -1,19 +1,18 @@
 {
-  "version": "5.4.0",
-  "versionCode": 540,
+  "version": "5.4.1",
+  "versionCode": 541,
   "releaseDate": "23/11/2026",
-  "title": "Trợ Lý CSDL v5.4.0 - Tự Động Điền Lịch Báo Giảng 1-Click Toàn Trường THCS Đăk Ơ",
+  "title": "Trợ Lý CSDL v5.4.1 - Nâng cấp bộ giải mã TKB, chuẩn hóa danh mục môn học CSDL và tự động cập nhật 1-Click",
   "changelog": [
-    "Tự động điền 1-Click Lịch Báo Giảng toàn trường, không cần hỏi han hay thao tác thủ công.",
-    "Tích hợp sẵn Thời khóa biểu của tất cả 60 giáo viên trường THCS Đăk Ơ.",
-    "Tự động nhận diện giáo viên đang đăng nhập và nạp đúng thời khóa biểu cá nhân.",
-    "Bộ chọn giáo viên nhanh với thanh tìm kiếm trực quan trên thanh công cụ nổi.",
-    "Khắc phục triệt để lỗi bảng trắng trên tuần 13 và các tuần tiếp theo.",
-    "Xác nhận Hoàn thành tuần trong 0.5s chỉ đánh dấu các tiết có dạy, làm sạch tiết trống."
+    "Cập nhật 1-Click mượt mà: Bấm 1 nút duy nhất, có thanh trạng thái tiến trình chạy từ 0% đến 100% và kích hoạt phiên bản mới ngay mà không cần tải về rườm rà.",
+    "Nâng cấp bộ giải mã TKB: Duyệt theo thứ tự tiết dạy trong tuần (stt) chuẩn xác.",
+    "Chuẩn hóa tên môn học theo đúng danh mục trang CSDL (sheet MonHoc) để nạp không bị lệch.",
+    "Tối ưu tương tác tự động với cửa sổ popup KhaiBaoLichBaoGiangTuExcel.",
+    "Tích hợp kỹ năng Antigravity AI tự động điền phôi tuần từ 2 files chỉ trong 3 giây."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip",
-    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.3.4.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip",
+    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.0.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"
   }
 }
