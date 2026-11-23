@@ -1,5 +1,5 @@
-// page_bridge.js - Telerik Engine THCS Đăk Ơ v5.3.4 (Sloppy Mode)
-// Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
+// page_bridge.js - Telerik Engine v5.5.1 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
+// Bản quyền: © 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 
 (function () {
   console.log('[CSDL Robot] Khởi động Telerik Engine THCS Đăk Ơ v5.3.4...');

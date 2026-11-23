@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Trợ Lý Tự Động CSDL Giáo Dục (v5.4.1)</title>
+  <title>Trợ Lý Tự Động CSDL Giáo Dục (v5.5.1) 🌻 Hướng Dẫn Đồng Nghiệp</title>
   
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 
   <!-- Tailwind CSS CDN -->
@@ -18,14 +18,18 @@
       theme: {
         extend: {
           colors: {
-            'paper-bg': '#FFFDF5',
-            'surface-cream': '#FBF9F1',
-            'chalk-orange': '#FFEDD5',
-            'sprout-green': '#D1FAE5',
-            'sticker-yellow': '#FEF3C7',
-            'ink-blue': '#2563EB',
-            'ink-blue-dark': '#1D4ED8',
-            'slate-main': '#0F172A',
+            'sun-bg': '#FFFDF0',
+            'sun-surface': '#FFFBEB',
+            'sun-cream': '#FEF9C3',
+            'sun-yellow': '#FBBF24',
+            'sun-gold': '#F59E0B',
+            'sun-amber': '#D97706',
+            'sun-deep': '#B45309',
+            'sun-dark': '#78350F',
+            'leaf-green': '#10B981',
+            'leaf-dark': '#047857',
+            'leaf-light': '#D1FAE5',
+            'slate-main': '#1E293B',
             'slate-muted': '#64748B'
           },
           fontFamily: {
@@ -36,25 +40,47 @@
       }
     }
   </script>
+  <style>
+    body {
+      background: 
+        radial-gradient(circle at 10% 12%, rgba(254, 240, 138, 0.55) 0%, transparent 38%),
+        radial-gradient(circle at 90% 18%, rgba(251, 191, 36, 0.40) 0%, transparent 40%),
+        radial-gradient(circle at 50% 60%, rgba(254, 243, 199, 0.45) 0%, transparent 50%),
+        linear-gradient(180deg, #FFFDF0 0%, #FFFBEB 45%, #FEF9C3 100%);
+      background-attachment: fixed;
+    }
+    .sun-shine {
+      animation: sunGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes sunGlow {
+      0% { filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4)); }
+      100% { filter: drop-shadow(0 0 16px rgba(251, 191, 36, 0.75)); }
+    }
+  </style>
 </head>
-<body class="bg-surface-cream text-slate-main font-sans antialiased min-h-screen flex flex-col selection:bg-amber-200">
+<body class="text-slate-main font-sans antialiased min-h-screen flex flex-col selection:bg-amber-300 selection:text-amber-950">
 
-  <!-- HEADER -->
-  <header class="w-full bg-paper-bg border-b-2 border-slate-main sticky top-0 z-50">
+  <!-- TOP HEADER (HOA MẶT TRỜI & NẮNG VÀNG) -->
+  <header class="w-full bg-sun-surface/90 backdrop-blur-md border-b-2 border-sun-dark sticky top-0 z-50 shadow-sm">
     <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <span class="text-2xl">🤖</span>
+        <span class="text-3xl sun-shine">🌻</span>
         <div class="flex items-center gap-2">
-          <span class="font-display font-bold text-base md:text-lg tracking-tight uppercase">TRỢ LÝ TỰ ĐỘNG CSDL</span>
-          <span class="px-2 py-0.5 bg-ink-blue text-white font-display text-xs font-bold rounded-full shadow-[1.5px_1.5px_0px_#0F172A]">v5.4.1</span>
+          <span class="font-display font-black text-base md:text-lg tracking-tight uppercase text-sun-dark">TRỢ LÝ TỰ ĐỘNG CSDL</span>
+          <span class="px-2.5 py-0.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-display text-xs font-black rounded-full border border-sun-dark shadow-[1.5px_1.5px_0px_#78350F]">
+            v5.5.1 ☀️
+          </span>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-paper-bg hover:bg-sprout-green text-slate-main font-semibold text-xs rounded-lg border-2 border-slate-main shadow-[2px_2px_0px_#0F172A] transition-all">
-          <span class="material-symbols-outlined text-sm text-emerald-600">chat</span>
+        <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-leaf-light text-leaf-dark font-bold text-xs rounded-lg border-2 border-leaf-dark shadow-[2px_2px_0px_#047857] transition-all">
+          <span class="material-symbols-outlined text-sm text-leaf-green">chat</span>
           <span>Nhóm Zalo AI</span>
         </a>
-        <a href="TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg border-2 border-slate-main shadow-[2px_2px_0px_#0F172A] transition-all"><span class="material-symbols-outlined text-sm">download</span><span>Tải Tiện Ích v5.4.1</span></a>
+        <a href="TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-black text-xs rounded-lg border-2 border-sun-dark shadow-[2px_2px_0px_#78350F] active:translate-x-0.5 active:translate-y-0.5 transition-all">
+          <span class="material-symbols-outlined text-sm">download</span>
+          <span>Tải Tiện Ích v5.5.1</span>
+        </a>
       </div>
     </div>
   </header>
@@ -62,169 +88,172 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-5xl mx-auto px-4 py-8 flex-1 flex flex-col gap-8">
 
-    <!-- HERO SECTION (TINH GỌN, TRỰC DIỆN) -->
-    <section class="bg-paper-bg rounded-2xl border-2 border-slate-main p-6 sm:p-8 shadow-[4px_4px_0px_#0F172A] relative overflow-hidden">
-      <div class="flex flex-col md:flex-row items-center gap-6">
-        <!-- Robot Avatar -->
-        <div class="shrink-0 p-3 bg-chalk-orange rounded-2xl border-2 border-slate-main shadow-[3px_3px_0px_#0F172A]">
-          <span class="text-6xl sm:text-7xl">🤖</span>
+    <!-- HERO SECTION (RỰC RỠ SẮC VÀNG NẮNG MAI & HOA MẶT TRỜI) -->
+    <section class="bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7] to-[#FDE68A] rounded-2xl border-2 border-sun-dark p-6 sm:p-8 shadow-[5px_5px_0px_#78350F] relative overflow-hidden">
+      <div class="flex flex-col md:flex-row items-center gap-6 relative z-10">
+        <!-- Sunflower Avatar -->
+        <div class="shrink-0 p-4 bg-gradient-to-br from-amber-300 to-yellow-200 rounded-2xl border-2 border-sun-dark shadow-[3px_3px_0px_#78350F] text-center">
+          <span class="text-6xl sm:text-7xl block sun-shine">🌻</span>
+          <span class="text-xs font-black text-sun-dark tracking-wide uppercase mt-1 block">Nắng Vàng</span>
         </div>
+
         <!-- Hero Content -->
         <div class="flex-1 text-center md:text-left flex flex-col gap-2">
-          <div class="inline-flex items-center gap-2 self-center md:self-start px-2.5 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 font-display text-xs font-bold rounded-full">
-            <span>⚡ TIỆN ÍCH GOOGLE CHROME V5.4.1 (TELERIK CLIENT ENGINE)</span>
+          <div class="inline-flex items-center gap-2 self-center md:self-start px-3 py-1 bg-gradient-to-r from-amber-400 to-yellow-300 text-sun-dark border border-sun-dark font-display text-xs font-black rounded-full shadow-sm">
+            <span>🌻 HƯỚNG DẪN ĐỒNG NGHIỆP — PHIÊN BẢN HOA MẶT TRỜI v5.5.1</span>
           </div>
-          <h1 class="font-display font-bold text-2xl sm:text-3xl text-slate-main tracking-tight leading-snug">
-            Cài Đặt 1 Lần — Đăng Nhập & Báo Giảng Tự Động Trong 0.5 Giây
+          <h1 class="font-display font-black text-2xl sm:text-3xl text-sun-dark tracking-tight leading-snug">
+            Cài Đặt 1 Lần — Đăng Nhập & Báo Giảng Tự Động Trong 0.5 Giây 🌻
           </h1>
-          <p class="text-slate-muted text-sm sm:text-base leading-relaxed">
+          <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
             Giải pháp tiện ích mở rộng tối ưu hóa nghiệp vụ cho Quý Thầy/Cô trên cổng CSDL Giáo dục. Tự động chọn Cấp học, Xã/Phường, Trường và điền sẵn tài khoản. Con trỏ chuột tự nhảy sẵn vào ô CAPTCHA, chỉ cần gõ <strong>8 ký tự CAPTCHA</strong> rồi ấn <strong>Enter</strong> là vào ngay hệ thống!
           </p>
-          <!-- Action Buttons (2 Phiên Bản Rõ Ràng) -->
+
+          <!-- Action Buttons -->
           <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-3">
-            <a href="TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl border-2 border-slate-main shadow-[3px_3px_0px_#0F172A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
+            <a href="TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-black text-sm rounded-xl border-2 border-sun-dark shadow-[3px_3px_0px_#78350F] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
               <span class="material-symbols-outlined text-lg">download</span>
-              <span>⚡ Tải Bản Mới Nhất v5.4.1 (1-Click Tự Động)</span>
+              <span>⚡ Tải Bản Mới Nhất v5.5.1 (Hoa Mặt Trời & Nắng Vàng)</span>
             </a>
-            <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="inline-flex items-center gap-2 px-4 py-3 bg-paper-bg hover:bg-chalk-orange text-slate-main font-semibold text-sm rounded-xl border-2 border-slate-main shadow-[2px_2px_0px_#0F172A] transition-all">
-              <span class="material-symbols-outlined text-lg text-emerald-600">groups</span>
-              <span>Nhóm Zalo AI</span>
+            <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="inline-flex items-center gap-2 px-4 py-3 bg-white hover:bg-leaf-light text-leaf-dark font-bold text-sm rounded-xl border-2 border-sun-dark shadow-[2px_2px_0px_#78350F] transition-all">
+              <span class="material-symbols-outlined text-lg text-leaf-green">groups</span>
+              <span>Nhóm Zalo AI Giáo Dục</span>
             </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3 TÍNH NĂNG CỐT LÕI (KHÔNG LẶP LẠI) -->
+    <!-- 3 TÍNH NĂNG CỐT LÕI -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
       <!-- Feature 1 -->
-      <div class="bg-paper-bg rounded-xl border-2 border-slate-main p-5 shadow-[3px_3px_0px_#0F172A] flex flex-col gap-2">
-        <div class="w-10 h-10 rounded-lg bg-blue-100 border border-blue-300 flex items-center justify-center text-xl text-ink-blue">
+      <div class="bg-white rounded-xl border-2 border-sun-dark p-5 shadow-[3px_3px_0px_#78350F] flex flex-col gap-2">
+        <div class="w-10 h-10 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center text-xl text-amber-600">
           🔑
         </div>
-        <h3 class="font-display font-bold text-base text-slate-main">Tự Động Điền 100%</h3>
-        <p class="text-xs text-slate-muted leading-relaxed">
+        <h3 class="font-display font-bold text-base text-sun-dark">Tự Động Điền 100%</h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
           Tích hợp <strong>Telerik Client Engine</strong> tự động chọn Cấp học, Xã/Phường, Trường học và điền tài khoản. Chuột tự nhảy vào ô CAPTCHA, Thầy/Cô chỉ gõ 8 ký tự rồi ấn <strong>Enter</strong>.
         </p>
       </div>
 
       <!-- Feature 2 -->
-      <div class="bg-paper-bg rounded-xl border-2 border-slate-main p-5 shadow-[3px_3px_0px_#0F172A] flex flex-col gap-2">
+      <div class="bg-white rounded-xl border-2 border-sun-dark p-5 shadow-[3px_3px_0px_#78350F] flex flex-col gap-2">
         <div class="w-10 h-10 rounded-lg bg-emerald-100 border border-emerald-300 flex items-center justify-center text-xl text-emerald-600">
           ⚡
         </div>
-        <h3 class="font-display font-bold text-base text-slate-main">Báo Giảng Trong 0.5 Giây</h3>
-        <p class="text-xs text-slate-muted leading-relaxed">
+        <h3 class="font-display font-bold text-base text-sun-dark">Báo Giảng 0.5 Giây</h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
           Tại mục 3.6.2 Khai báo lịch báo giảng, nút nổi <strong>"✅ BẤM ĐỂ HOÀN THÀNH"</strong> giúp chuyển toàn bộ 15-18 tiết sang 'Hoàn thành' và tự bấm Ghi chỉ với đúng 1 click chuột.
         </p>
       </div>
 
       <!-- Feature 3 -->
-      <div class="bg-paper-bg rounded-xl border-2 border-slate-main p-5 shadow-[3px_3px_0px_#0F172A] flex flex-col gap-2">
-        <div class="w-10 h-10 rounded-lg bg-amber-100 border border-amber-300 flex items-center justify-center text-xl text-amber-600">
-          🔒
+      <div class="bg-white rounded-xl border-2 border-sun-dark p-5 shadow-[3px_3px_0px_#78350F] flex flex-col gap-2">
+        <div class="w-10 h-10 rounded-lg bg-amber-200 border border-amber-400 flex items-center justify-center text-xl">
+          🌻
         </div>
-        <h3 class="font-display font-bold text-base text-slate-main">Bảo Mật Tuyệt Đối 100%</h3>
-        <p class="text-xs text-slate-muted leading-relaxed">
-          Thông tin chỉ lưu trong trình duyệt của Thầy/Cô. Robot <strong>không giải mã CAPTCHA</strong>, đảm bảo đúng quy chuẩn an toàn thông tin theo quy định hiện hành.
+        <h3 class="font-display font-bold text-base text-sun-dark">Cập Nhật 1-Click 100%</h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Nút <strong>"⚡ Cập Nhật Phiên Bản Mới"</strong> ngay trong tiện ích với thanh tiến trình <strong>0% ➔ 100%</strong>, tự nạp dữ liệu TKB & thuật toán mới mà không cần tải file rườm rà!
         </p>
       </div>
     </section>
 
-    <!-- HƯỚNG DẪN 3 BƯỚC CÀI ĐẶT (SIÊU GỌN GÀNG) -->
-    <section class="bg-paper-bg rounded-2xl border-2 border-slate-main p-6 sm:p-8 shadow-[4px_4px_0px_#0F172A] flex flex-col gap-6">
-      <div class="border-b-2 border-slate-main pb-3 flex items-center justify-between">
+    <!-- HƯỚNG DẪN 3 BƯỚC CÀI ĐẶT (TIẾNG VÀNG NẮNG ẤM) -->
+    <section class="bg-white rounded-2xl border-2 border-sun-dark p-6 sm:p-8 shadow-[4px_4px_0px_#78350F] flex flex-col gap-6">
+      <div class="border-b-2 border-sun-dark pb-3 flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-ink-blue">rocket_launch</span>
-          <h2 class="font-display font-bold text-lg sm:text-xl text-slate-main uppercase tracking-tight">HƯỚNG DẪN CÀI ĐẶT (3 BƯỚC — CHƯA ĐẾN 1 PHÚT)</h2>
+          <span class="text-2xl">🌻</span>
+          <h2 class="font-display font-bold text-lg sm:text-xl text-sun-dark uppercase tracking-tight">HƯỚNG DẪN CÀI ĐẶT (3 BƯỚC — CHƯA ĐẾN 1 PHÚT)</h2>
         </div>
-        <span class="text-xs bg-sprout-green px-2.5 py-1 rounded-full font-bold border border-emerald-300">Cài 1 lần dùng mãi</span>
+        <span class="text-xs bg-amber-100 text-sun-dark px-3 py-1 rounded-full font-bold border border-amber-300">Cài 1 lần dùng mãi</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Bước 1 -->
-        <div class="flex flex-col gap-2 p-4 bg-surface-cream rounded-xl border border-slate-200">
+        <div class="flex flex-col gap-2 p-4 bg-sun-surface rounded-xl border border-amber-200">
           <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-full bg-ink-blue text-white font-display font-bold text-xs flex items-center justify-center">1</span>
-            <h4 class="font-display font-bold text-sm text-slate-main">Giải nén & Chạy File .bat</h4>
+            <span class="w-7 h-7 rounded-full bg-sun-dark text-white font-display font-bold text-xs flex items-center justify-center">1</span>
+            <h4 class="font-display font-bold text-sm text-sun-dark">Giải nén & Chạy File .bat</h4>
           </div>
-          <p class="text-xs text-slate-muted leading-relaxed">
+          <p class="text-xs text-slate-600 leading-relaxed">
             Tải file ZIP về, giải nén và nhấp đúp chạy file <strong><code>CAI_DAT_TIEN_ICH_CHROME.bat</code></strong>. File sẽ tự sao chép đường dẫn và mở sẵn trang quản lý tiện ích Chrome.
           </p>
         </div>
 
         <!-- Bước 2 -->
-        <div class="flex flex-col gap-2 p-4 bg-surface-cream rounded-xl border border-slate-200">
+        <div class="flex flex-col gap-2 p-4 bg-sun-surface rounded-xl border border-amber-200">
           <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-full bg-ink-blue text-white font-display font-bold text-xs flex items-center justify-center">2</span>
-            <h4 class="font-display font-bold text-sm text-slate-main">Nạp Tiện Ích Vào Chrome</h4>
+            <span class="w-7 h-7 rounded-full bg-sun-dark text-white font-display font-bold text-xs flex items-center justify-center">2</span>
+            <h4 class="font-display font-bold text-sm text-sun-dark">Nạp Tiện Ích Vào Chrome</h4>
           </div>
-          <p class="text-xs text-slate-muted leading-relaxed">
+          <p class="text-xs text-slate-600 leading-relaxed">
             Trên trang Chrome vừa mở, bật công tắc <strong>"Chế độ dành cho nhà phát triển"</strong> (góc trên bên phải) ➔ Bấm <strong>"Tải tiện ích đã giải nén"</strong> ➔ Chọn thư mục <code>chrome_extension</code>.
           </p>
         </div>
 
         <!-- Bước 3 -->
-        <div class="flex flex-col gap-2 p-4 bg-surface-cream rounded-xl border border-slate-200">
+        <div class="flex flex-col gap-2 p-4 bg-sun-surface rounded-xl border border-amber-200">
           <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-full bg-ink-blue text-white font-display font-bold text-xs flex items-center justify-center">3</span>
-            <h4 class="font-display font-bold text-sm text-slate-main">Lưu Cấu Hình Của Thầy/Cô</h4>
+            <span class="w-7 h-7 rounded-full bg-sun-dark text-white font-display font-bold text-xs flex items-center justify-center">3</span>
+            <h4 class="font-display font-bold text-sm text-sun-dark">Lưu Cấu Hình Của Thầy/Cô</h4>
           </div>
-          <p class="text-xs text-slate-muted leading-relaxed">
+          <p class="text-xs text-slate-600 leading-relaxed">
             Bấm vào biểu tượng 🧩 Trợ Lý CSDL ở góc trên Chrome. Chọn Tên hoặc Trường của mình, điền Số điện thoại & Mật khẩu rồi bấm <strong>💾 Lưu Cấu Hình</strong> là xong!
           </p>
         </div>
       </div>
 
-      <!-- Quick Download Banner (2 Bản) -->
-      <div class="mt-2 p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col md:flex-row items-center justify-between gap-4">
+      <!-- Quick Download Banner -->
+      <div class="mt-2 p-4 bg-amber-50 rounded-xl border border-amber-300 flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <span class="text-2xl">📦</span>
+          <span class="text-3xl sun-shine">🌻</span>
           <div>
-            <div class="font-display font-bold text-sm text-emerald-900">Sẵn sàng trải nghiệm ngay hôm nay!</div>
-            <div class="text-xs text-emerald-700">Tải gói tiện ích v5.4.1 mới nhất (1-Click tự động điền lịch báo giảng & TKB 60 GV):</div>
+            <div class="font-display font-bold text-sm text-sun-dark">Sẵn sàng trải nghiệm ngay hôm nay!</div>
+            <div class="text-xs text-amber-800">Tải gói tiện ích v5.5.1 mới nhất (Hoa Mặt Trời & Nắng Vàng — 1-Click tự động):</div>
           </div>
         </div>
         <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <a href="TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip" class="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg border border-blue-800 shadow-[2px_2px_0px_#0F172A] transition-all">
+          <a href="TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip" class="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-black text-xs rounded-lg border-2 border-sun-dark shadow-[2px_2px_0px_#78350F] transition-all">
             <span class="material-symbols-outlined text-sm">download</span>
-            <span>Tải Tiện Ích v5.4.1 (~230KB)</span>
+            <span>Tải Tiện Ích v5.5.1 (~230KB)</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- SECTION MỚI: KỸ NĂNG ANTIGRAVITY AI (2-FILE RULE) -->
-    <section class="bg-paper-bg rounded-2xl border-2 border-slate-main p-6 sm:p-8 shadow-[4px_4px_0px_#0F172A] flex flex-col gap-6">
-      <div class="border-b-2 border-slate-main pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+    <!-- SECTION: KỸ NĂNG ANTIGRAVITY AI (2-FILE RULE) -->
+    <section class="bg-white rounded-2xl border-2 border-sun-dark p-6 sm:p-8 shadow-[4px_4px_0px_#78350F] flex flex-col gap-6">
+      <div class="border-b-2 border-sun-dark pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div class="flex items-center gap-2">
-          <span class="text-2xl">⚡</span>
+          <span class="text-2xl">🌻</span>
           <div>
-            <h2 class="font-display font-bold text-lg sm:text-xl text-slate-main uppercase tracking-tight">KỸ NĂNG ANTIGRAVITY AI: ĐIỀN LỊCH TUẦN TRONG 3 GIÂY</h2>
-            <div class="text-xs text-slate-muted">Dành cho Thầy/Cô sử dụng trợ lý Antigravity — Quy tắc tối giản chỉ cần đúng 2 tệp đầu vào</div>
+            <h2 class="font-display font-bold text-lg sm:text-xl text-sun-dark uppercase tracking-tight">KỸ NĂNG ANTIGRAVITY AI: ĐIỀN LỊCH TUẦN TRONG 3 GIÂY</h2>
+            <div class="text-xs text-slate-500">Dành cho Thầy/Cô sử dụng trợ lý Antigravity — Quy tắc tối giản chỉ cần đúng 2 tệp đầu vào</div>
           </div>
         </div>
-        <span class="self-start sm:self-auto text-xs bg-sticker-yellow text-amber-900 px-3 py-1 rounded-full font-bold border border-amber-300">
+        <span class="self-start sm:self-auto text-xs bg-amber-100 text-sun-dark px-3 py-1 rounded-full font-bold border border-amber-300">
           Chỉ Cần 2 Files
         </span>
       </div>
 
       <!-- Description Banner -->
-      <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs sm:text-sm text-emerald-900 leading-relaxed">
+      <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs sm:text-sm text-sun-dark leading-relaxed">
         Thầy/Cô chỉ cần kéo thả <strong>1 File Mẫu Tuần (.xlsx)</strong> và <strong>1 File TKB Toàn Trường (.csv/.xlsx)</strong> vào Antigravity rồi nhắn: <em>"Điền lịch báo giảng tuần mới cho tôi"</em>. Trợ lý AI sẽ tự động phân tích TKB giáo viên, tính lũy kế số tiết PPCT từng lớp và tạo file Excel hoàn chỉnh 100% trong nháy mắt!
       </div>
 
       <!-- Infographic Image -->
       <div class="flex flex-col gap-3">
         <a href="infographic_huong_dan_lbg.png" target="_blank" title="Bấm để xem ảnh phóng to kích thước đầy đủ">
-          <img src="infographic_huong_dan_lbg.png" alt="Hướng dẫn 3 bước tự động điền lịch báo giảng" class="w-full rounded-xl border-2 border-slate-main shadow-[3px_3px_0px_#0F172A] hover:opacity-95 transition-all cursor-zoom-in"/>
+          <img src="infographic_huong_dan_lbg.png" alt="Hướng dẫn 3 bước tự động điền lịch báo giảng" class="w-full rounded-xl border-2 border-sun-dark shadow-[3px_3px_0px_#78350F] hover:opacity-95 transition-all cursor-zoom-in"/>
         </a>
-        <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-muted">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
           <span>💡 <em>Bấm vào hình để mở ảnh Infographic kích thước lớn tải về điện thoại/máy tính.</em></span>
           <div class="flex items-center gap-2">
-            <a href="infographic_huong_dan_lbg.html" target="_blank" class="text-ink-blue font-bold hover:underline">🌐 Bản web tương tác</a>
+            <a href="infographic_huong_dan_lbg.html" target="_blank" class="text-sun-amber font-bold hover:underline">🌐 Bản web tương tác</a>
             <span>•</span>
-            <a href="skills/tu-dong-dien-lich-bao-giang/" class="text-emerald-700 font-bold hover:underline">📁 Thư mục Skill Antigravity</a>
+            <a href="skills/tu-dong-dien-lich-bao-giang/" class="text-leaf-dark font-bold hover:underline">📁 Thư mục Skill Antigravity</a>
           </div>
         </div>
       </div>
@@ -232,24 +261,26 @@
 
   </main>
 
-  <!-- FOOTER (TUÂN THỦ NGUYÊN TẮC BẢO MẬT PHÁP LÝ & TÊN TỔ CHỨC) -->
-  <footer class="w-full bg-paper-bg border-t-2 border-slate-main py-6 mt-8">
+  <!-- FOOTER (HOA MẶT TRỜI & CỘNG ĐỒNG GIÁO VIÊN - ĐÃ BỎ CÁ NHÂN HÓA) -->
+  <footer class="w-full bg-sun-surface border-t-2 border-sun-dark py-6 mt-8">
     <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
       <div class="flex flex-col gap-1">
-        <div class="font-display font-bold text-sm text-slate-main">
-          © 2026 Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
+        <div class="font-display font-bold text-sm text-sun-dark flex items-center justify-center sm:justify-start gap-1.5">
+          <span>🌻</span>
+          <span>© 2026 Dự Án Trợ Lý CSDL Học Đường & Cộng Đồng Giáo Viên Chuyển Đổi Số</span>
+          <span>☀️</span>
         </div>
-        <div class="text-xs text-slate-muted">
-          Sáng kiến phi lợi nhuận hỗ trợ Quý Thầy/Cô giáo chuyển đổi số học đường nhẹ nhàng & hiệu quả.
+        <div class="text-xs text-slate-500">
+          Sáng kiến phi lợi nhuận mang ánh nắng ấm áp và năng lượng hoa mặt trời tiếp sức cho Quý Thầy/Cô.
         </div>
       </div>
       <div class="flex items-center gap-3">
-        <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-cream hover:bg-sprout-green text-slate-main font-semibold text-xs rounded-lg border border-slate-main shadow-[1.5px_1.5px_0px_#0F172A] transition-all">
-          <span class="material-symbols-outlined text-sm text-emerald-600">chat</span>
+        <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-leaf-light text-leaf-dark font-semibold text-xs rounded-lg border border-sun-dark shadow-[1.5px_1.5px_0px_#78350F] transition-all">
+          <span class="material-symbols-outlined text-sm text-leaf-green">chat</span>
           <span>Zalo AI</span>
         </a>
-        <a href="https://github.com/hungcnfree/lbg-dongnai" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-cream hover:bg-amber-100 text-slate-main font-semibold text-xs rounded-lg border border-slate-main shadow-[1.5px_1.5px_0px_#0F172A] transition-all">
-          <span class="material-symbols-outlined text-sm text-ink-blue">code</span>
+        <a href="https://github.com/hungcnfree/lbg-dongnai" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-amber-100 text-sun-dark font-semibold text-xs rounded-lg border border-sun-dark shadow-[1.5px_1.5px_0px_#78350F] transition-all">
+          <span class="material-symbols-outlined text-sm text-sun-amber">code</span>
           <span>GitHub</span>
         </a>
       </div>

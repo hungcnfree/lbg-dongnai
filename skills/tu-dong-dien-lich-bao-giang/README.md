@@ -1,7 +1,7 @@
 # 🤖 Kỹ Năng Antigravity: Tự Động Điền Lịch Báo Giảng Tuần (2-File Rule)
 
 > **Dành cho giáo viên sử dụng Antigravity AI:** Tự động hoàn thành bảng lịch báo giảng tuần chuẩn CSDL Giáo dục chỉ trong 3 giây.  
-> Tác quyền: **© 2026 Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai**.
+> Bản quyền: **© 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️**.
 
 ---
 
@@ -42,4 +42,4 @@ Thầy/Cô chỉ cần gửi cho AI đúng **2 file**:
 
 ---
 
-*Mọi thắc mắc và đóng góp, thầy/cô vui lòng liên hệ Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai.*
+*Mọi thắc mắc và đóng góp, Thầy/Cô vui lòng nhắn trong Nhóm Zalo AI Giáo dục.*

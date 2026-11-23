@@ -1,7 +1,7 @@
 // lbg_excel_engine.js - Quản lý, Phân Tích & Sinh Lịch Báo Giảng Excel Tự Động
-// Phiên bản: v5.4.1 (Bộ giải mã Thời khóa biểu Đa năng Siêu Thông Minh)
+// Phiên bản: v5.5.1 (Hoa Mặt Trời & Nắng Vàng 🌻☀️ - Bộ giải mã Thời khóa biểu Đa năng)
 // Hỗ trợ: Ma trận Khối GV, Lưới Toàn Trường, Đa Sheet, Bảng CSDL / vnEdu / SMAS
-// Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
+// Tác quyền: © 2026 Dự Án Trợ Lý CSDL Học Đường & Cộng Đồng Giáo Viên Chuyển Đổi Số
 
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {

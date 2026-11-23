@@ -3,8 +3,8 @@ chcp 65001 >nul
 title CÀI ĐẶT TIỆN ÍCH CHROME - BẢN NỘI BỘ THCS ĐĂK Ơ
 cls
 echo ====================================================================
-echo   TRỢ LÝ TỰ ĐỘNG CSDL - BẢN NỘI BỘ THCS ĐĂK Ơ (v5.4.0)
-echo   Tác quyền: Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
+echo   🌻 TRỢ LÝ TỰ ĐỘNG CSDL - HOA MẶT TRỜI & NẮNG VÀNG (v5.5.1)
+echo   Bản quyền: Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 echo ====================================================================
 echo.
 set EXT_DIR=%~dp0chrome_extension

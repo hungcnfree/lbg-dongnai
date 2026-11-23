@@ -81,4 +81,4 @@ Xem hình ảnh hướng dẫn trực quan:
 
 ---
 
-*Tác quyền: © 2026 Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai.*
+*Bản quyền: © 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️.*

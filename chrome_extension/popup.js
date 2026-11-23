@@ -1,7 +1,7 @@
-// popup.js - Trợ Lý CSDL v5.4.1
-// Tác quyền: © 2026 Thầy Nông Văn Hùng và Cộng đồng AI Giáo dục Đồng Nai
+// popup.js - Trợ Lý CSDL v5.5.1 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
+// Bản quyền: © 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 
-const CURRENT_VERSION = '5.4.1';
+const CURRENT_VERSION = '5.5.1';
 
 document.addEventListener('DOMContentLoaded', () => {
   const nameSelect = document.getElementById('cfg-name');

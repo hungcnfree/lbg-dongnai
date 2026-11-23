@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 dien_lich_bao_giang.py - Bộ xử lý Tự Động Điền Lịch Báo Giảng Cho Giáo Viên
-Tác quyền: © 2026 Thầy Nông Văn Hùng & Cộng đồng AI Giáo dục Đồng Nai
+Tác quyền: © 2026 Dự Án Trợ Lý CSDL Học Đường & Cộng Đồng Giáo Viên Chuyển Đổi Số
 Quy chuẩn CSDL Giáo dục Đồng Nai / vnEdu / SMAS / Q.Doc
 
 Chỉ cần 2 tệp đầu vào:
