@@ -1,8 +1,6 @@
 # 🌻 Trợ Lý Tự Động CSDL & Lịch Báo Giảng (v5.5.1)
 
-> **Phiên bản Hoa Mặt Trời & Nắng Vàng 🌻☀️:** Hệ sinh thái tự động hóa nghiệp vụ Lịch báo giảng và CSDL Giáo dục gồm:  
-> 1. **Kỹ năng Antigravity AI**: Tự động điền phôi Lịch báo giảng tuần chỉ với 2 tệp đầu vào trong 3 giây.  
-> 2. **Tiện ích mở rộng Google Chrome (Manifest V3)**: Tự động đăng nhập CSDL, 1-click nạp lịch/hoàn thành tuần, và tính năng **Cập nhật 1-Click hiển thị thanh tiến trình 100%** không cần tải file rườm rà.  
+> **Phiên bản Hoa Mặt Trời & Nắng Vàng 🌻☀️:** Tiện ích mở rộng Google Chrome (Manifest V3) hỗ trợ tự động hóa nghiệp vụ Lịch báo giảng và CSDL Giáo dục: Tự động đăng nhập CSDL, 1-click nạp lịch/hoàn thành tuần, và tính năng **Cập nhật 1-Click hiển thị thanh tiến trình 100%** không cần tải file rườm rà.  
 > Bản quyền: **© 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️**.
 
 🌐 **Trang web hướng dẫn trực tuyến (GitHub Pages):**  
@@ -21,24 +19,6 @@
 2. **Cập nhật 1-Click 100% Tiến Trình:** Bấm nút *⚡ Cập Nhật Phiên Bản Mới* ngay trong tiện ích, thanh trạng thái chạy từ 0% ➔ 100%, nạp dữ liệu TKB mới trực tiếp vào bộ nhớ mà không cần tải file rườm rà.
 3. **Nâng cấp bộ giải mã TKB:** Duyệt theo thứ tự tiết dạy chuẩn xác trong tuần (`stt`), chuẩn hóa danh mục môn học CSDL (sheet `MonHoc`).
 
----
-
-## ⚡ KỸ NĂNG ANTIGRAVITY AI: TỰ ĐỘNG ĐIỀN LỊCH TUẦN (2-FILE RULE)
-
-> **Dành cho Thầy/Cô sử dụng Antigravity AI:** Không cần cài đặt extension nếu chỉ muốn tạo file Excel lịch báo giảng tuần. Thầy/Cô chỉ cần cung cấp đúng **2 tệp duy nhất**:
-> 1. **File Mẫu Tuần (`.xlsx`)**: Tải từ CSDL hoặc file lịch tuần trước của mình.
-> 2. **File TKB Toàn Trường (`.csv` hoặc `.xlsx`)**: File thời khóa biểu chung do BGH/nhà trường xuất ra.
-
-### 🖼️ Hướng Dẫn 3 Bước Bằng Ảnh Infographic:
-
-![Hướng Dẫn 3 Bước Tự Động Điền Lịch Báo Giảng](infographic_huong_dan_lbg.png)
-
-### 3 Bước Thao Tác Siêu Nhanh:
-1. Kéo thả 2 file vào khung chat Antigravity AI.
-2. Gõ lệnh: `"Điền lịch báo giảng tuần 12 cho tôi"` (hoặc `"Tạo lịch tuần tiếp theo từ 2 file này"`).
-3. Nhận ngay file `LichBaoGiang_Tuan[X]_[TenGV].xlsx` hoàn tất 100% (tự nhận diện GV, tự tính lũy kế số tiết PPCT, khớp đúng 54 ô CSDL)!
-
-📁 **Mã nguồn kỹ năng Antigravity:** Thư mục [`skills/tu-dong-dien-lich-bao-giang/`](skills/tu-dong-dien-lich-bao-giang/)
 
 ---
 
