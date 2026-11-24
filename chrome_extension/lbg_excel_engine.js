@@ -1,5 +1,5 @@
 // lbg_excel_engine.js - Quản lý, Phân Tích & Sinh Lịch Báo Giảng Excel Tự Động
-// Phiên bản: v5.5.1 (Hoa Mặt Trời & Nắng Vàng 🌻☀️ - Bộ giải mã Thời khóa biểu Đa năng)
+// Phiên bản: v5.5.2 (Hoa Mặt Trời & Nắng Vàng 🌻☀️ - Bộ giải mã Thời khóa biểu Đa năng)
 // Hỗ trợ: Ma trận Khối GV, Lưới Toàn Trường, Đa Sheet, Bảng CSDL / vnEdu / SMAS
 // Tác quyền: © 2026 Dự Án Trợ Lý CSDL Học Đường & Cộng Đồng Giáo Viên Chuyển Đổi Số
 

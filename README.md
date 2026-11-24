@@ -1,4 +1,4 @@
-# 🌻 Trợ Lý Tự Động CSDL & Lịch Báo Giảng (v5.5.1)
+# 🌻 Trợ Lý Tự Động CSDL & Lịch Báo Giảng (v5.5.2)
 
 > **Phiên bản Hoa Mặt Trời & Nắng Vàng 🌻☀️:** Tiện ích mở rộng Google Chrome (Manifest V3) hỗ trợ tự động hóa nghiệp vụ Lịch báo giảng và CSDL Giáo dục: Tự động đăng nhập CSDL, 1-click nạp lịch/hoàn thành tuần, và tính năng **Cập nhật 1-Click hiển thị thanh tiến trình 100%** không cần tải file rườm rà.  
 > Bản quyền: **© 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️**.
@@ -7,14 +7,14 @@
 👉 **[https://hungcnfree.github.io/lbg-dongnai/](https://hungcnfree.github.io/lbg-dongnai/)**
 
 📦 **Tải trực tiếp gói tiện ích đã đóng gói (ZIP ~230KB):**  
-👉 **[Tải file TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip](https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip)**
+👉 **[Tải file TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.2.zip](https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.2.zip)**
 
 💬 **Nhóm Zalo AI chia sẻ & hỗ trợ giáo viên:**  
 👉 **[https://zalo.me/g/2vhbtmsqdr06gyfiuru8](https://zalo.me/g/2vhbtmsqdr06gyfiuru8)**
 
 ---
 
-## 🌻 ĐIỂM MỚI V5.5.1: PHIÊN BẢN HOA MẶT TRỜI & NẮNG VÀNG
+## 🌻 ĐIỂM MỚI V5.5.2: PHIÊN BẢN HOA MẶT TRỜI & NẮNG VÀNG
 1. **Giao diện Nắng Vàng Rực Rỡ:** Mang nguồn năng lượng ấm áp, tích cực của hoa mặt trời tiếp sức cho Quý Thầy/Cô mỗi sớm mai lên lớp.
 2. **Cập nhật 1-Click 100% Tiến Trình:** Bấm nút *⚡ Cập Nhật Phiên Bản Mới* ngay trong tiện ích, thanh trạng thái chạy từ 0% ➔ 100%, nạp dữ liệu TKB mới trực tiếp vào bộ nhớ mà không cần tải file rườm rà.
 3. **Nâng cấp bộ giải mã TKB:** Duyệt theo thứ tự tiết dạy chuẩn xác trong tuần (`stt`), chuẩn hóa danh mục môn học CSDL (sheet `MonHoc`).
@@ -22,7 +22,7 @@
 
 ---
 
-## 🌟 TÍNH NĂNG VƯỢT TRỘI v5.5.1 (TIỆN ÍCH CHROME)
+## 🌟 TÍNH NĂNG VƯỢT TRỘI v5.5.2 (TIỆN ÍCH CHROME)
 
 1. **Tự động điền 1-Click Lịch Báo Giảng:**
    - Hệ thống tự nhận biết tuần hiện tại (như Tuần 11, 12, 13...).
@@ -54,8 +54,8 @@ lbg-dongnai/
 ├── index.html                        # Bản build deploy trực tiếp lên GitHub Pages
 ├── infographic_huong_dan_lbg.png     # Ảnh Infographic hướng dẫn 3 bước điền lịch tuần
 ├── infographic_huong_dan_lbg.html    # Bản web tương tác của Infographic
-├── version.json                      # Cấu hình kiểm tra cập nhật tự động v5.5.1
-├── TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip # Gói tiện ích cài đặt v5.5.1
+├── version.json                      # Cấu hình kiểm tra cập nhật tự động v5.5.2
+├── TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.2.zip # Gói tiện ích cài đặt v5.5.2
 ├── skills/                           # Kỹ năng dành cho Antigravity AI Assistant
 │   └── tu-dong-dien-lich-bao-giang/  # Kỹ năng tự động điền lịch tuần từ 2 files
 │       ├── SKILL.md                  # Hướng dẫn chi tiết cho Agent

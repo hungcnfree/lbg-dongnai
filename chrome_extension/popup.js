@@ -1,7 +1,7 @@
-// popup.js - Trợ Lý CSDL v5.5.1 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
+// popup.js - Trợ Lý CSDL v5.5.2 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
 // Bản quyền: © 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 
-const CURRENT_VERSION = '5.5.1';
+const CURRENT_VERSION = '5.5.2';
 
 document.addEventListener('DOMContentLoaded', () => {
   const nameSelect = document.getElementById('cfg-name');

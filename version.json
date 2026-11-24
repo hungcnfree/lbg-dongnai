@@ -1,17 +1,17 @@
 {
-  "version": "5.5.1",
-  "versionCode": 551,
-  "releaseDate": "23/11/2026",
-  "title": "Trợ Lý CSDL v5.5.1 - Phiên Bản Hoa Mặt Trời & Nắng Vàng 🌻☀️",
+  "version": "5.5.2",
+  "versionCode": 552,
+  "releaseDate": "24/11/2026",
+  "title": "Trợ Lý CSDL v5.5.2 - Phiên Bản Hoa Mặt Trời & Nắng Vàng 🌻☀️",
   "changelog": [
-    "Giao diện Hoa Mặt Trời & Nắng Vàng rạng rỡ, tiếp thêm năng lượng tích cực cho Thầy/Cô mỗi sớm mai.",
-    "Cập nhật 1-Click thông minh: Hiển thị thanh tiến trình 0% đến 100%, nạp dữ liệu TKB mới trực tiếp vào bộ nhớ.",
-    "Nâng cấp bộ giải mã TKB v5.5.1: Duyệt theo STT tiết dạy, chuẩn hóa danh mục môn học CSDL (sheet MonHoc).",
-    "Tối ưu tương tác tự động với popup KhaiBaoLichBaoGiangTuExcel và tự động bấm Ghi hoàn tất."
+    "Chặn hoàn toàn tiện ích trên trang Nhập điểm (NhapDiemDiaPhuong.aspx, SoDiem.aspx, DiemTongKet.aspx, Điểm danh), không gây vướng hay cản trở nạp Excel điểm.",
+    "Thông báo hoàn thành tự động đóng sau 4 giây kèm nút X đóng nhanh tiện lợi.",
+    "Giao diện Hoa Mặt Trời & Nắng Vàng rạng rỡ, tràn đầy năng lượng tích cực.",
+    "Cập nhật 1-Click thông minh với thanh trạng thái 100% không cần tải lại thủ công."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip",
-    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.4.1.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.2.zip",
+    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"
   }
 }

@@ -3,7 +3,7 @@ chcp 65001 >nul
 title CÀI ĐẶT TIỆN ÍCH CHROME - BẢN NỘI BỘ THCS ĐĂK Ơ
 cls
 echo ====================================================================
-echo   🌻 TRỢ LÝ TỰ ĐỘNG CSDL - HOA MẶT TRỜI & NẮNG VÀNG (v5.5.1)
+echo   🌻 TRỢ LÝ TỰ ĐỘNG CSDL - HOA MẶT TRỜI & NẮNG VÀNG (v5.5.2)
 echo   Bản quyền: Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 echo ====================================================================
 echo.

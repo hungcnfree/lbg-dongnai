@@ -7,7 +7,7 @@ $destDir = Join-Path $PSScriptRoot "chrome_extension"
 
 Clear-Host
 Write-Host "==========================================================" -ForegroundColor Yellow
-Write-Host "   🌻 TRỢ LÝ TỰ ĐỘNG CSDL - HOA MẶT TRỜI & NẮNG VÀNG v5.5.1" -ForegroundColor Yellow
+Write-Host "   🌻 TRỢ LÝ TỰ ĐỘNG CSDL - HOA MẶT TRỜI & NẮNG VÀNG v5.5.2" -ForegroundColor Yellow
 Write-Host "   Tác quyền: (c) 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số" -ForegroundColor DarkYellow
 Write-Host "==========================================================" -ForegroundColor Yellow
 Write-Host ""
@@ -32,7 +32,7 @@ try {
     Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing
 } catch {
     Show-ProgressBar 35 "Đang tải gói cập nhật dự phòng..."
-    $fallbackUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.1.zip"
+    $fallbackUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.2.zip"
     Invoke-WebRequest -Uri $fallbackUrl -OutFile $tempZip -UseBasicParsing
 }
 
