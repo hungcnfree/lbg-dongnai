@@ -17,7 +17,9 @@
   const isLbgPage = currentUrl.includes('khaibaolichbaogiang');
 
   if (!isLoginPage && !isLbgPage) {
-    // Không thuộc phạm vi Lịch Báo Giảng hay Đăng Nhập -> Dừng ngay lập tức 100%!
+    // Không thuộc phạm vi Lịch Báo Giảng hay Đăng Nhập -> Gỡ bỏ thanh công cụ nếu có và Dừng ngay lập tức 100%!
+    const bar = document.getElementById('csdl-quick-confirm-bar');
+    if (bar) bar.remove();
     return;
   }
 

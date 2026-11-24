@@ -28,6 +28,16 @@
       "matches": [
         "*://truong.dongnai.edu.vn/*"
       ],
+      "exclude_matches": [
+        "*://truong.dongnai.edu.vn/*nhapdiem*",
+        "*://truong.dongnai.edu.vn/*NhapDiem*",
+        "*://truong.dongnai.edu.vn/*sodiem*",
+        "*://truong.dongnai.edu.vn/*SoDiem*",
+        "*://truong.dongnai.edu.vn/*diemtongket*",
+        "*://truong.dongnai.edu.vn/*DiemTongKet*",
+        "*://truong.dongnai.edu.vn/*diemdanh*",
+        "*://truong.dongnai.edu.vn/*DiemDanh*"
+      ],
       "js": [
         "xlsx.mini.min.js",
         "template_lbg_base64.js",
