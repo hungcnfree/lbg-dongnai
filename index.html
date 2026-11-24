@@ -74,6 +74,10 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
+        <a href="#video-huong-dan" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-amber-100 text-sun-dark font-bold text-xs rounded-lg border-2 border-sun-dark shadow-[2px_2px_0px_#78350F] transition-all">
+          <span class="material-symbols-outlined text-sm text-amber-600">play_circle</span>
+          <span>Video Hướng Dẫn</span>
+        </a>
         <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-leaf-light text-leaf-dark font-bold text-xs rounded-lg border-2 border-leaf-dark shadow-[2px_2px_0px_#047857] transition-all">
           <span class="material-symbols-outlined text-sm text-leaf-green">chat</span>
           <span>Nhóm Zalo AI</span>
@@ -118,6 +122,10 @@
             <a href="TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.3.zip" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-black text-sm rounded-xl border-2 border-sun-dark shadow-[3px_3px_0px_#78350F] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all">
               <span class="material-symbols-outlined text-lg">download</span>
               <span>⚡ Tải Bản Mới Nhất v5.5.3 (Hoa Mặt Trời & Nắng Vàng)</span>
+            </a>
+            <a href="#video-huong-dan" class="inline-flex items-center gap-2 px-4 py-3 bg-white hover:bg-amber-100 text-sun-dark font-bold text-sm rounded-xl border-2 border-sun-dark shadow-[2px_2px_0px_#78350F] transition-all">
+              <span class="material-symbols-outlined text-lg text-amber-600">play_circle</span>
+              <span>🎬 Xem Video Hướng Dẫn (3 Phút)</span>
             </a>
             <a href="https://zalo.me/g/2vhbtmsqdr06gyfiuru8" target="_blank" class="inline-flex items-center gap-2 px-4 py-3 bg-white hover:bg-leaf-light text-leaf-dark font-bold text-sm rounded-xl border-2 border-sun-dark shadow-[2px_2px_0px_#78350F] transition-all">
               <span class="material-symbols-outlined text-lg text-leaf-green">groups</span>
@@ -173,6 +181,110 @@
         <p class="text-xs text-slate-600 leading-relaxed">
           Nút <strong>"⚡ Cập Nhật Phiên Bản Mới"</strong> ngay trong tiện ích với thanh tiến trình <strong>0% ➔ 100%</strong>, tự nạp dữ liệu TKB mới mà không cần tải file ZIP rườm rà!
         </p>
+      </div>
+
+    </section>
+
+    <!-- SECTION VIDEO HƯỚNG DẪN THAO TÁC TRỰC QUAN -->
+    <section id="video-huong-dan" class="bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7] to-[#FDE68A] rounded-2xl border-2 border-sun-dark p-6 sm:p-8 shadow-[5px_5px_0px_#78350F] flex flex-col gap-6 scroll-mt-20">
+      
+      <!-- Section Header -->
+      <div class="border-b-2 border-sun-dark pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="text-3xl sun-shine">🎬</span>
+          <div>
+            <h2 class="font-display font-black text-lg sm:text-xl text-sun-dark uppercase tracking-tight flex items-center gap-2">
+              <span>VIDEO HƯỚNG DẪN THAO TÁC TRỰC QUAN</span>
+              <span class="text-xs bg-red-600 text-white font-sans font-bold px-2 py-0.5 rounded-full shadow-sm">HD 1080p</span>
+            </h2>
+            <div class="text-xs text-slate-700 font-medium">Quan sát video thực tế 3 phút để tự cài đặt và thực hiện báo giảng siêu tốc</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1 text-xs bg-white text-sun-dark px-3 py-1 rounded-full font-bold border border-sun-dark shadow-[1.5px_1.5px_0px_#78350F]">
+            <span class="material-symbols-outlined text-sm text-amber-600">play_circle</span>
+            <span>Bấm nút Play ▶ để xem</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Video Player Wrapper -->
+      <div class="flex flex-col lg:flex-row gap-6 items-start">
+        
+        <!-- Video Box -->
+        <div class="w-full lg:w-2/3 flex flex-col gap-2">
+          <div class="relative w-full aspect-video rounded-xl border-2 border-sun-dark bg-black shadow-[4px_4px_0px_#78350F] overflow-hidden">
+            <video 
+              id="tutorial-video"
+              class="w-full h-full object-cover" 
+              controls 
+              preload="metadata" 
+              poster="video_poster.jpg">
+              <source src="video_huong_dan_lbg.mp4" type="video/mp4"/>
+              Trình duyệt của bạn không hỗ trợ thẻ video HTML5. Thầy/Cô vui lòng cập nhật trình duyệt Chrome/Cốc Cốc.
+            </video>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-slate-600 px-1">
+            <span class="flex items-center gap-1 font-medium">
+              <span class="material-symbols-outlined text-xs text-amber-600">info</span>
+              Video ở chế độ tạm dừng. Thầy/Cô nhấn nút ▶ để bắt đầu xem.
+            </span>
+            <span class="font-bold text-sun-dark">Thời lượng: 03:07</span>
+          </div>
+        </div>
+
+        <!-- Video Chapters & Highlights -->
+        <div class="w-full lg:w-1/3 flex flex-col gap-3">
+          <div class="bg-white p-4 rounded-xl border-2 border-sun-dark shadow-sm flex flex-col gap-2.5">
+            <div class="flex items-center gap-2 font-display font-bold text-xs uppercase tracking-wide text-sun-dark border-b border-amber-200 pb-2">
+              <span class="material-symbols-outlined text-sm text-amber-600">list_alt</span>
+              <span>CÁC MỐC THỜI GIAN CHÍNH:</span>
+            </div>
+
+            <!-- Chapter 1 -->
+            <button type="button" onclick="seekVideo(0)" class="text-left p-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 flex items-start gap-2.5 transition-all group">
+              <span class="px-2 py-0.5 bg-amber-500 text-slate-950 font-display font-black text-[11px] rounded border border-sun-dark shadow-xs shrink-0 group-hover:scale-105 transition-transform">00:00</span>
+              <div class="flex flex-col">
+                <span class="font-bold text-xs text-slate-800">Giải nén & Nạp vào Chrome</span>
+                <span class="text-[11px] text-slate-500">Chạy file .bat và chọn thư mục chrome_extension</span>
+              </div>
+            </button>
+
+            <!-- Chapter 2 -->
+            <button type="button" onclick="seekVideo(55)" class="text-left p-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 flex items-start gap-2.5 transition-all group">
+              <span class="px-2 py-0.5 bg-amber-500 text-slate-950 font-display font-black text-[11px] rounded border border-sun-dark shadow-xs shrink-0 group-hover:scale-105 transition-transform">00:55</span>
+              <div class="flex flex-col">
+                <span class="font-bold text-xs text-slate-800">Ghim & Cấu hình tài khoản</span>
+                <span class="text-[11px] text-slate-500">Chọn tên trong danh sách 60 GV & lưu mật khẩu</span>
+              </div>
+            </button>
+
+            <!-- Chapter 3 -->
+            <button type="button" onclick="seekVideo(90)" class="text-left p-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 flex items-start gap-2.5 transition-all group">
+              <span class="px-2 py-0.5 bg-amber-500 text-slate-950 font-display font-black text-[11px] rounded border border-sun-dark shadow-xs shrink-0 group-hover:scale-105 transition-transform">01:30</span>
+              <div class="flex flex-col">
+                <span class="font-bold text-xs text-slate-800">Đăng nhập CSDL tự động</span>
+                <span class="text-[11px] text-slate-500">Robot tự chọn trường, Thầy/Cô chỉ gõ 8 mã CAPTCHA</span>
+              </div>
+            </button>
+
+            <!-- Chapter 4 -->
+            <button type="button" onclick="seekVideo(135)" class="text-left p-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 flex items-start gap-2.5 transition-all group">
+              <span class="px-2 py-0.5 bg-emerald-600 text-white font-display font-black text-[11px] rounded border border-emerald-800 shadow-xs shrink-0 group-hover:scale-105 transition-transform">02:15</span>
+              <div class="flex flex-col">
+                <span class="font-bold text-xs text-emerald-900">Báo giảng 1-Click (Mục 3.6.2)</span>
+                <span class="text-[11px] text-emerald-700">Bấm "Tự Động Điền" và "Hoàn Thành Tuần" trong 0.5s</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Quick Tip Box -->
+          <div class="p-3 bg-white/80 rounded-xl border border-sun-dark/40 text-xs text-slate-700 flex items-center gap-2">
+            <span class="text-xl">💡</span>
+            <span>Thầy/Cô có thể nhấp vào các mốc thời gian trên để tua nhanh đến bước cần thực hiện!</span>
+          </div>
+        </div>
+
       </div>
 
     </section>
@@ -372,5 +484,17 @@
     </div>
   </footer>
 
+  <!-- Video Seek Helper Script -->
+  <script>
+    function seekVideo(seconds) {
+      const v = document.getElementById('tutorial-video');
+      if (v) {
+        v.currentTime = seconds;
+        v.play();
+        // Cuộn mượt đến video nếu màn hình đang ở xa
+        v.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  </script>
 </body>
 </html>
