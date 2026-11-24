@@ -741,7 +741,7 @@
     return { value: raw, ok: false };
   }
 
-  // opts: { teacherTitle: 'Nông Văn Hùng (7023564959)', weekText: 'Tuần 11 (16/11/2026 - 21/11/2026)' }
+  // opts: { teacherTitle: 'Giáo Viên Bộ Môn', weekText: 'Tuần 11 (16/11/2026 - 21/11/2026)' }
   // Trả về { blob, info } - info cho biết đã ghi bao nhiêu tiết và những cảnh báo thật.
   function generateWeekExcel(weekNum, tkbConfig, templateBase64, opts) {
     if (typeof XLSX === 'undefined') {

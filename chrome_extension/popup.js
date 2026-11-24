@@ -40,12 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTkbStatus(res.csdl_tkb_config);
   });
 
+  function getTeacherFromSchoolTkb(schoolTkb, teacherName) {
+    if (!teacherName || !schoolTkb) return null;
+    if (schoolTkb[teacherName]) return schoolTkb[teacherName];
+    const norm = teacherName.trim().toLowerCase();
+    for (const k in schoolTkb) {
+      if (k.trim().toLowerCase() === norm) return schoolTkb[k];
+    }
+    return null;
+  }
+
   // Khi đổi tên trên dropdown
   nameSelect.addEventListener('change', () => {
     currentTeacher = nameSelect.value;
     const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
-    if (currentTeacher && schoolTkb[currentTeacher]) {
-      updateTkbStatus(schoolTkb[currentTeacher]);
+    const foundTkb = getTeacherFromSchoolTkb(schoolTkb, currentTeacher);
+    if (foundTkb) {
+      updateTkbStatus(foundTkb);
     } else {
       updateTkbStatus(null);
     }
@@ -68,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
-    const teacherTkb = schoolTkb[name] || {
+    const teacherTkb = getTeacherFromSchoolTkb(schoolTkb, name) || {
       hasTkb: true,
       teacherName: name,
       baseWeek: 11,
@@ -104,8 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tName = currentTeacher || (nameSelect ? nameSelect.value : '');
 
     let activeCfg = tkbCfg;
-    if (!activeCfg && tName && schoolTkb[tName]) {
-      activeCfg = schoolTkb[tName];
+    if (!activeCfg && tName) {
+      activeCfg = getTeacherFromSchoolTkb(schoolTkb, tName);
     }
 
     if (activeCfg && activeCfg.lessons && activeCfg.lessons.length > 0) {
@@ -172,16 +183,16 @@ document.addEventListener('DOMContentLoaded', () => {
   btnReset.addEventListener('click', () => {
     const tName = currentTeacher || nameSelect.value;
     const schoolTkb = window.DEFAULT_SCHOOL_TKB || {};
-    if (!tName || !schoolTkb[tName]) {
+    const standardTkb = getTeacherFromSchoolTkb(schoolTkb, tName);
+    if (!tName || !standardTkb) {
       alert('⚠️ Vui lòng chọn một Thầy/Cô từ danh sách trước!');
       return;
     }
-    const standardTkb = schoolTkb[tName];
     chrome.storage.local.set({
       csdl_tkb_config: standardTkb,
-      activeTeacher: tName
+      activeTeacher: standardTkb.teacherName || tName
     }, () => {
-      alert('🎉 Đã đặt lại Thời khóa biểu chuẩn toàn trường cho ' + tName.toUpperCase() + ' (' + standardTkb.totalLessons + ' tiết/tuần)!');
+      alert('🎉 Đã đặt lại Thời khóa biểu chuẩn toàn trường cho ' + (standardTkb.teacherName || tName).toUpperCase() + ' (' + standardTkb.totalLessons + ' tiết/tuần)!');
       updateTkbStatus(standardTkb);
     });
   });

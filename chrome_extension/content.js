@@ -531,6 +531,16 @@
     }, holdMs);
   }
 
+  function getTeacherFromSchoolTkb(schoolTkb, teacherName) {
+    if (!teacherName || !schoolTkb) return null;
+    if (schoolTkb[teacherName]) return schoolTkb[teacherName];
+    const norm = teacherName.trim().toLowerCase();
+    for (const k in schoolTkb) {
+      if (k.trim().toLowerCase() === norm) return schoolTkb[k];
+    }
+    return null;
+  }
+
   // NÚT 1: TỰ ĐỘNG ĐIỀN LỊCH BÁO GIẢNG
   function runOneClickFillLbg() {
     if (fillRunning) {
@@ -548,7 +558,7 @@
         let teacherTkb = res.csdl_tkb_config;
 
         if (!teacherTkb || !teacherTkb.lessons || teacherTkb.lessons.length === 0 || teacherTkb.teacherName !== teacherName) {
-          teacherTkb = schoolTkb[teacherName];
+          teacherTkb = getTeacherFromSchoolTkb(schoolTkb, teacherName);
         }
 
         if (!teacherTkb || !teacherTkb.lessons || teacherTkb.lessons.length === 0) {
