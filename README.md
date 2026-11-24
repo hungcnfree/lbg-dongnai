@@ -77,11 +77,26 @@ lbg-dongnai/
 
 ## 🚀 HƯỚNG DẪN CÀI ĐẶT (CHỈ 3 BƯỚC)
 
-1. Nhấp đúp vào file **`CAI_DAT_TIEN_ICH_CHROME.bat`**.  
-   *(Chương trình sẽ tự động sao chép đường dẫn ổ cứng vào Clipboard và mở sẵn trang quản lý tiện ích `chrome://extensions` trên Chrome).*
+1. Tải và giải nén file ZIP, nhấp đúp vào file **`CAI_DAT_TIEN_ICH_CHROME.bat`**.  
+   *(Chương trình sẽ tự động sao chép đường dẫn thư mục `chrome_extension` vào Clipboard và mở sẵn trang quản lý tiện ích `chrome://extensions` trên Chrome).*
 2. Tại trang `chrome://extensions`, bật công tắc **"Chế độ dành cho nhà phát triển"** ở góc trên cùng bên phải. Bấm nút **"Tải tiện ích đã giải nén"** ở góc trên bên trái ➔ Dán đường dẫn hoặc chọn thư mục `chrome_extension`.
-3. Bấm vào biểu tượng Tiện ích (🧩) trên thanh công cụ Chrome ➔ Chọn Tên Thầy/Cô và nhập SĐT + Mật khẩu ➔ Bấm **Lưu cấu hình của tôi**.
-4. **Sử dụng:** Mở `truong.dongnai.edu.vn` ➔ Robot tự động điền 100%, Thầy/Cô chỉ cần gõ 8 ký tự CAPTCHA rồi ấn **Enter**!
+3. Bấm vào biểu tượng Tiện ích (🧩) trên thanh công cụ Chrome ➔ Ghim 📌 Trợ Lý CSDL ➔ Mở tiện ích, chọn **Tên Thầy/Cô** (trong danh sách 60 giáo viên toàn trường Đăk Ơ), nhập SĐT + Mật khẩu CSDL ➔ Bấm **💾 Lưu Cấu Hình Của Tôi**.
+
+---
+
+## ⚡ QUY TRÌNH SỬ DỤNG HÀNG TUẦN (1-CLICK SIÊU TỐC)
+
+1. **Đăng nhập tự động CSDL:** Mở trang `truong.dongnai.edu.vn` ➔ Robot tự động chọn Cấp - Xã - Trường và điền tài khoản. Thầy/Cô chỉ cần nhìn 8 ký tự CAPTCHA, gõ vào ô rồi ấn **Enter** là vào ngay.
+2. **Mở mục 3.6.2 Khai báo:** Vào menu: `3. Kế hoạch giáo dục` ➔ `3.6 Lịch báo giảng` ➔ `3.6.2 Khai báo lịch báo giảng`. Chọn Tuần cần lên lịch.
+3. **Thanh nổi 2 nút thông minh (có thể kéo di chuyển bằng tay cầm ⠿):**
+   - ⚡ **Bấm `⚡ Tự Động Điền`**: Robot tự động nạp toàn bộ lịch dạy theo TKB cá nhân, tính lũy kế số tiết PPCT từng lớp và bấm Ghi thành công trong 0.5 giây!
+   - ✅ **Bấm `✅ Hoàn Thành Tuần`**: Chuyển toàn bộ tiết dạy sang trạng thái 'Hoàn thành' và bấm Ghi xác nhận.
+
+---
+
+## 🔄 CẬP NHẬT KHI NHÀ TRƯỜNG ĐỔI THỜI KHÓA BIỂU
+- **Cách 1 (Khuyên dùng):** Mở tiện ích ➔ Bấm **"⚡ Cập Nhật Phiên Bản Mới (1-Click)"**. Thanh trạng thái chạy từ 0% ➔ 100% tự nạp TKB mới trực tiếp vào bộ nhớ máy mà **không cần tải lại file ZIP hay cài đặt lại**.
+- **Cách 2:** Bấm **"📁 Nhập File TKB Mới (.xlsx, .csv)"** trong popup tiện ích để nạp file TKB toàn trường mới của BGH.
 
 ---
 
