@@ -2,6 +2,25 @@
 // Bản quyền: © 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 
 (function () {
+  const currentUrl = (window.location.href || '').toLowerCase();
+
+  // BẢO VỆ PHẠM VI HOẠT ĐỘNG NGHIÊM NGẶT THEO YÊU CẦU:
+  // Tiện ích CHỈ ĐƯỢC PHÉP chạy trên 2 phạm vi:
+  // 1. Trang Đăng nhập CSDL: URL chứa 'login.aspx' hoặc trang gốc '/'
+  // 2. Trang Khai báo Lịch báo giảng: URL PHẢI chứa 'khaibaolichbaogiang'
+  //    (Bao gồm KhaiBaoLichBaoGiang.aspx và KhaiBaoLichBaoGiangTuExcel.aspx)
+  //
+  // TUYỆT ĐỐI KHÔNG CHẠY trên bất kỳ trang nào khác (đặc biệt là NhapDiemDiaPhuong.aspx, NhapDiem.aspx,
+  // SoDiem.aspx, DiemTongKet.aspx, Điểm danh,...) để bảo đảm không can thiệp, không cản trở việc nạp Excel điểm!
+  const isLoginPage = currentUrl.includes('login.aspx') || 
+                      (window.location.pathname === '/' && (currentUrl.includes('truong.dongnai.edu.vn')));
+  const isLbgPage = currentUrl.includes('khaibaolichbaogiang');
+
+  if (!isLoginPage && !isLbgPage) {
+    // Không thuộc phạm vi Lịch Báo Giảng hay Đăng Nhập -> Dừng ngay lập tức 100%!
+    return;
+  }
+
   // NẾU ĐANG CHẠY BÊN TRONG IFRAME "NHẬP TỪ EXCEL" (KhaiBaoLichBaoGiangTuExcel)
   // v5.5.1: trang cha (cùng tên miền) thao tác trực tiếp vào iframe này. Listener dưới đây chỉ là
   // đường dự phòng, khi trình duyệt không cho trang cha chạm vào iframe.
@@ -738,10 +757,16 @@
       getTeacherConfig((cfg) => {
         triggerAutoLogin(cfg);
       });
+      return;
     }
 
-    if (url.includes('khaibaolichbaogiang.aspx') || document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadGrid1')) {
+    // CHỈ hiển thị thanh công cụ nổi khi URL chính xác là trang Lịch Báo Giảng (KhaiBaoLichBaoGiang.aspx)
+    // TUYỆT ĐỐI KHÔNG dùng điều kiện chung RadGrid1 vì RadGrid1 tồn tại trên cả trang Nhập điểm (NhapDiemDiaPhuong.aspx)!
+    if (url.includes('khaibaolichbaogiang.aspx')) {
       injectMinimalToolbar();
+    } else {
+      const bar = document.getElementById('csdl-quick-confirm-bar');
+      if (bar) bar.remove();
     }
   }
 
@@ -753,14 +778,19 @@
 
   let lastUrl = location.href;
   new MutationObserver(() => {
-    const url = location.href;
+    const url = location.href.toLowerCase();
     if (url !== lastUrl) {
       lastUrl = url;
       checkAndInit();
     }
-    const isLbgPage = url.toLowerCase().includes('khaibaolichbaogiang.aspx') || document.getElementById('ctl00_ContentPlaceHolder1_ctl00_RadGrid1');
-    if (isLbgPage && !document.getElementById('csdl-quick-confirm-bar')) {
-      injectMinimalToolbar();
+    const isLbg = url.includes('khaibaolichbaogiang.aspx');
+    if (isLbg) {
+      if (!document.getElementById('csdl-quick-confirm-bar')) {
+        injectMinimalToolbar();
+      }
+    } else {
+      const bar = document.getElementById('csdl-quick-confirm-bar');
+      if (bar) bar.remove();
     }
   }).observe(document, { subtree: true, childList: true });
 
