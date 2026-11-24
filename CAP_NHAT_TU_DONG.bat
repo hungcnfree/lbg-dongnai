@@ -1,4 +1,3 @@
 @echo off
-chcp 65001 >nul
-title TRỢ LÝ CSDL - TỰ ĐỘNG CẬP NHẬT
+title TRO LY CSDL - TU DONG CAP NHAT (v5.5.3)
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tu_dong_cap_nhat.ps1"

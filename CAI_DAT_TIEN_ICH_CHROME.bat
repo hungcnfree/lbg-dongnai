@@ -1,46 +1,45 @@
 @echo off
-chcp 65001 >nul
-title CÀI ĐẶT TIỆN ÍCH CHROME - BẢN NỘI BỘ THCS ĐĂK Ơ
+title CAI DAT TIEN ICH CHROME - BAN NOI BO THCS DAK O
 cls
 echo ====================================================================
-echo   🌻 TRỢ LÝ TỰ ĐỘNG CSDL - HOA MẶT TRỜI & NẮNG VÀNG (v5.5.2)
-echo   Bản quyền: Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
+echo   TRO LY TU DONG CSDL - HOA MAT TROI VA NANG VANG (v5.5.3)
+echo   Ban quyen: Cong Dong Giao Vien Chuyen Doi So
 echo ====================================================================
 echo.
 set EXT_DIR=%~dp0chrome_extension
-echo [*] ĐƯỜNG DẪN THƯ MỤC TIỆN ÍCH TRÊN MÁY TÍNH:
+echo [*] DUONG DAN THU MUC TIEN ICH TREN MAY TINH:
 echo     "%EXT_DIR%"
 echo.
-:: Tự động sao chép đường dẫn thư mục vào Clipboard
+:: Tu dong sao chep duong dan thu muc vao Clipboard
 echo %EXT_DIR%| clip
-echo  --^> [ĐÃ TỰ ĐỘNG SAO CHÉP ĐƯỜNG DẪN TRÊN VÀO BỘ NHỚ TẠM CLIPBOARD!]
+echo  --^> [DA TU DONG SAO CHEP DUONG DAN TREN VAO BO NHO TAM CLIPBOARD!]
 echo.
 echo --------------------------------------------------------------------
-echo 1. Đang mở trang Quản lý tiện ích Chrome (chrome://extensions)...
+echo 1. Dang mo trang Quan ly tien ich Chrome (chrome://extensions)...
 start chrome "chrome://extensions"
 echo.
-echo 2. Đang mở thư mục tiện ích trong máy tính...
+echo 2. Dang mo thu muc tien ich trong may tinh...
 explorer "%EXT_DIR%"
 echo.
 echo ====================================================================
-echo   HƯỚNG DẪN 3 BƯỚC NẠP VÀO GOOGLE CHROME / CỐC CỐC:
+echo   HUONG DAN 3 BUOC NAP VAO GOOGLE CHROME / COC COC:
 echo ====================================================================
 echo.
-echo   [BƯỚC 1] Bật công tắc "Chế độ dành cho nhà phát triển"
-echo            (Ở góc trên cùng bên phải màn hình Chrome).
+echo   [BUOC 1] Bat cong tac "Che do danh cho nha phat trien"
+echo            (O goc tren cung ben phai man hinh Chrome).
 echo.
-echo   [BƯỚC 2] Bấm nút "Tải tiện ích đã giải nén" (Góc trên cùng bên trái)
-echo            và DÁN hoặc CHỌN thư mục "chrome_extension" vừa mở ra!
+echo   [BUOC 2] Bam nut "Tai tien ich da giai nen" (Goc tren cung ben trai)
+echo            va DAN hoac CHON thu muc "chrome_extension" vua mo ra!
 echo.
-echo   [BƯỚC 3] Nhấp vào biểu tượng Tiện ích ở góc trên Chrome (hình mảnh ghép),
-echo            chọn Tên Thầy/Cô và nhập SĐT + Mật khẩu rồi bấm LƯU!
+echo   [BUOC 3] Nhap vao bieu tuong Tien ich o goc tren Chrome (hinh manh ghep),
+echo            chon Ten Thay/Co va nhap SDT + Mat khau roi bam LUU!
 echo.
-echo   [BƯỚC 4] Mở trang https://truong.dongnai.edu.vn:
-echo            Robot sẽ TỰ ĐỘNG CHỌN ĐÚNG TRƯỜNG THCS ĐĂK Ơ và điền tài khoản!
-echo            Thầy/Cô chỉ cần gõ 8 ký tự CAPTCHA rồi ấn ENTER là vào ngay!
+echo   [BUOC 4] Mo trang https://truong.dongnai.edu.vn:
+echo            Robot se TU DONG CHON DUNG TRUONG va dien tai khoan!
+echo            Thay/Co chi can go 8 ky tu CAPTCHA roi an ENTER la vao ngay!
 echo ====================================================================
 echo.
-echo [*] Nhóm Zalo AI chia sẻ và hỗ trợ: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
-echo [*] GitHub cập nhật phiên bản mới: https://github.com/hungcnfree/lbg-dongnai
+echo [*] Nhom Zalo AI chia se va ho tro: https://zalo.me/g/2vhbtmsqdr06gyfiuru8
+echo [*] GitHub cap nhat phien ban moi: https://github.com/hungcnfree/lbg-dongnai
 echo.
 pause
