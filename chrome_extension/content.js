@@ -416,26 +416,26 @@
     }
     const week = readWeekFromPage();
     if (!week) {
-      showToastNotification('⚠️ Không đọc được <b>Tuần</b> đang chọn trên trang. Thầy/Cô chọn tuần ở ô "Tuần" rồi bấm lại.', true, 9000);
+      showToastNotification('⚠️ Không đọc được <b>Tuần</b> đang chọn trên trang. Thầy/Cô chọn tuần ở ô "Tuần" rồi bấm lại.', true, 4000);
       return;
     }
     const teacherTitle = readTeacherLabelFromPage(teacherName);
-    showToastNotification(`🚀 <strong>Đang tạo lịch báo giảng ${escHtml(week.text)} cho ${escHtml(teacherName)}...</strong>`, false, 8000);
+    showToastNotification(`🚀 <strong>Đang tạo lịch báo giảng ${escHtml(week.text)} cho ${escHtml(teacherName)}...</strong>`, false, 4000);
 
     const gen = window.LbgExcelEngine.generateWeekExcel(week.num, teacherTkb, window.TEMPLATE_LBG_BASE64,
       { teacherTitle: teacherTitle, weekText: week.text });
     const info = gen.info;
     const fileName = `LichBaoGiang_Tuan${week.num}_${teacherName.replace(/\s+/g, '')}.xlsx`;
     if (info.written === 0) {
-      showToastNotification('⚠️ Thời khóa biểu của Thầy/Cô không có tiết nào để nạp.', true, 8000);
+      showToastNotification('⚠️ Thời khóa biểu của Thầy/Cô không có tiết nào để nạp.', true, 4000);
       return;
     }
 
-    showToastNotification(`📄 Đã tạo file (${info.written} tiết). Đang mở "Nhập từ Excel"...`, false, 8000);
+    showToastNotification(`📄 Đã tạo file (${info.written} tiết). Đang mở "Nhập từ Excel"...`, false, 4000);
     const opened = await openExcelImportPopup();
     if (!opened.ok) { offerManualImport(gen.blob, fileName, opened.reason); return; }
 
-    showToastNotification('📂 Đang đưa file vào cửa sổ Nhập từ Excel...', false, 8000);
+    showToastNotification('📂 Đang đưa file vào cửa sổ Nhập từ Excel...', false, 4000);
     const res = await importExcelIntoPopup(gen.blob, fileName);
 
     if (res.status === 'cross') {
@@ -444,7 +444,7 @@
       if (f && f.contentWindow) {
         const buf = await gen.blob.arrayBuffer();
         f.contentWindow.postMessage({ type: 'CSDL_AUTO_IMPORT_EXCEL', arrayBuffer: buf, fileName: fileName }, '*');
-        showToastNotification('📨 Đã gửi file vào cửa sổ Nhập từ Excel. Thầy/Cô xem kết quả trong cửa sổ đó rồi kiểm tra bảng nhé.', false, 12000);
+        showToastNotification('📨 Đã gửi file vào cửa sổ Nhập từ Excel. Thầy/Cô xem kết quả trong cửa sổ đó rồi kiểm tra bảng nhé.', false, 4000);
         return;
       }
     }
@@ -465,15 +465,15 @@
     if (AUTO_SAVE_AFTER_IMPORT && res.status !== 'unknown') {
       await sleep(1200);
       clickSaveButton();
-      showToastNotification(`${head} (${info.written} tiết, ${escHtml(week.text)}). Đã bấm Ghi.${siteMsg}`, false, 14000);
+      showToastNotification(`${head} (${info.written} tiết, ${escHtml(week.text)}). Đã bấm Ghi.${siteMsg}`, false, 4000);
       return;
     }
     showToastNotification(
       `${head} (${info.written} tiết, ${escHtml(week.text)}).${siteMsg}<br>Thầy/Cô <b>kiểm tra bảng rồi bấm nút Ghi</b>.${notes.length ? '<br>' + notes.join('<br>') : ''}`,
-      false, 20000);
+      false, 4000);
   }
 
-  function showToastNotification(message, isError = false, holdMs = 4500) {
+  function showToastNotification(message, isError = false, holdMs = 4000) {
     let toast = document.getElementById('csdl-robot-toast');
     if (!toast) {
       toast = document.createElement('div');
@@ -483,20 +483,51 @@
         padding: 12px 18px; border-radius: 12px; font-weight: 700; font-size: 13px;
         box-shadow: 4px 4px 0px #0F172A; border: 2px solid #0F172A;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        transition: all 0.3s ease; pointer-events: none; max-width: 440px; line-height: 1.4;
+        transition: all 0.3s ease; pointer-events: auto; max-width: 440px; line-height: 1.4;
       `;
       document.body.appendChild(toast);
     }
     toast.style.background = isError ? '#FEE2E2' : '#D1FAE5';
     toast.style.color = isError ? '#991B1B' : '#065F46';
-    toast.innerHTML = message;
+    toast.style.pointerEvents = 'auto';
+
+    toast.innerHTML = `
+      <div style="position: relative; padding-right: 24px;">
+        <button id="csdl-toast-close" title="Đóng lại" style="
+          position: absolute; top: -4px; right: -10px;
+          background: transparent; border: none; font-size: 16px; font-weight: 900;
+          color: ${isError ? '#991B1B' : '#065F46'}; cursor: pointer;
+          width: 24px; height: 24px; line-height: 24px; text-align: center;
+          border-radius: 50%; display: flex; align-items: center; justify-content: center;
+          transition: background 0.15s ease;
+        ">✕</button>
+        <div style="word-break: break-word;">${message}</div>
+      </div>
+    `;
+
+    const hideToast = () => {
+      clearTimeout(toast._timer);
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      toast.style.pointerEvents = 'none';
+    };
+
+    const closeBtn = document.getElementById('csdl-toast-close');
+    if (closeBtn) {
+      closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        hideToast();
+      };
+      closeBtn.onmouseenter = () => { closeBtn.style.background = isError ? '#FECACA' : '#A7F3D0'; };
+      closeBtn.onmouseleave = () => { closeBtn.style.background = 'transparent'; };
+    }
+
     toast.style.opacity = '1';
     toast.style.transform = 'translateY(0)';
 
     clearTimeout(toast._timer);
     toast._timer = setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(-10px)';
+      hideToast();
     }, holdMs);
   }
 
