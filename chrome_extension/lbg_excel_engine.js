@@ -1,5 +1,5 @@
 // lbg_excel_engine.js - Quản lý, Phân Tích & Sinh Lịch Báo Giảng Excel Tự Động
-// Phiên bản: v5.5.3 (Hoa Mặt Trời & Nắng Vàng 🌻☀️ - Bộ giải mã Thời khóa biểu Đa năng)
+// Phiên bản: v5.5.4 (Hoa Mặt Trời & Nắng Vàng 🌻☀️ - Bộ giải mã Thời khóa biểu Đa năng)
 // Hỗ trợ: Ma trận Khối GV, Lưới Toàn Trường, Đa Sheet, Bảng CSDL / vnEdu / SMAS
 // Tác quyền: © 2026 Dự Án Trợ Lý CSDL Học Đường & Cộng Đồng Giáo Viên Chuyển Đổi Số
 
@@ -783,6 +783,41 @@
     // Số tiết theo PPCT: CHỈ ghi khi đã có số liệu đã hiệu chỉnh thật (hiện có cho thầy Nông Văn Hùng).
     // Các giáo viên khác: để trống thay vì tự bịa số, tránh ghi sai vào sổ chính thức.
     var writePpct = cfg.ppctCalibrated === true || /nông văn hùng/i.test(norm(cfg.teacherName));
+    // Built-in PPCT values are anchored to week 11, independently of
+    // the date when an imported timetable takes effect.
+    var builtInPpct = new Map();
+    var useBuiltInPpct = cfg.ppctCalibrated !== true &&
+      foldKey(cfg.teacherName) === 'nong van hung';
+    if (useBuiltInPpct) {
+      var nextOrdinal = new Map();
+      var effectiveWeek = Number(cfg.baseWeek) || 11;
+      var oldWeeks = Math.min(weekNum, effectiveWeek) - 11;
+      var newWeeks = Math.max(weekNum - effectiveWeek, 0);
+      cfg.lessons.slice().sort(function (a, b) { return a.stt - b.stt; }).forEach(function (lesson) {
+        var subject = foldKey(lesson.mon);
+        var className = foldKey(lesson.lop);
+        var first;
+        var oldStep;
+        if (subject === 'cong nghe' && /^8a[1567]$/.test(className)) {
+          first = 11;
+          oldStep = 1;
+        } else if (subject === 'cong nghe' && /^9a[2345]$/.test(className)) {
+          first = 21;
+          oldStep = 2;
+        } else if (subject === 'hdtn' && className === '8a5') {
+          first = 31;
+          oldStep = 3;
+        } else {
+          return;
+        }
+
+        var key = subject + ':' + className;
+        var ordinal = nextOrdinal.get(key) || 0;
+        nextOrdinal.set(key, ordinal + 1);
+        builtInPpct.set(lesson, first + ordinal + oldWeeks * oldStep +
+          newWeeks * (lesson.step || oldStep));
+      });
+    }
     var info = { written: 0, ppctBlank: !writePpct, warnings: [], weekText: weekText, teacherTitle: teacherTitle };
     var seen = {};
     function warn(msg) { if (!seen[msg]) { seen[msg] = 1; info.warnings.push(msg); } }
@@ -803,9 +838,14 @@
       ws['F' + rowIdx] = { t: 's', v: mon.value };
       ws['G' + rowIdx] = { t: 's', v: lop.value };
       if (writePpct) {
-        var ppct = (item.basePpct || 1) + offset * (item.step || 1);
+        var ppct = useBuiltInPpct
+          ? builtInPpct.get(item)
+          : (item.basePpct || 1) + offset * (item.step || 1);
+        if (useBuiltInPpct && ppct === undefined) {
+          warn('Ch\u01b0a c\u00f3 m\u1ed1c PPCT cho ' + item.mon + ' ' + item.lop);
+        }
         if (ppct >= 1) ws['H' + rowIdx] = { t: 'n', v: ppct };
-        else warn('Tuần ' + weekNum + ' nằm trước mốc PPCT đã hiệu chỉnh, bỏ trống số PPCT');
+        else if (ppct !== undefined) warn('Tuần ' + weekNum + ' nằm trước mốc PPCT đã hiệu chỉnh, bỏ trống số PPCT');
       }
       info.written++;
     }

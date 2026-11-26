@@ -1,7 +1,7 @@
-// popup.js - Trợ Lý CSDL v5.5.3 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
+// popup.js - Trợ Lý CSDL v5.5.4 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
 // Bản quyền: © 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 
-const CURRENT_VERSION = '5.5.3';
+const CURRENT_VERSION = '5.5.4';
 
 document.addEventListener('DOMContentLoaded', () => {
   const nameSelect = document.getElementById('cfg-name');
@@ -19,13 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentTeacher = '';
 
   // 1. Tải cấu hình đã lưu
-  chrome.storage.local.get(['csdl_teacher_config', 'activeTeacher', 'csdl_tkb_config', 'updated_school_tkb', 'app_version'], (res) => {
+  chrome.storage.local.get(['csdl_teacher_config', 'activeTeacher', 'csdl_tkb_config', 'updated_school_tkb'], (res) => {
     if (res.updated_school_tkb) {
       window.DEFAULT_SCHOOL_TKB = res.updated_school_tkb;
-    }
-    if (res.app_version) {
-      const vBadge = document.querySelector('.version-badge');
-      if (vBadge) vBadge.innerText = 'v' + res.app_version;
     }
     if (res.csdl_teacher_config) {
       const cfg = res.csdl_teacher_config;
@@ -219,106 +215,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const versionUrl = 'https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json?t=' + Date.now();
     const tkbUrl = 'https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/chrome_extension/default_school_tkb.js?t=' + Date.now();
 
-    // Bước 1: Kiểm tra phiên bản mới
-    fetch(versionUrl)
-      .then(r => r.json())
-      .then(vData => {
-        const latestVer = vData.version || CURRENT_VERSION;
-        setUpdateProgress(40, `📥 Đang tải dữ liệu TKB 60 GV & thuật toán mới v${latestVer}...`);
+    async function readResponse(url) {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response;
+    }
 
-        // Bước 2: Tải dữ liệu TKB mới nhất
-        return fetch(tkbUrl)
-          .then(r => r.text())
-          .then(tkbText => {
-            setUpdateProgress(75, '⚙️ Đang đồng bộ bộ nhớ & tối ưu danh mục CSDL...');
+    async function checkAndSync() {
+      const versionData = await (await readResponse(versionUrl)).json();
+      const latestVersion = versionData.version;
+      if (!/^\d+\.\d+\.\d+$/.test(latestVersion)) throw new Error('Phiên bản không hợp lệ');
+      const installed = CURRENT_VERSION.split('.').map(Number);
+      const available = latestVersion.split('.').map(Number);
+      const difference = available.findIndex((part, index) => part !== installed[index]);
+      verResult.style.display = 'block';
 
-            let newTkb = null;
-            const match = tkbText.match(/var\s+schoolTkb\s*=\s*(\{[\s\S]*?\});/);
-            if (match) {
-              try {
-                newTkb = JSON.parse(match[1]);
-              } catch (e) {
-                console.warn('Lỗi parse JSON TKB:', e);
-              }
-            }
+      if (difference !== -1 && available[difference] > installed[difference]) {
+        setUpdateProgress(100, 'Đã tìm thấy phiên bản mới.');
+        const link = document.createElement('a');
+        link.href = 'https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v' + latestVersion + '.zip';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Tải v' + latestVersion;
+        verResult.replaceChildren(link, document.createTextNode(' hoặc chạy CAP_NHAT_TU_DONG.bat trong thư mục đang dùng, rồi tải lại tiện ích trong Chrome.'));
+        return;
+      }
 
-            const payload = {
-              app_version: latestVer,
-              last_update_time: new Date().toLocaleString('vi-VN')
-            };
-
-            if (newTkb) {
-              payload.updated_school_tkb = newTkb;
-              window.DEFAULT_SCHOOL_TKB = newTkb;
-              const tName = currentTeacher || (nameSelect ? nameSelect.value : '');
-              if (tName && newTkb[tName]) {
-                payload.csdl_tkb_config = newTkb[tName];
-                payload.activeTeacher = tName;
-                updateTkbStatus(newTkb[tName]);
-              }
-            }
-
-            return new Promise((resolve) => {
-              chrome.storage.local.set(payload, () => {
-                setTimeout(() => {
-                  setUpdateProgress(100, `🎉 Hoàn tất 100%! Đã kích hoạt bản mới v${latestVer}.`);
-                  resolve({ version: latestVer, tkbCount: newTkb ? Object.keys(newTkb).length : 60 });
-                }, 400);
-              });
-            });
-          });
-      })
-      .then(resInfo => {
-        // Cập nhật huy hiệu phiên bản trên giao diện
-        const vBadge = document.querySelector('.version-badge');
-        if (vBadge) {
-          vBadge.innerText = 'v' + resInfo.version;
-          vBadge.style.background = '#10B981';
-        }
-
-        verResult.style.display = 'block';
-        verResult.innerHTML = `
-          <div style="background: #ECFDF5; border: 1.5px solid #10B981; padding: 10px; border-radius: 8px; color: #065F46;">
-            <div style="font-weight: 800; font-size: 12.5px; margin-bottom: 5px; display: flex; align-items: center; gap: 5px;">
-              <span>✅</span> CẬP NHẬT THÀNH CÔNG 100%!
-            </div>
-            <div style="font-size: 11.5px; line-height: 1.5; color: #047857;">
-              • Đã kích hoạt phiên bản <strong>v${resInfo.version}</strong> mới nhất.<br>
-              • Đồng bộ dữ liệu TKB <strong>${resInfo.tkbCount} giáo viên</strong> toàn trường.<br>
-              • Mật khẩu & thông tin tài khoản được bảo toàn nguyên vẹn 100%.<br>
-              • Tiện ích đã sẵn sàng nạp lịch báo giảng và đăng nhập ngay.
-            </div>
-            <button type="button" id="btn-reload-runtime" class="btn-main btn-green" style="margin-top: 8px; width: 100%; font-size: 11px; padding: 6px;">
-              🔄 Làm Mới Tiện Ích Ngay
-            </button>
-          </div>
-        `;
-
-        const btnReload = document.getElementById('btn-reload-runtime');
-        if (btnReload) {
-          btnReload.addEventListener('click', () => {
-            if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.reload) {
-              chrome.runtime.reload();
-            } else {
-              window.location.reload();
-            }
-          });
-        }
-
-        btnCheckVer.disabled = false;
-        btnCheckVer.style.opacity = '1';
-        btnCheckVer.innerText = `✅ Đã Cập Nhật Mới Nhất (v${resInfo.version})`;
-      })
-      .catch(err => {
-        setUpdateProgress(100, '✅ Đã hoàn tất đồng bộ cấu hình!');
-        verResult.style.display = 'block';
-        verResult.innerHTML = `
-          <div style="background: #EFF6FF; border: 1.5px solid #3B82F6; padding: 8px; border-radius: 6px; color: #1E40AF;">
-            ℹ️ Tiện ích đang chạy phiên bản <strong>v${CURRENT_VERSION}</strong> ổn định và sẵn sàng sử dụng.
-          </div>
-        `;
-        btnCheckVer.disabled = false;
-        btnCheckVer.style.opacity = '1';
+      setUpdateProgress(40, 'Đang tải thời khóa biểu chuẩn...');
+      const tkbText = await (await readResponse(tkbUrl)).text();
+      const match = tkbText.match(/var\s+schoolTkb\s*=\s*(\{[\s\S]*?\});/);
+      if (!match) throw new Error('Không đọc được dữ liệu TKB');
+      const schoolTkb = JSON.parse(match[1]);
+      await chrome.storage.local.set({
+        updated_school_tkb: schoolTkb,
+        last_update_time: new Date().toLocaleString('vi-VN')
       });
+      window.DEFAULT_SCHOOL_TKB = schoolTkb;
+      setUpdateProgress(100, 'Đã đồng bộ thời khóa biểu chuẩn.');
+      verResult.textContent = 'Đang chạy v' + CURRENT_VERSION + '. Đã đồng bộ TKB chuẩn của ' +
+        Object.keys(schoolTkb).length + ' giáo viên.';
+    }
+
+    checkAndSync().catch(() => {
+      setUpdateProgress(0, 'Chưa thể đồng bộ.');
+      verResult.style.display = 'block';
+      verResult.textContent = 'Không tải được dữ liệu. Thầy/Cô kiểm tra kết nối rồi thử lại.';
+    }).finally(() => {
+      btnCheckVer.disabled = false;
+      btnCheckVer.style.opacity = '1';
+    });
   });
 });

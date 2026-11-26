@@ -2,7 +2,7 @@
 title CAI DAT TIEN ICH CHROME - BAN NOI BO THCS DAK O
 cls
 echo ====================================================================
-echo   TRO LY TU DONG CSDL - HOA MAT TROI VA NANG VANG (v5.5.3)
+echo   TRO LY TU DONG CSDL - HOA MAT TROI VA NANG VANG (v5.5.4)
 echo   Ban quyen: Cong Dong Giao Vien Chuyen Doi So
 echo ====================================================================
 echo.

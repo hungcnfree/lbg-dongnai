@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Trợ Lý CSDL - THCS Đăk Ơ 🌻",
-  "version": "5.5.3",
+  "version": "5.5.4",
   "description": "Tiện ích tự động điền đăng nhập và hoàn thành lịch báo giảng 1-click (Hoa Mặt Trời & Nắng Vàng) dành riêng cho giáo viên",
   "author": "Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️",
   "permissions": [
@@ -15,7 +15,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Trợ Lý CSDL v5.5.3 🌻",
+    "default_title": "Trợ Lý CSDL v5.5.4 🌻",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

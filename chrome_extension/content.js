@@ -1,4 +1,4 @@
-// content.js - Trợ Lý CSDL v5.5.3 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
+// content.js - Trợ Lý CSDL v5.5.4 (Hoa Mặt Trời & Nắng Vàng 🌻☀️)
 // Bản quyền: © 2026 Cộng Đồng Giáo Viên Chuyển Đổi Số 🌻☀️
 
 (function () {
@@ -24,7 +24,7 @@
   }
 
   // NẾU ĐANG CHẠY BÊN TRONG IFRAME "NHẬP TỪ EXCEL" (KhaiBaoLichBaoGiangTuExcel)
-  // v5.5.3: trang cha (cùng tên miền) thao tác trực tiếp vào iframe này. Listener dưới đây chỉ là
+  // v5.5.4: trang cha (cùng tên miền) thao tác trực tiếp vào iframe này. Listener dưới đây chỉ là
   // đường dự phòng, khi trình duyệt không cho trang cha chạm vào iframe.
   if (window.location.href.toLowerCase().includes('khaibaolichbaogiangtuexcel')) {
     console.log('[CSDL Robot] Sẵn sàng (dự phòng) bên trong cửa sổ Nhập từ Excel.');
@@ -51,7 +51,7 @@
     return; // Dừng, không khởi tạo thanh công cụ cha trong iframe
   }
 
-  console.log('[CSDL Robot v5.5.3] Đang khởi động tiện ích trên trang chính...');
+  console.log('[CSDL Robot v5.5.4] Đang khởi động tiện ích trên trang chính...');
 
   function injectBridgeScript() {
     if (document.getElementById('csdl-bridge-script')) return;
@@ -68,12 +68,12 @@
 
   injectBridgeScript();
 
-  // v5.5.3: Đồng bộ dữ liệu TKB mới nhất từ 1-Click Update nếu có
+  // v5.5.4: Đồng bộ dữ liệu TKB mới nhất từ 1-Click Update nếu có
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get(['updated_school_tkb'], (res) => {
       if (res && res.updated_school_tkb) {
         window.DEFAULT_SCHOOL_TKB = res.updated_school_tkb;
-        console.log('[CSDL Robot v5.5.3] Đã nạp Thời khóa biểu cập nhật mới nhất từ bộ nhớ.');
+        console.log('[CSDL Robot v5.5.4] Đã nạp Thời khóa biểu cập nhật mới nhất từ bộ nhớ.');
       }
     });
   }
@@ -148,7 +148,7 @@
       updateRobotBanner(`
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong style="color: #065F46; font-size: 13.5px;">🎉 ROBOT ĐÃ TỰ ĐIỀN XONG MỌI THỨ!</strong>
-          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.5.3</span>
+          <span style="font-size: 10.5px; background: #FEF3C7; color: #854D0E; border: 1.5px solid #0F172A; padding: 2px 7px; border-radius: 12px; font-weight: bold; box-shadow: 1px 1px 0px #0F172A;">v5.5.4</span>
         </div>
         <div style="font-size: 12px; color: #0F172A; margin-bottom: 6px;">
           ${detail.message}
@@ -173,7 +173,7 @@
 
   function triggerAutoLogin(cfg) {
     injectBridgeScript();
-    updateRobotBanner(`⚡ <strong>TRỢ LÝ CSDL v5.5.3:</strong> Đang tự động chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
+    updateRobotBanner(`⚡ <strong>TRỢ LÝ CSDL v5.5.4:</strong> Đang tự động chọn Cấp - Xã - Trường THCS Đăk Ơ...`);
     let tries = 0;
     const send = () => {
       const ready = document.documentElement.getAttribute('data-csdl-bridge') === 'ready';
@@ -245,7 +245,7 @@
   }
 
   // ===========================================================================
-  // v5.5.3 — NẠP LỊCH BÁO GIẢNG QUA "NHẬP TỪ EXCEL": TỪNG BƯỚC, BÁO CÁO THẬT
+  // v5.5.4 — NẠP LỊCH BÁO GIẢNG QUA "NHẬP TỪ EXCEL": TỪNG BƯỚC, BÁO CÁO THẬT
   // ===========================================================================
 
   // Đặt true nếu muốn robot tự bấm "Ghi" sau khi nhập. Mặc định false: giáo viên xem bảng rồi tự bấm Ghi.

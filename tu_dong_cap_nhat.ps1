@@ -6,7 +6,7 @@ $destDir = Join-Path $PSScriptRoot "chrome_extension"
 
 Clear-Host
 Write-Host "==========================================================" -ForegroundColor Yellow
-Write-Host "   TRO LY TU DONG CSDL - HOA MAT TROI VA NANG VANG v5.5.3" -ForegroundColor Yellow
+Write-Host "   TRO LY TU DONG CSDL - HOA MAT TROI VA NANG VANG v5.5.4" -ForegroundColor Yellow
 Write-Host "   Tac quyen: Ban quyen 2026 Cong Dong Giao Vien Chuyen Doi So" -ForegroundColor DarkYellow
 Write-Host "==========================================================" -ForegroundColor Yellow
 Write-Host ""
@@ -21,6 +21,7 @@ function Show-ProgressBar ($percent, $message) {
 
 Show-ProgressBar 15 "Dang kiem tra phien ban moi tu GitHub..."
 
+$latestVer = "5.5.4"
 try {
     $vData = Invoke-RestMethod -Uri $versionUrl -UseBasicParsing
     $latestVer = $vData.version
@@ -29,11 +30,15 @@ try {
         $zipUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v" + $latestVer + ".zip"
     }
     Show-ProgressBar 40 "Dang tai goi tien ich v$latestVer..."
-    Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing
+    Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing -ErrorAction Stop
 } catch {
     Show-ProgressBar 35 "Dang tai goi cap nhat du phong..."
-    $fallbackUrl = "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.3.zip"
-    Invoke-WebRequest -Uri $fallbackUrl -OutFile $tempZip -UseBasicParsing
+    $fallbackUrl = if ($vData -and $vData.downloadUrls.dakoZipFallback) {
+        $vData.downloadUrls.dakoZipFallback
+    } else {
+        "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.4.zip"
+    }
+    Invoke-WebRequest -Uri $fallbackUrl -OutFile $tempZip -UseBasicParsing -ErrorAction Stop
 }
 
 Show-ProgressBar 70 "Dang giai nen va dong bo ma nguon..."

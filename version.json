@@ -1,18 +1,16 @@
 {
-  "version": "5.5.3",
-  "versionCode": 553,
-  "releaseDate": "24/11/2026",
-  "title": "Trợ Lý CSDL v5.5.3 - Phiên Bản Hoa Mặt Trời & Nắng Vàng 🌻☀️",
+  "version": "5.5.4",
+  "versionCode": 554,
+  "releaseDate": "26/11/2026",
+  "title": "Trợ lý CSDL v5.5.4 • Sửa lũy kế tiết PPCT",
   "changelog": [
-    "Chuyển toàn bộ giao diện file chạy (.bat và .ps1) sang Tiếng Việt không dấu chuẩn, chống tuyệt đối lỗi font hiển thị trên mọi máy tính Windows.",
-    "Chặn hoàn toàn tiện ích trên trang Nhập điểm (NhapDiemDiaPhuong.aspx, SoDiem.aspx, DiemTongKet.aspx, Điểm danh), không gây cản trở nạp Excel điểm.",
-    "Thông báo hoàn thành tự động đóng sau 4 giây kèm nút X đóng nhanh tiện lợi.",
-    "Giao diện Hoa Mặt Trời & Nắng Vàng rạng rỡ, tiếp thêm năng lượng tích cực.",
-    "Cập nhật 1-Click thông minh với thanh trạng thái 100% không cần tải lại thủ công."
+    "Sửa lỗi tuần 13 lặp lại số tiết PPCT của tuần 11 sau khi đổi thời khóa biểu.",
+    "Tiếp nối số tiết theo từng môn và lớp. Đã đối chiếu 15 tiết từ lịch báo giảng THCS Đăk Ơ.",
+    "Tách kiểm tra phiên bản tiện ích khỏi đồng bộ dữ liệu thời khóa biểu."
   ],
   "downloadUrls": {
-    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.3.zip",
-    "dakoZipFallback": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.2.zip",
+    "dakoZip": "https://hungcnfree.github.io/lbg-dongnai/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.4.zip",
+    "dakoZipFallback": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/TRO_LY_CSDL_NOI_BO_THCS_DAK_O_v5.5.4.zip",
     "rawVersion": "https://raw.githubusercontent.com/hungcnfree/lbg-dongnai/main/version.json"
   }
 }
